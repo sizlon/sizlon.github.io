@@ -116,6 +116,12 @@ p {
   line-height: 1.2;
 }
 
+.subsection-title {
+  margin: 20px 0 10px;
+  font-size: 1.05rem;
+  line-height: 1.25;
+}
+
 .principles {
   display: grid;
   gap: 12px;
