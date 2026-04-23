@@ -116,6 +116,34 @@ p {
   line-height: 1.2;
 }
 
+.contact-list {
+  margin: 0;
+  display: grid;
+  gap: 12px;
+}
+
+.contact-item {
+  display: grid;
+  gap: 4px;
+  padding: 14px 16px;
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  background: #fbfcff;
+}
+
+.contact-item dt {
+  color: var(--muted);
+  font-size: 0.92rem;
+  font-weight: 700;
+}
+
+.contact-item dd {
+  margin: 0;
+  font-size: 1rem;
+  color: var(--text);
+  font-weight: 700;
+}
+
 .footer {
   padding-top: 0;
 }
@@ -157,6 +185,10 @@ p {
 
   .nav a {
     width: 100%;
+  }
+
+  .contact-item {
+    padding: 12px 14px;
   }
 
   .footer-grid {
