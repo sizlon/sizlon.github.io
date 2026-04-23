@@ -94,8 +94,8 @@ a:focus-visible {
 }
 
 h1 {
-  margin: 0 0 16px;
-  font-size: clamp(2rem, 4.5vw, 3rem);
+  margin: 20px 0 16px;
+  font-size: clamp(1.9rem, 3.8vw, 2.25rem);
   line-height: 1.15;
 }
 
