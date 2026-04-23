@@ -27,7 +27,6 @@
       nav.classList.toggle('is-open', open);
     });
     backdrops.forEach((backdrop) => {
-      backdrop.hidden = !open;
       backdrop.classList.toggle('is-open', open);
     });
     document.body.classList.toggle('nav-open', open);
@@ -95,5 +94,6 @@
     });
   }
 
+  setNavOpen(false);
   activate('ko');
 })();
