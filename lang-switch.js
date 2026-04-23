@@ -7,6 +7,17 @@
   const navToggle = document.querySelector('[data-site-nav-toggle]');
   const mobileQuery = window.matchMedia('(max-width: 640px)');
 
+  function bindMediaChange(query, handler) {
+    if (typeof query.addEventListener === 'function') {
+      query.addEventListener('change', handler);
+      return;
+    }
+
+    if (typeof query.addListener === 'function') {
+      query.addListener(handler);
+    }
+  }
+
   function setNavOpen(open) {
     if (!navToggle) {
       return;
@@ -65,7 +76,7 @@
       backdrop.addEventListener('click', () => setNavOpen(false));
     });
 
-    mobileQuery.addEventListener('change', (event) => {
+    bindMediaChange(mobileQuery, (event) => {
       if (!event.matches) {
         setNavOpen(false);
       }
