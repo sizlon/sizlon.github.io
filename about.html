@@ -5,60 +5,88 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>About - Sizlon Inc.</title>
-  <meta name="description" content="주식회사 시즐론의 회사 소개 페이지입니다. boundary-protocol의 철학을 바탕으로 합니다.">
+  <meta name="description" content="주식회사 시즐론의 회사 소개 페이지입니다.">
   <link rel="stylesheet" href="/styles.css">
 </head>
 <body>
   <main class="page">
     <section class="shell">
-      <p class="eyebrow">About</p>
-      <h1>회사 소개</h1>
-
-      <p>
-        주식회사 시즐론은 기준과 규칙에 따라 소프트웨어를 개발합니다.
-      </p>
-
-      <p class="muted">
-        회사 철학은 boundary-protocol의 accountability, event-first, minimal state 원칙에 맞춰 있습니다.
-      </p>
-
-      <hr class="rule">
-
-      <div class="principles">
-        <div class="principle">
-          <strong>Accountability</strong>
-          <span>행동은 기록되고, 결과는 검증될 수 있어야 합니다.</span>
-        </div>
-        <div class="principle">
-          <strong>Event-first</strong>
-          <span>시스템의 의미는 사건의 순서로 드러납니다.</span>
-        </div>
-        <div class="principle">
-          <strong>Minimal state</strong>
-          <span>불필요한 상태보다 남겨야 할 기록에 집중합니다.</span>
+      <div class="topbar">
+        <p class="eyebrow">About</p>
+        <div class="lang-switch" role="tablist" aria-label="Language switch">
+          <button type="button" class="lang-switch__button is-active" data-lang-target="ko" aria-pressed="true">KO</button>
+          <button type="button" class="lang-switch__button" data-lang-target="en" aria-pressed="false">EN</button>
         </div>
       </div>
 
-      <hr class="rule">
+      <section class="lang-panel" data-lang="ko">
+        <h1>회사 소개</h1>
 
-      <nav class="nav" aria-label="페이지 이동">
-        <a href="/">홈으로</a>
-        <a href="/contact.html">문의</a>
-      </nav>
+        <p>
+          주식회사 시즐론은 기준과 규칙에 따라 판단의 기준을 고정하는 회사입니다.
+        </p>
+
+        <p class="muted">
+          회사는 결과보다 책임의 구조를 먼저 봅니다.
+        </p>
+
+        <hr class="rule">
+
+        <h2 class="section-title">책임의 구조</h2>
+        <p>
+          시즐론의 시스템은 기준을 적용하고 결과를 남깁니다.
+          해석과 최종 판단은 사용자 또는 조직에 남습니다.
+        </p>
+
+        <nav class="nav" aria-label="페이지 이동">
+          <a href="/">홈으로</a>
+          <a href="/notices.html">공고</a>
+          <a href="/contact.html">문의</a>
+        </nav>
+      </section>
+
+      <section class="lang-panel" data-lang="en" hidden>
+        <h1>Company introduction</h1>
+
+        <p>
+          Sizlon is a company that fixes the criteria for judgment through predefined rules.
+        </p>
+
+        <p class="muted">
+          The company looks at the structure of responsibility before outcomes.
+        </p>
+
+        <hr class="rule">
+
+        <h2 class="section-title">Responsibility structure</h2>
+        <p>
+          Sizlon systems apply criteria and record results.
+          Interpretation and final decisions remain with the user or organization.
+        </p>
+
+        <nav class="nav" aria-label="Page navigation">
+          <a href="/">Home</a>
+          <a href="/notices.html">Notices</a>
+          <a href="/contact.html">Contact</a>
+        </nav>
+      </section>
     </section>
   </main>
 
   <footer class="page footer">
     <div class="footer-grid">
       <div>
-        <p class="eyebrow">Basic Info</p>
-        <p class="muted">회사 소개</p>
+        <p class="eyebrow">Sizlon Inc.</p>
+        <p class="muted">Company introduction</p>
       </div>
       <div class="footer-links">
-        <a href="/notices.html">공고</a>
-        <a href="/contact.html">문의</a>
+        <a href="/">Home</a>
+        <a href="/notices.html">Notices</a>
+        <a href="/contact.html">Contact</a>
       </div>
     </div>
   </footer>
+
+  <script src="/lang-switch.js"></script>
 </body>
 </html>

@@ -5,27 +5,49 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>공고 - Sizlon Inc.</title>
-  <meta name="description" content="주식회사 시즐론의 공고 게시판입니다. 법인 설립 절차와 운영 공지를 안내합니다.">
+  <meta name="description" content="주식회사 시즐론의 공고 게시판입니다.">
   <link rel="stylesheet" href="/styles.css">
 </head>
 <body>
   <main class="page">
     <section class="shell">
-      <p class="eyebrow">Notices</p>
-      <h1>공고 게시판</h1>
+      <div class="topbar">
+        <p class="eyebrow">Notices</p>
+        <div class="lang-switch" role="tablist" aria-label="Language switch">
+          <button type="button" class="lang-switch__button is-active" data-lang-target="ko" aria-pressed="true">KO</button>
+          <button type="button" class="lang-switch__button" data-lang-target="en" aria-pressed="false">EN</button>
+        </div>
+      </div>
 
-      <p>
-        본 페이지는 주식회사 시즐론의 공고와 운영 안내를 게시하기 위한 공간입니다.
-      </p>
+      <section class="lang-panel" data-lang="ko">
+        <h1>공고</h1>
 
-      <hr class="rule">
+        <p>
+          회사의 공식 공고는 회사의 인터넷 홈페이지에 게시됩니다.
+        </p>
 
-      <p class="muted">현재 게시된 공고는 없습니다.</p>
+        <p class="muted">현재 게시된 공고는 없습니다.</p>
 
-      <nav class="nav" aria-label="페이지 이동">
-        <a href="/">홈으로</a>
-        <a href="/contact.html">문의</a>
-      </nav>
+        <nav class="nav" aria-label="페이지 이동">
+          <a href="/">홈으로</a>
+          <a href="/contact.html">문의</a>
+        </nav>
+      </section>
+
+      <section class="lang-panel" data-lang="en" hidden>
+        <h1>Notices</h1>
+
+        <p>
+          Official notices of the company are published on this website.
+        </p>
+
+        <p class="muted">There are no published notices at this time.</p>
+
+        <nav class="nav" aria-label="Page navigation">
+          <a href="/">Home</a>
+          <a href="/contact.html">Contact</a>
+        </nav>
+      </section>
     </section>
   </main>
 
@@ -33,13 +55,15 @@
     <div class="footer-grid">
       <div>
         <p class="eyebrow">Notice</p>
-        <p class="muted">법정 공고 및 운영 공지</p>
+        <p class="muted">Official notices</p>
       </div>
       <div class="footer-links">
-        <a href="/about.html">회사 소개</a>
-        <a href="/contact.html">문의</a>
+        <a href="/">Home</a>
+        <a href="/contact.html">Contact</a>
       </div>
     </div>
   </footer>
+
+  <script src="/lang-switch.js"></script>
 </body>
 </html>

@@ -48,8 +48,8 @@
         </p>
 
         <p>
-          누가 이 결정을 했는가
-          어떤 기준을 따랐는가
+          누가 이 결정을 했는가<br>
+          어떤 기준을 따랐는가<br>
           왜 이런 결과가 나왔는가
         </p>
 
@@ -130,8 +130,8 @@
         </p>
 
         <p>
-          Who made the decision
-          Which criteria were used
+          Who made the decision<br>
+          Which criteria were used<br>
           Why the outcome occurred
         </p>
 
@@ -199,31 +199,6 @@
     </div>
   </footer>
 
-  <script>
-    (function () {
-      const buttons = document.querySelectorAll('.lang-switch__button');
-      const panels = document.querySelectorAll('.lang-panel');
-
-      function activate(lang) {
-        buttons.forEach((button) => {
-          const active = button.dataset.langTarget === lang;
-          button.classList.toggle('is-active', active);
-          button.setAttribute('aria-pressed', active ? 'true' : 'false');
-        });
-
-        panels.forEach((panel) => {
-          panel.hidden = panel.dataset.lang !== lang;
-        });
-
-        document.documentElement.lang = lang === 'ko' ? 'ko' : 'en';
-      }
-
-      buttons.forEach((button) => {
-        button.addEventListener('click', () => activate(button.dataset.langTarget));
-      });
-
-      activate('ko');
-    })();
-  </script>
+  <script src="/lang-switch.js"></script>
 </body>
 </html>
