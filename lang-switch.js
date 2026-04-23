@@ -1,6 +1,7 @@
 (function () {
   const buttons = document.querySelectorAll('[data-lang-target]');
   const panels = document.querySelectorAll('[data-lang]');
+  const labels = document.querySelectorAll('[data-label-ko][data-label-en]');
 
   function activate(lang) {
     buttons.forEach((button) => {
@@ -11,6 +12,10 @@
 
     panels.forEach((panel) => {
       panel.hidden = panel.dataset.lang !== lang;
+    });
+
+    labels.forEach((node) => {
+      node.textContent = lang === 'ko' ? node.dataset.labelKo : node.dataset.labelEn;
     });
 
     document.documentElement.lang = lang === 'ko' ? 'ko' : 'en';
