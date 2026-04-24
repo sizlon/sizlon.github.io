@@ -34,7 +34,10 @@
       <section class="lang-panel" data-lang="ko">
         <h1>문의</h1>
 
-        <p>문의는 아래 폼으로 접수됩니다.</p>
+        <p>
+          입력은 아래 양식으로 접수되고 기록됩니다.<br>
+          해석과 판단은 외부에 있습니다.
+        </p>
 
         <form class="contact-form" action="/contact" method="post">
           <div class="form-grid">
@@ -51,10 +54,10 @@
             <label class="field">
               <span>문의 유형</span>
               <select name="category" required>
-                <option value="" selected disabled>선택해 주세요</option>
+                <option value="" selected disabled>선택</option>
                 <option value="general">일반 문의</option>
-                <option value="business">제휴 문의</option>
-                <option value="press">보도 문의</option>
+                <option value="business">사업 문의</option>
+                <option value="press">공보 문의</option>
               </select>
             </label>
 
@@ -70,7 +73,7 @@
           </div>
 
           <div class="form-actions">
-            <button type="submit" data-label-ko="보내기" data-label-en="Send">보내기</button>
+            <button type="submit" data-label-ko="제출" data-label-en="Submit">제출</button>
           </div>
         </form>
       </section>
@@ -78,7 +81,10 @@
       <section class="lang-panel" data-lang="en" hidden>
         <h1>Contact</h1>
 
-        <p>Inquiries are received through the form below.</p>
+        <p>
+          Input is received and recorded through the form below.<br>
+          Interpretation and judgment are external.
+        </p>
 
         <form class="contact-form" action="/contact" method="post">
           <div class="form-grid">
@@ -95,10 +101,10 @@
             <label class="field">
               <span>Inquiry type</span>
               <select name="category" required>
-                <option value="" selected disabled>Select one</option>
+                <option value="" selected disabled>Select</option>
                 <option value="general">General inquiry</option>
                 <option value="business">Business inquiry</option>
-                <option value="press">Press inquiry</option>
+                <option value="press">Public notice inquiry</option>
               </select>
             </label>
 
@@ -114,7 +120,7 @@
           </div>
 
           <div class="form-actions">
-            <button type="submit" data-label-ko="Send" data-label-en="Send">Send</button>
+            <button type="submit" data-label-ko="Submit" data-label-en="Submit">Submit</button>
           </div>
         </form>
       </section>
@@ -124,12 +130,12 @@
   </main>
 
   <footer class="page footer">
-    <div class="footer-grid">
-      <div>
-        <p class="eyebrow">Sizlon</p>
-        <p class="muted">Inquiry form</p>
+      <div class="footer-grid">
+        <div>
+          <p class="eyebrow">Sizlon</p>
+          <p class="muted">Input receipt surface</p>
+        </div>
       </div>
-    </div>
   </footer>
 
   <script src="/lang-switch.js"></script>
