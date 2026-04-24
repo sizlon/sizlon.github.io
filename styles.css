@@ -205,16 +205,18 @@ p {
 
 .principles {
   display: grid;
-  gap: 12px;
+  gap: 8px;
+  margin: 0;
+  padding-left: 20px;
+  list-style: disc;
 }
 
 .principle {
-  display: grid;
-  gap: 4px;
-  padding: 14px 16px;
-  border: 1px solid var(--border);
-  border-radius: 12px;
-  background: #fbfcff;
+  display: list-item;
+  padding: 0;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
 }
 
 .principle strong {
@@ -482,10 +484,6 @@ p {
   }
 
   .contact-item {
-    padding: 12px 14px;
-  }
-
-  .principle {
     padding: 12px 14px;
   }
 
