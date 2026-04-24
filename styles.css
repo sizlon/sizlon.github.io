@@ -181,6 +181,7 @@ figure {
   border: 1px solid var(--border);
   border-radius: 18px;
   overflow: hidden;
+  width: 100%;
   background:
     linear-gradient(180deg, rgba(238, 243, 255, 0.9), rgba(255, 255, 255, 0.96)),
     repeating-linear-gradient(
@@ -195,10 +196,9 @@ figure {
 
 .intro-visual img {
   display: block;
-  width: calc(100% + 8px);
-  max-width: calc(100% + 8px);
+  width: 100%;
+  max-width: 100%;
   height: auto;
-  margin: 0 -4px;
   border-radius: 12px;
 }
 
@@ -505,7 +505,7 @@ figure {
   }
 
   .intro-visual {
-    padding: 8px 6px;
+    padding: 6px 4px;
     border-radius: 14px;
   }
 
