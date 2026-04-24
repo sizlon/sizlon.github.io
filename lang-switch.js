@@ -1,4 +1,5 @@
 (function () {
+  const STORAGE_KEY = 'sizlon-site-lang';
   const buttons = Array.from(document.querySelectorAll('[data-lang-target]'));
   const panels = Array.from(document.querySelectorAll('[data-lang]'));
   const labels = Array.from(document.querySelectorAll('[data-label-ko][data-label-en]'));
@@ -6,6 +7,23 @@
   const backdrops = Array.from(document.querySelectorAll('[data-site-nav-backdrop]'));
   const navToggle = document.querySelector('[data-site-nav-toggle]');
   const mobileQuery = window.matchMedia('(max-width: 640px)');
+
+  function readStoredLang() {
+    try {
+      const stored = window.localStorage.getItem(STORAGE_KEY);
+      return stored === 'en' ? 'en' : 'ko';
+    } catch (_error) {
+      return 'ko';
+    }
+  }
+
+  function writeStoredLang(lang) {
+    try {
+      window.localStorage.setItem(STORAGE_KEY, lang);
+    } catch (_error) {
+      // Ignore storage failures and keep the current in-memory selection.
+    }
+  }
 
   function bindMediaChange(query, handler) {
     if (typeof query.addEventListener === 'function') {
@@ -49,6 +67,7 @@
     });
 
     document.documentElement.lang = lang === 'ko' ? 'ko' : 'en';
+    writeStoredLang(lang);
   }
 
   buttons.forEach((button) => {
@@ -95,5 +114,5 @@
   }
 
   setNavOpen(false);
-  activate('ko');
+  activate(readStoredLang());
 })();
