@@ -39,43 +39,21 @@
           해석과 판단은 외부에 있습니다.
         </p>
 
-        <form class="contact-form" action="/contact" method="post">
+        <div class="contact-form">
           <div class="form-grid">
-            <label class="field">
-              <span>이름</span>
-              <input type="text" name="name" autocomplete="name" required maxlength="60">
-            </label>
-
-            <label class="field">
-              <span>이메일</span>
-              <input type="email" name="email" autocomplete="email" required maxlength="120">
-            </label>
-
-            <label class="field">
-              <span>문의 유형</span>
-              <select name="category" required>
-                <option value="" selected disabled>선택</option>
-                <option value="general">일반 문의</option>
-                <option value="business">사업 문의</option>
-                <option value="press">공보 문의</option>
-              </select>
-            </label>
-
-            <label class="field field-full">
-              <span>내용</span>
-              <textarea name="message" rows="7" required maxlength="4000"></textarea>
-            </label>
-
-            <label class="honeypot" aria-hidden="true">
-              <span>웹사이트</span>
-              <input type="text" name="website" tabindex="-1" autocomplete="off">
-            </label>
+            <div class="field field-full">
+              <span>외부 접수 시스템</span>
+              <p>
+                문의 입력은 Google Forms로 전달됩니다.<br>
+                이 페이지는 접수 경계만 제공합니다.
+              </p>
+            </div>
           </div>
 
           <div class="form-actions">
-            <button type="submit" data-label-ko="제출" data-label-en="Submit">제출</button>
+            <a href="https://forms.gle/nYfxywddRc7boeRo6" target="_blank" rel="noreferrer" data-label-ko="접수" data-label-en="Submit">접수</a>
           </div>
-        </form>
+        </div>
       </section>
 
       <section class="lang-panel" data-lang="en" hidden>
@@ -86,43 +64,21 @@
           Interpretation and judgment are external.
         </p>
 
-        <form class="contact-form" action="/contact" method="post">
+        <div class="contact-form">
           <div class="form-grid">
-            <label class="field">
-              <span>Name</span>
-              <input type="text" name="name" autocomplete="name" required maxlength="60">
-            </label>
-
-            <label class="field">
-              <span>Email</span>
-              <input type="email" name="email" autocomplete="email" required maxlength="120">
-            </label>
-
-            <label class="field">
-              <span>Inquiry type</span>
-              <select name="category" required>
-                <option value="" selected disabled>Select</option>
-                <option value="general">General inquiry</option>
-                <option value="business">Business inquiry</option>
-                <option value="press">Public notice inquiry</option>
-              </select>
-            </label>
-
-            <label class="field field-full">
-              <span>Message</span>
-              <textarea name="message" rows="7" required maxlength="4000"></textarea>
-            </label>
-
-            <label class="honeypot" aria-hidden="true">
-              <span>Website</span>
-              <input type="text" name="website" tabindex="-1" autocomplete="off">
-            </label>
+            <div class="field field-full">
+              <span>External Intake System</span>
+              <p>
+                Inquiry input is routed to Google Forms.<br>
+                This page provides the intake boundary only.
+              </p>
+            </div>
           </div>
 
           <div class="form-actions">
-            <button type="submit" data-label-ko="Submit" data-label-en="Submit">Submit</button>
+            <a href="https://forms.gle/nYfxywddRc7boeRo6" target="_blank" rel="noreferrer" data-label-ko="Submit" data-label-en="Submit">Submit</a>
           </div>
-        </form>
+        </div>
       </section>
 
       <div class="site-nav-backdrop" data-site-nav-backdrop></div>
