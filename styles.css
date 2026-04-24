@@ -158,11 +158,26 @@ p {
   font-weight: 700;
 }
 
+.nav a.is-active,
+.nav a[aria-current="page"] {
+  background: var(--accent);
+  border-color: var(--accent);
+  color: #fff;
+}
+
 .nav a:hover,
 .nav a:focus-visible {
   text-decoration: none;
   border-color: #c2cdf3;
   background: #e2ebff;
+}
+
+.nav a.is-active:hover,
+.nav a.is-active:focus-visible,
+.nav a[aria-current="page"]:hover,
+.nav a[aria-current="page"]:focus-visible {
+  background: #102e62;
+  border-color: #102e62;
 }
 
 .rule {
