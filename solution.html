@@ -35,15 +35,15 @@
         <h1>솔루션</h1>
 
         <p class="solution-summary">
-          시즐론은 경계를 정의하고 고정하는 원칙 위에 규칙 기반 검증 운영을 구축합니다.<br>
-          공개되어 있는 기반은 프로토콜 계층이며, 실행과 목적별 엔진 계층은 별도의 운영 저장소에서 관리됩니다.
+          시즐론은 경계를 정의하고 고정하는 원칙 위에 규칙 기반 검증 솔루션을 구축합니다.<br>
+          공개되어 있는 것은 프로토콜 계층이며, 실행 런타임과 목적별 엔진 계층은 별도의 운영 저장소에서 관리됩니다.
         </p>
 
         <h2 class="section-title">Foundation</h2>
         <div class="solution-card">
           <p>
             시즐론의 규범적 책임성 기반은 <strong>boundary-protocol</strong>에 있습니다.<br>
-            이 저장소는 프로토콜 의미, 책임 모델, 검증 가능한 아티팩트 의미를 공개 기준점으로 문서화합니다.
+            이 공개 저장소는 프로토콜의 의미, 책임 모델, 검증 가능한 아티팩트의 의미를 기준점으로 문서화합니다.
           </p>
           <p>
             <a class="solution-link" href="https://github.com/sizlon/boundary-protocol" target="_blank" rel="noreferrer">boundary-protocol GitHub</a>
@@ -54,7 +54,7 @@
         <div class="solution-card">
           <p>
             실행 런타임은 <strong>boundary-executor</strong>로 구현됩니다.<br>
-            이 계층은 프로토콜 의미를 새로 정의하지 않고, 고정된 실행 계약과 단계 경계를 집행합니다.
+            이 계층은 프로토콜의 의미를 새로 정하지 않고, 고정된 실행 계약과 단계 경계를 집행합니다.
           </p>
         </div>
 
@@ -62,10 +62,11 @@
         <div class="solution-card">
           <p>
             현재 공식 통합 경로는 <strong>dpurix</strong>를 중심으로 구성됩니다.<br>
-            dpurix는 고정 명세에 대해 문서와 문서 패키지를 검증하는 엔진이며, executor는 최종 검증 산출물과 실행 경계를 소유합니다.
+            dpurix는 문서와 문서 패키지를 고정된 명세와 비교해 검증하는 엔진입니다.<br>
+            boundary-executor는 그 실행 경계와 최종 검증 산출물을 소유합니다.
           </p>
           <p class="solution-meta">
-            현재 공개 저장소로 직접 노출되는 것은 protocol layer이며, integrated execution stack은 운영 저장소에서 관리됩니다.
+            현재 외부에 직접 공개되어 있는 것은 protocol layer이며, integrated execution stack은 운영 저장소에서 관리됩니다.
           </p>
         </div>
 
@@ -73,7 +74,7 @@
         <div class="solution-grid">
           <div class="solution-card">
             <p>
-              <strong>code-boundary</strong>는 코드 구현 경계가 고정된 명세와 일치하는지 검증하는 방향입니다.
+              <strong>code-boundary</strong>는 구현된 코드가 고정된 경계 명세를 지키는지 검증하는 방향입니다.
             </p>
           </div>
           <div class="solution-card">
@@ -94,15 +95,15 @@
         <h1>Solution</h1>
 
         <p class="solution-summary">
-          Sizlon builds rule-based verification operations on principles that define and fix boundaries.<br>
-          The public layer is the protocol foundation, while execution and purpose-specific engine layers are maintained in separate operational repositories.
+          Sizlon builds a rule-based verification solution on principles that define and fix boundaries.<br>
+          The public layer is the protocol foundation, while the execution runtime and purpose-specific engine layers are maintained in separate operational repositories.
         </p>
 
         <h2 class="section-title">Foundation</h2>
         <div class="solution-card">
           <p>
             Sizlon's normative accountability foundation is grounded in <strong>boundary-protocol</strong>.<br>
-            That repository serves as the public reference for protocol meaning, responsibility model, and verifiable artifact meaning.
+            This public repository serves as the reference point for protocol meaning, responsibility model, and verifiable artifact meaning.
           </p>
           <p>
             <a class="solution-link" href="https://github.com/sizlon/boundary-protocol" target="_blank" rel="noreferrer">View boundary-protocol on GitHub</a>
@@ -121,10 +122,11 @@
         <div class="solution-card">
           <p>
             The current integrated path centers on <strong>dpurix</strong>.<br>
-            dpurix is the engine for verifying documents and document packages against fixed specifications, while the executor owns final verification artifacts and runtime boundaries.
+            dpurix is the engine that verifies documents and document packages against fixed specifications.<br>
+            boundary-executor owns the runtime boundary and the final verification artifacts.
           </p>
           <p class="solution-meta">
-            The protocol layer is the public repository surface. The integrated execution stack is maintained in operational repositories.
+            The protocol layer is the only directly public repository surface. The integrated execution stack is maintained in operational repositories.
           </p>
         </div>
 
