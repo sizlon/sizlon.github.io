@@ -35,19 +35,19 @@ const endpoint = site.contactFormEndpoint;
       >
         <label>
           <span>{c.labels.name}</span>
-          <input type="text" name="name" autocomplete="name" required />
+          <input type="text" name="name" autocomplete="name" maxlength="120" required />
         </label>
         <label>
           <span>{c.labels.email}</span>
-          <input type="email" name="email" autocomplete="email" required />
+          <input type="email" name="email" autocomplete="email" maxlength="180" required />
         </label>
         <label>
           <span>{c.labels.company}</span>
-          <input type="text" name="company" autocomplete="organization" />
+          <input type="text" name="company" autocomplete="organization" maxlength="160" />
         </label>
         <label>
           <span>{c.labels.message}</span>
-          <textarea name="message" rows="4"></textarea>
+          <textarea name="message" rows="4" maxlength="4000" required></textarea>
         </label>
 
         <div class="hp" aria-hidden="true">
@@ -55,6 +55,7 @@ const endpoint = site.contactFormEndpoint;
             <input type="text" name="company_url" tabindex="-1" autocomplete="off" />
           </label>
         </div>
+        <input type="hidden" name="elapsed" value="" data-elapsed />
 
         <button class="btn btn-primary" type="submit">{tr.common.requestDemo} <span class="arrow">&rarr;</span></button>
         <p class="note eyebrow">{c.note}</p>
@@ -74,6 +75,7 @@ const endpoint = site.contactFormEndpoint;
   // Progressive enhancement for the hidden-iframe form: show a "sending" state,
   // then swap the form for an inline confirmation when the iframe finishes the
   // POST. The honeypot is enforced server-side too; this just avoids a bot spin.
+  const loadedAt = Date.now();
   const form = document.querySelector<HTMLFormElement>('[data-contact-form]');
   const sent = document.querySelector<HTMLElement>('[data-contact-sent]');
   const frame = document.querySelector<HTMLIFrameElement>('iframe[name="sizlon-form-frame"]');
@@ -83,6 +85,9 @@ const endpoint = site.contactFormEndpoint;
       const hp = form.querySelector<HTMLInputElement>('[name="company_url"]');
       if (hp && hp.value) { e.preventDefault(); return; }
       if (!form.getAttribute('action')) { e.preventDefault(); return; } // endpoint not set yet
+      // Stamp elapsed ms since load; the script drops sub-3s (bot-fast) posts.
+      const elapsed = form.querySelector<HTMLInputElement>('[data-elapsed]');
+      if (elapsed) elapsed.value = String(Date.now() - loadedAt);
       pending = true;
       const btn = form.querySelector<HTMLButtonElement>('button[type="submit"]');
       if (btn) { btn.disabled = true; btn.textContent = form.dataset.sending || 'Sending…'; }
