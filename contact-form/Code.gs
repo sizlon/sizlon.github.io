@@ -46,6 +46,12 @@
  */
 
 const NOTIFY = 'hello@sizlon.io';
+const FROM_NAME = 'Sizlon 웹 문의'; // sender display name on the notification
+// Optional: a Gmail "send mail as" alias (e.g. 'noreply@sizlon.io') set up in
+// Gmail settings. When set, the notification is sent FROM it instead of the
+// owner's own address — which stops Gmail from labelling it "me". Leave empty
+// to send from the owner account (shows as "me" when NOTIFY is that account).
+const FROM_ALIAS = '';
 const HOURLY_CAP = 40; // max notification emails per hour; overflow is logged only
 
 function doPost(e) {
@@ -91,13 +97,16 @@ function doPost(e) {
                 scrub_(company), scrub_(message), over ? 'RATE-LIMITED' : '']);
 
   if (!over) {
-    MailApp.sendEmail({
+    const mail = {
       to: NOTIFY,
       replyTo: email,
+      name: FROM_NAME,
       subject: 'Sizlon 문의 — ' + name,
       body: '이름: ' + name + '\n이메일: ' + email +
             '\n회사: ' + company + '\n\n' + message,
-    });
+    };
+    if (FROM_ALIAS) mail.from = FROM_ALIAS;
+    MailApp.sendEmail(mail);
   }
   return ok();
 }
