@@ -1,5 +1,7 @@
 # Contact form
 
+> 한국어 문서: [README.ko.md](README.ko.md)
+
 Developer reference for the Sizlon marketing-site contact form: a static form
 that submits into the owner's own Google Workspace — no third-party form SaaS,
 so submissions never leave infrastructure Sizlon controls.
