@@ -1,0 +1,79 @@
+---
+import { site, nav, legalLinks } from '../config/site';
+import type { Lang } from '../i18n/content';
+import { t, localizePath } from '../i18n/utils';
+
+interface Props { lang: Lang }
+const { lang } = Astro.props;
+const tr = t(lang);
+---
+
+<footer class="footer band-ink">
+  <div class="wrap footer-inner">
+    <div class="col brandcol">
+      <a class="brand" href={localizePath('/', lang)}>sizlon</a>
+      <p class="tag">{tr.footer.tagline}</p>
+    </div>
+
+    <nav class="col" aria-label="Site">
+      <span class="eyebrow">{tr.footer.site}</span>
+      {nav.map((item) => <a href={localizePath(item.href, lang)}>{tr.nav[item.key]}</a>)}
+    </nav>
+
+    <nav class="col" aria-label="Legal">
+      <span class="eyebrow">{tr.footer.legal}</span>
+      {legalLinks.map((item) => <a href={localizePath(item.href, lang)}>{tr.legalNav[item.key]}</a>)}
+    </nav>
+
+    <div class="col">
+      <span class="eyebrow">{tr.footer.getInTouch}</span>
+      <a href={localizePath('/contact', lang)}>{tr.common.requestDemo}</a>
+      <a href={`mailto:${site.contactEmail}`}>{site.contactEmail}</a>
+    </div>
+  </div>
+
+  <div class="wrap baseline">
+    <span>&copy; {new Date().getFullYear()} Sizlon</span>
+    <span class="note">{tr.footer.baseline}</span>
+  </div>
+</footer>
+
+<style>
+  .footer { border-top: 1px solid var(--hairline-dark); padding-top: var(--section-y); }
+  .footer-inner {
+    display: grid;
+    grid-template-columns: 1.6fr 1fr 1fr 1.2fr;
+    gap: 2rem;
+    padding-bottom: 3rem;
+  }
+  .col { display: flex; flex-direction: column; gap: 0.6rem; align-items: flex-start; }
+  .col a {
+    text-decoration: none;
+    color: var(--slate-on-dark);
+    font-size: var(--step--1);
+  }
+  .col a:hover { color: var(--color-mist); }
+  .brand {
+    font-family: var(--font-display);
+    font-weight: 700;
+    font-size: var(--step-1);
+    letter-spacing: -0.03em;
+    color: var(--color-mist);
+    text-decoration: none;
+  }
+  .tag { color: var(--slate-on-dark); font-size: var(--step--1); }
+  .baseline {
+    display: flex;
+    justify-content: space-between;
+    gap: 1rem;
+    flex-wrap: wrap;
+    padding-block: 1.5rem;
+    border-top: 1px solid var(--hairline-dark);
+    font-family: var(--font-mono);
+    font-size: var(--step--1);
+    color: var(--slate-on-dark);
+  }
+  @media (max-width: 720px) {
+    .footer-inner { grid-template-columns: 1fr 1fr; }
+  }
+</style>

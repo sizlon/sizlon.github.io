@@ -1,0 +1,60 @@
+---
+import Base from '../layouts/Base.astro';
+import { site } from '../config/site';
+import type { Lang } from '../i18n/content';
+import { t } from '../i18n/utils';
+// Form backend is an open scaffold item — wire to a static form service or
+// scheduling embed later. For now it posts nowhere and the email is the fallback.
+
+interface Props { lang: Lang }
+const { lang } = Astro.props;
+const tr = t(lang);
+const c = tr.contact;
+---
+
+<Base title={c.title} description={c.description} lang={lang}>
+  <section class="section wrap grid">
+    <div class="copy">
+      <span class="eyebrow">{c.eyebrow}</span>
+      <h1>{c.h1}</h1>
+      <p class="lede">{c.lede}</p>
+      <p class="alt">{c.altPrefix} <a href={`mailto:${site.contactEmail}`}>{site.contactEmail}</a></p>
+    </div>
+
+    <form class="form" method="post" action="#">
+      <label>
+        <span>{c.labels.name}</span>
+        <input type="text" name="name" autocomplete="name" required />
+      </label>
+      <label>
+        <span>{c.labels.email}</span>
+        <input type="email" name="email" autocomplete="email" required />
+      </label>
+      <label>
+        <span>{c.labels.company}</span>
+        <input type="text" name="company" autocomplete="organization" />
+      </label>
+      <label>
+        <span>{c.labels.message}</span>
+        <textarea name="message" rows="4"></textarea>
+      </label>
+      <button class="btn btn-primary" type="submit">{tr.common.requestDemo} <span class="arrow">&rarr;</span></button>
+      <p class="note eyebrow">{c.note}</p>
+    </form>
+  </section>
+</Base>
+
+<style>
+  .grid { display: grid; grid-template-columns: 1fr 1fr; gap: clamp(2rem, 1rem + 4vw, 4rem); align-items: start; }
+  .copy { display: flex; flex-direction: column; gap: 1rem; max-width: 46ch; }
+  .alt { color: var(--color-slate); }
+  .alt a { color: var(--color-ink); text-decoration: underline; text-decoration-color: var(--color-recovered); text-underline-offset: 3px; }
+  .form { display: flex; flex-direction: column; gap: 1rem; padding: 1.75rem; border: 1px solid var(--hairline); border-radius: var(--radius); background: var(--color-mist); }
+  label { display: flex; flex-direction: column; gap: 0.4rem; }
+  label span { font-family: var(--font-mono); font-size: var(--step--1); color: var(--color-slate); }
+  input, textarea { font-family: var(--font-body); font-size: var(--step-0); color: var(--color-ink); background: var(--color-vellum); border: 1px solid var(--hairline); border-radius: var(--radius); padding: 0.7rem 0.85rem; }
+  input:focus, textarea:focus { outline: 2px solid var(--color-recovered); outline-offset: 1px; border-color: transparent; }
+  .form .btn { align-self: flex-start; }
+  .note { margin-top: 0.25rem; }
+  @media (max-width: 760px) { .grid { grid-template-columns: 1fr; } }
+</style>

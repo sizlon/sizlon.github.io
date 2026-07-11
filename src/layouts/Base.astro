@@ -1,0 +1,63 @@
+---
+// Self-hosted variable fonts (no third-party runtime calls — matches the
+// product's offline ethos). Family names used in global.css.
+import '@fontsource-variable/bricolage-grotesque';
+import '@fontsource-variable/hanken-grotesk';
+import '@fontsource-variable/jetbrains-mono';
+// Korean (Hangul) coverage — Latin display/body fonts are Latin-only, so
+// Pretendard is the per-glyph Hangul fallback in the font stacks.
+import '@fontsource/pretendard/400.css';
+import '@fontsource/pretendard/500.css';
+import '@fontsource/pretendard/600.css';
+import '@fontsource/pretendard/700.css';
+import '../styles/global.css';
+import Nav from '../components/Nav.astro';
+import Footer from '../components/Footer.astro';
+import type { Lang } from '../i18n/content';
+import { t } from '../i18n/utils';
+
+interface Props {
+  title: string;
+  description: string;
+  lang?: Lang;
+}
+const { title, description, lang = 'en' } = Astro.props;
+const fullTitle = title === 'Sizlon' ? title : `${title} — Sizlon`;
+const tr = t(lang);
+---
+
+<!doctype html>
+<html lang={lang}>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <title>{fullTitle}</title>
+    <meta name="description" content={description} />
+    <meta property="og:title" content={fullTitle} />
+    <meta property="og:description" content={description} />
+    <meta property="og:type" content="website" />
+  </head>
+  <body>
+    <a class="skip" href="#main">{tr.common.skip}</a>
+    <Nav lang={lang} />
+    <main id="main">
+      <slot />
+    </main>
+    <Footer lang={lang} />
+
+    <style>
+      .skip {
+        position: absolute;
+        left: -9999px;
+        top: 0;
+        background: var(--color-recovered);
+        color: var(--color-ink);
+        padding: 0.6rem 1rem;
+        z-index: 20;
+        border-radius: 0 0 var(--radius) 0;
+      }
+      .skip:focus { left: 0; }
+    </style>
+  </body>
+</html>

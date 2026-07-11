@@ -1,0 +1,161 @@
+/*
+ * Sizlon brand tokens — derived from docs/platform/marketing/DESIGN_DIRECTION.md.
+ * Brand-level (shared by every solution); do not hard-code colors/fonts in pages.
+ */
+:root {
+  /* Color — Fault→Recovered is the self-healing brand grammar */
+  --color-vellum: #e8eaea; /* primary background — cool engineering vellum, not cream */
+  --color-ink: #14191f; /* text; hero/signature dark band — blue-charcoal, not pure black */
+  --color-slate: #5a6470; /* secondary text, hairlines */
+  --color-recovered: #22c0a0; /* signature accent — "recovered/healthy" */
+  --color-fault: #c8703d; /* "broken/degraded" — used only in the heal moment */
+  --color-mist: #f4f5f4; /* cards on dark, hairlines */
+
+  --ink-on-dark: var(--color-mist);
+  --slate-on-dark: #9aa3ad;
+  --hairline: color-mix(in srgb, var(--color-slate) 28%, transparent);
+  --hairline-dark: color-mix(in srgb, var(--color-mist) 16%, transparent);
+
+  /* Type — Latin face first, then Pretendard for per-glyph Hangul fallback */
+  --font-display: 'Bricolage Grotesque Variable', 'Pretendard', system-ui, sans-serif;
+  --font-body: 'Hanken Grotesk Variable', 'Pretendard', system-ui, sans-serif;
+  --font-mono: 'JetBrains Mono Variable', 'Pretendard', ui-monospace, monospace;
+
+  /* Type scale (fluid) */
+  --step--1: clamp(0.83rem, 0.79rem + 0.2vw, 0.94rem);
+  --step-0: clamp(1rem, 0.95rem + 0.25vw, 1.13rem);
+  --step-1: clamp(1.2rem, 1.1rem + 0.5vw, 1.5rem);
+  --step-2: clamp(1.5rem, 1.3rem + 1vw, 2rem);
+  --step-3: clamp(2rem, 1.6rem + 2vw, 3rem);
+  --step-4: clamp(2.6rem, 1.9rem + 3.4vw, 4.5rem);
+
+  /* Space + structure */
+  --measure: 68ch;
+  --gutter: clamp(1.25rem, 0.8rem + 2vw, 2.5rem);
+  --section-y: clamp(4rem, 3rem + 5vw, 7.5rem);
+  --radius: 4px;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html {
+  -webkit-text-size-adjust: 100%;
+  scroll-behavior: smooth;
+}
+
+body {
+  margin: 0;
+  background: var(--color-vellum);
+  color: var(--color-ink);
+  font-family: var(--font-body);
+  font-size: var(--step-0);
+  line-height: 1.55;
+  font-synthesis: none;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+h1,
+h2,
+h3 {
+  font-family: var(--font-display);
+  font-weight: 600;
+  line-height: 1.04;
+  letter-spacing: -0.02em;
+  margin: 0;
+  text-wrap: balance;
+}
+
+h1 { font-size: var(--step-4); }
+h2 { font-size: var(--step-3); }
+h3 { font-size: var(--step-1); }
+
+p { margin: 0; max-width: var(--measure); }
+
+a { color: inherit; }
+
+/* Mono is the data/utility voice: eyebrows, labels, strategy/field names — never headlines */
+.eyebrow {
+  font-family: var(--font-mono);
+  font-size: var(--step--1);
+  font-weight: 500;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--color-slate);
+}
+
+.wrap {
+  width: min(100% - 2 * var(--gutter), 1200px);
+  margin-inline: auto;
+}
+
+.section { padding-block: var(--section-y); }
+
+.lede {
+  font-size: var(--step-1);
+  color: color-mix(in srgb, var(--color-ink) 78%, var(--color-vellum));
+  max-width: 54ch;
+}
+
+/* Buttons */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5em;
+  font-family: var(--font-body);
+  font-size: var(--step-0);
+  font-weight: 600;
+  text-decoration: none;
+  padding: 0.7em 1.2em;
+  border-radius: var(--radius);
+  border: 1px solid transparent;
+  transition: transform 0.15s ease, background 0.15s ease, border-color 0.15s ease;
+}
+.btn-primary {
+  background: var(--color-recovered);
+  color: var(--color-ink);
+}
+.btn-primary:hover { transform: translateY(-1px); }
+.btn-ghost {
+  border-color: var(--hairline);
+  color: var(--color-ink);
+}
+.btn-ghost:hover { border-color: var(--color-slate); }
+
+.btn .arrow { transition: transform 0.15s ease; }
+.btn:hover .arrow { transform: translateX(3px); }
+
+/* Dark band (hero, security, footer) */
+.band-ink {
+  background: var(--color-ink);
+  color: var(--ink-on-dark);
+}
+.band-ink h1,
+.band-ink h2,
+.band-ink h3 { color: var(--color-mist); }
+.band-ink .eyebrow { color: var(--slate-on-dark); }
+.band-ink .btn-ghost {
+  border-color: var(--hairline-dark);
+  color: var(--color-mist);
+}
+
+:where(a, button, .btn):focus-visible {
+  outline: 2px solid var(--color-recovered);
+  outline-offset: 3px;
+  border-radius: 2px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+  }
+}

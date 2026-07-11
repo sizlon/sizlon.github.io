@@ -1,0 +1,89 @@
+---
+import Base from '../layouts/Base.astro';
+import HealSignature from '../components/HealSignature.astro';
+import SolutionCard from '../components/SolutionCard.astro';
+import { solutions } from '../config/site';
+import type { Lang } from '../i18n/content';
+import { t, localizePath } from '../i18n/utils';
+
+interface Props { lang: Lang }
+const { lang } = Astro.props;
+const tr = t(lang);
+const c = tr.home;
+---
+
+<Base title={c.title} description={c.description} lang={lang}>
+  <section class="hero band-ink">
+    <div class="wrap hero-grid">
+      <div class="hero-copy">
+        <span class="eyebrow">{c.eyebrow}</span>
+        <h1>{c.h1}</h1>
+        <p class="lede">{c.lede}</p>
+        <div class="cta-row">
+          <a class="btn btn-primary" href={localizePath('/contact', lang)}>{tr.common.requestDemo} <span class="arrow">&rarr;</span></a>
+          <a class="btn btn-ghost" href={localizePath('/how-it-works', lang)}>{tr.common.howItWorks}</a>
+        </div>
+        <p class="trust eyebrow">{c.trust}</p>
+      </div>
+      <div class="hero-sig">
+        <HealSignature lang={lang} />
+      </div>
+    </div>
+  </section>
+
+  <section class="section wrap">
+    <span class="eyebrow">{c.problemEyebrow}</span>
+    <h2 class="thesis">{c.thesis}</h2>
+    <p class="lede thesis-sub">{c.thesisSub}</p>
+  </section>
+
+  <section class="section wrap">
+    <ul class="diffs">
+      {c.diffs.map((d) => (
+        <li class="diff">
+          <span class="eyebrow">{d.stage}</span>
+          <p>{d.text}</p>
+        </li>
+      ))}
+    </ul>
+  </section>
+
+  <section class="section wrap">
+    <div class="sol-head">
+      <span class="eyebrow">{c.solEyebrow}</span>
+      <h2>{c.solH2}</h2>
+      <p class="lede">{c.solLede}</p>
+    </div>
+    <div class="sol-grid">
+      {solutions.map((s) => <SolutionCard solution={s} lang={lang} />)}
+    </div>
+  </section>
+
+  <section class="cta-band band-ink">
+    <div class="wrap cta-inner">
+      <h2>{c.closingH2}</h2>
+      <a class="btn btn-primary" href={localizePath('/contact', lang)}>{tr.common.requestDemo} <span class="arrow">&rarr;</span></a>
+    </div>
+  </section>
+</Base>
+
+<style>
+  .hero { padding-block: clamp(3.5rem, 2rem + 8vw, 7rem); }
+  .hero-grid { display: grid; grid-template-columns: 1.1fr 0.9fr; gap: clamp(2rem, 1rem + 4vw, 4rem); align-items: center; }
+  .hero-copy { display: flex; flex-direction: column; gap: 1.25rem; align-items: flex-start; }
+  .cta-row { display: flex; gap: 0.75rem; flex-wrap: wrap; margin-top: 0.5rem; }
+  .trust { margin-top: 0.5rem; }
+  .thesis { max-width: 20ch; }
+  .thesis-sub { margin-top: 1.5rem; }
+  .diffs { list-style: none; padding: 0; margin: 0; display: grid; grid-template-columns: repeat(2, 1fr); gap: 1px; background: var(--hairline); border: 1px solid var(--hairline); border-radius: var(--radius); overflow: hidden; }
+  .diff { background: var(--color-vellum); padding: 1.75rem; display: flex; flex-direction: column; gap: 0.6rem; }
+  .sol-head { display: flex; flex-direction: column; gap: 0.75rem; margin-bottom: 2rem; max-width: var(--measure); }
+  .sol-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 1.25rem; }
+  .cta-band { padding-block: var(--section-y); }
+  .cta-inner { display: flex; justify-content: space-between; align-items: center; gap: 2rem; flex-wrap: wrap; }
+  @media (max-width: 860px) {
+    .hero-grid { grid-template-columns: 1fr; }
+    .hero-sig { order: -1; }
+    .diffs { grid-template-columns: 1fr; }
+  }
+</style>

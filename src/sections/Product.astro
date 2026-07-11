@@ -1,0 +1,64 @@
+---
+import Base from '../layouts/Base.astro';
+import StrategyLadder from '../components/StrategyLadder.astro';
+import type { Lang } from '../i18n/content';
+import { t, localizePath } from '../i18n/utils';
+
+interface Props { lang: Lang }
+const { lang } = Astro.props;
+const tr = t(lang);
+const c = tr.product;
+---
+
+<Base title={c.title} description={c.description} lang={lang}>
+  <section class="head section wrap">
+    <span class="eyebrow">{c.eyebrow}</span>
+    <h1>{c.h1}</h1>
+    <p class="lede">{c.lede}</p>
+    <div class="cta-row">
+      <a class="btn btn-primary" href={localizePath('/contact', lang)}>{tr.common.requestDemo} <span class="arrow">&rarr;</span></a>
+      <a class="btn btn-ghost" href={localizePath('/how-it-works', lang)}>{c.ctaHeal}</a>
+    </div>
+  </section>
+
+  <section class="section wrap">
+    <ul class="caps">
+      {c.caps.map((cap) => (
+        <li class="cap">
+          <h3>{cap.name}</h3>
+          <p>{cap.text}</p>
+        </li>
+      ))}
+    </ul>
+  </section>
+
+  <section class="section wrap ladder-section">
+    <div class="ladder-copy">
+      <span class="eyebrow">{c.ladderEyebrow}</span>
+      <h2>{c.ladderH2}</h2>
+      <p class="lede">{c.ladderLede}</p>
+      <a class="btn btn-ghost" href={localizePath('/how-it-works', lang)}>{c.ladderBtn}</a>
+    </div>
+    <StrategyLadder lang={lang} />
+  </section>
+
+  <section class="section wrap model">
+    <span class="eyebrow">{c.modelEyebrow}</span>
+    <p class="model-note">
+      {c.modelNote} <a href={localizePath('/editions', lang)}>{c.compareEditions} &rarr;</a>
+    </p>
+  </section>
+</Base>
+
+<style>
+  .head { display: flex; flex-direction: column; gap: 1rem; max-width: var(--measure); padding-bottom: 0; }
+  .cta-row { display: flex; gap: 0.75rem; flex-wrap: wrap; margin-top: 0.5rem; }
+  .caps { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 1.25rem; }
+  .cap { border: 1px solid var(--hairline); border-radius: var(--radius); padding: 1.5rem; background: var(--color-mist); display: flex; flex-direction: column; gap: 0.5rem; }
+  .ladder-section { display: grid; grid-template-columns: 1fr 1fr; gap: clamp(2rem, 1rem + 4vw, 4rem); align-items: center; }
+  .ladder-copy { display: flex; flex-direction: column; gap: 1rem; align-items: flex-start; }
+  .model { max-width: var(--measure); }
+  .model-note { font-size: var(--step-1); }
+  .model-note a { color: var(--color-ink); font-weight: 600; text-decoration: underline; text-decoration-color: var(--color-recovered); text-underline-offset: 3px; white-space: nowrap; }
+  @media (max-width: 760px) { .ladder-section { grid-template-columns: 1fr; } }
+</style>
