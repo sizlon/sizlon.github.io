@@ -1,31 +1,37 @@
-# Astro Starter Kit: Minimal
+# sizlon.io — marketing site
 
-```sh
-npm create astro@latest -- --template minimal
-```
+Public Sizlon marketing site. Static [Astro](https://astro.build) output,
+bilingual (English default + Korean), deployed to GitHub Pages at
+[sizlon.io](https://sizlon.io).
 
-> 🧑‍🚀 **Seasoned astronaut?** Delete this file. Have fun!
+Presents Sizlon's products under one umbrella — *AI proposes, a deterministic
+layer verifies* — with a page per product (Crawler Platform, Miriboa) and a
+working contact form that submits into Sizlon's own Google Workspace.
 
-## 🚀 Project Structure
-
-Inside of your Astro project, you'll see the following folders and files:
+## Structure
 
 ```text
-/
-├── public/
-├── src/
-│   └── pages/
-│       └── index.astro
-└── package.json
+src/
+├── pages/        # routes (en at root, ko under /ko); thin — render a section
+├── sections/     # page bodies (Home, Product, Miriboa, Contact, Legal, …)
+├── components/   # Nav, Footer, SolutionCard, StrategyLadder, …
+├── layouts/      # Base.astro (html shell + meta)
+├── config/       # site.ts — nav, product list, endpoints, keys
+├── i18n/         # content.ts (en + ko copy) + utils
+└── styles/       # global.css
+contact-form/     # contact-form backend (Google Apps Script) + docs
 ```
 
-Astro looks for `.astro` or `.md` files in the `src/pages/` directory. Each page is exposed as a route based on its file name.
+Content lives in `src/i18n/content.ts` so markup stays language-free; pages read
+`content[lang]`. See `AGENTS.md` for dev-server notes.
 
-There's nothing special about `src/components/`, but that's where we like to put any Astro/React/Vue/Svelte/Preact components.
+## Documentation
 
-Any static assets, like images, can be placed in the `public/` directory.
+- **[Contact form](contact-form/README.md)** ([한국어](contact-form/README.ko.md)) —
+  architecture, configuration, the Apps Script backend, Cloudflare Turnstile
+  setup, and troubleshooting for the contact form.
 
-## 🧞 Commands
+## Commands
 
 All commands are run from the root of the project, from a terminal:
 
@@ -36,8 +42,3 @@ All commands are run from the root of the project, from a terminal:
 | `npm run build`           | Build your production site to `./dist/`          |
 | `npm run preview`         | Preview your build locally, before deploying     |
 | `npm run astro ...`       | Run CLI commands like `astro add`, `astro check` |
-| `npm run astro -- --help` | Get help using the Astro CLI                     |
-
-## 👀 Want to learn more?
-
-Feel free to check [our documentation](https://docs.astro.build) or jump into our [Discord server](https://astro.build/chat).
