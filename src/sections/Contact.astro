@@ -123,6 +123,9 @@ const turnstileKey = site.turnstileSiteKey;
 
 <style>
   .grid { display: grid; grid-template-columns: 1fr 1fr; gap: clamp(2rem, 1rem + 4vw, 4rem); align-items: start; }
+  /* The `display` rules below beat the UA [hidden] rule, so restore it: an
+     element with the hidden attribute must stay hidden until JS clears it. */
+  [hidden] { display: none !important; }
   .copy { display: flex; flex-direction: column; gap: 1rem; max-width: 46ch; }
   .alt { color: var(--color-slate); }
   .alt a { color: var(--color-ink); text-decoration: underline; text-decoration-color: var(--color-recovered); text-underline-offset: 3px; }
