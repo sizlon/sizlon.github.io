@@ -15,7 +15,7 @@ export function logicalPath(url: URL): string {
   return stripped === '' ? '/' : stripped;
 }
 
-/** Map a logical path to its localized URL ('/product' + ko → '/ko/product'). */
+/** Map a logical path to its localized URL ('/products' + ko → '/ko/products'). */
 export function localizePath(path: string, lang: Lang): string {
   if (lang === defaultLang) return path;
   return path === '/' ? '/ko/' : `/ko${path}`;

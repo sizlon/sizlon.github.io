@@ -5,31 +5,34 @@
  */
 export const site = {
   name: 'Sizlon',
-  tagline: 'Self-healing data systems',
+  tagline: 'AI proposes, a deterministic layer verifies',
   portalLoginUrl: 'https://portal.sizlon.io',
   contactEmail: 'hello@sizlon.io',
 };
 
 // Nav/legal hrefs and keys are language-neutral; labels come from content[lang].
 export const nav = [
-  { href: '/solutions', key: 'Solutions' },
+  { href: '/products', key: 'Products' },
   { href: '/how-it-works', key: 'How it works' },
   { href: '/security', key: 'Security' },
   { href: '/editions', key: 'Editions' },
   { href: '/contact', key: 'Contact' },
 ] as const;
 
+// The product line. `categoryKey` labels the domain (product-neutral — the
+// company umbrella is the shared "propose then verify" DNA, not one lifecycle).
 export type Solution = {
-  slug: 'crawler-platform' | 'verify';
+  slug: 'crawler-platform' | 'miriboa' | 'verify';
   name: string; // product name — same in every locale
-  stageKey: 'acquire' | 'trust';
+  categoryKey: 'extraction' | 'verification' | 'quality';
   status: 'live' | 'next' | 'roadmap';
   href?: string;
 };
 
 export const solutions: Solution[] = [
-  { slug: 'crawler-platform', name: 'Crawler Platform', stageKey: 'acquire', status: 'live', href: '/product' },
-  { slug: 'verify', name: 'Verify', stageKey: 'trust', status: 'next' },
+  { slug: 'crawler-platform', name: 'Crawler Platform', categoryKey: 'extraction', status: 'live', href: '/products/crawler-platform' },
+  { slug: 'miriboa', name: 'Miriboa', categoryKey: 'verification', status: 'next', href: '/products/miriboa' },
+  { slug: 'verify', name: 'Verify', categoryKey: 'quality', status: 'roadmap' },
 ];
 
 export const legalLinks = [

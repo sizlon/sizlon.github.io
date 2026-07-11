@@ -7,7 +7,7 @@ interface Props { solution: Solution; lang: Lang }
 const { solution, lang } = Astro.props;
 const tr = t(lang);
 const statusLabel = tr.common.solutionStatus[solution.status];
-const stageLabel = tr.common.stages[solution.stageKey];
+const categoryLabel = tr.common.categories[solution.categoryKey];
 const blurb = tr.common.solutionBlurbs[solution.slug];
 const href = solution.href ? localizePath(solution.href, lang) : undefined;
 const Tag = href ? 'a' : 'div';
@@ -15,7 +15,7 @@ const Tag = href ? 'a' : 'div';
 
 <Tag class:list={['card', `is-${solution.status}`]} href={href}>
   <div class="top">
-    <span class="eyebrow">{stageLabel}</span>
+    <span class="eyebrow">{categoryLabel}</span>
     <span class="status">{statusLabel}</span>
   </div>
   <h3>{solution.name}</h3>
