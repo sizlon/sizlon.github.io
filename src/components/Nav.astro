@@ -34,8 +34,58 @@ const homeHref = localizePath('/', lang);
         <a href={localizePath(logical, 'ko')} aria-current={lang === 'ko' ? 'true' : undefined}>KO</a>
       </span>
     </div>
+
+    <details class="mnav" data-mobile-nav>
+      <summary class="hamburger" aria-label={tr.common.menu} title={tr.common.menu}>
+        <span class="bar"></span>
+        <span class="bar"></span>
+        <span class="bar"></span>
+      </summary>
+
+      <div class="panel">
+        <nav class="m-links" aria-label="Primary">
+          {nav.map((item) => (
+            <a
+              href={localizePath(item.href, lang)}
+              class="m-link"
+              aria-current={logical === item.href ? 'page' : undefined}
+            >
+              {tr.nav[item.key]}
+            </a>
+          ))}
+        </nav>
+
+        <div class="m-divider"></div>
+
+        <a class="m-portal" href={site.portalLoginUrl} rel="noopener">{tr.common.portalLogin} &rarr;</a>
+        <span class="m-lang" aria-label="Language">
+          <a href={localizePath(logical, 'en')} aria-current={lang === 'en' ? 'true' : undefined}>EN</a>
+          <span class="sep">/</span>
+          <a href={localizePath(logical, 'ko')} aria-current={lang === 'ko' ? 'true' : undefined}>KO</a>
+        </span>
+      </div>
+    </details>
   </div>
 </header>
+
+<script>
+  // Progressive enhancement: <details> already opens/closes without JS.
+  // This adds Escape-to-close, outside-click-to-close, and auto-close when
+  // the viewport grows past the mobile breakpoint.
+  const details = document.querySelector<HTMLDetailsElement>('[data-mobile-nav]');
+  if (details) {
+    const close = () => details.removeAttribute('open');
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape' && details.open) close();
+    });
+    document.addEventListener('click', (e) => {
+      if (details.open && !details.contains(e.target as Node)) close();
+    });
+    window.matchMedia('(min-width: 721px)').addEventListener('change', (e) => {
+      if (e.matches) close();
+    });
+  }
+</script>
 
 <style>
   .nav {
@@ -96,8 +146,73 @@ const homeHref = localizePath('/', lang);
   .lang a[aria-current] { color: var(--color-mist); }
   .lang .sep { opacity: 0.5; margin: 0 0.15em; }
 
+  /* Mobile disclosure nav — hidden on desktop. */
+  .mnav { display: none; }
+  .hamburger {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 5px;
+    width: 44px;
+    height: 44px;
+    padding: 0 10px;
+    cursor: pointer;
+    border-radius: var(--radius);
+  }
+  .hamburger::-webkit-details-marker { display: none; }
+  .hamburger:focus-visible { outline: 2px solid var(--color-recovered); outline-offset: 2px; }
+  .hamburger .bar {
+    height: 2px;
+    width: 100%;
+    background: var(--color-mist);
+    transition: transform 0.2s ease, opacity 0.2s ease;
+  }
+  .mnav[open] .hamburger .bar:nth-child(1) { transform: translateY(7px) rotate(45deg); }
+  .mnav[open] .hamburger .bar:nth-child(2) { opacity: 0; }
+  .mnav[open] .hamburger .bar:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
+
+  .panel {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    background: var(--color-ink);
+    border-bottom: 1px solid var(--hairline-dark);
+    padding: 0.5rem var(--gutter) 1.5rem;
+    display: flex;
+    flex-direction: column;
+    box-shadow: 0 12px 24px -12px rgba(0, 0, 0, 0.5);
+  }
+  .m-links { display: flex; flex-direction: column; }
+  .m-link {
+    font-size: var(--step-1);
+    text-decoration: none;
+    color: var(--color-mist);
+    padding: 0.85rem 0;
+    border-bottom: 1px solid var(--hairline-dark);
+  }
+  .m-link[aria-current='page'] { color: var(--color-recovered); }
+  .m-divider { height: 0.5rem; }
+  .m-portal {
+    font-family: var(--font-mono);
+    font-size: var(--step-0);
+    text-decoration: none;
+    color: var(--color-recovered);
+    padding: 0.6rem 0;
+  }
+  .m-lang {
+    font-family: var(--font-mono);
+    font-size: var(--step--1);
+    color: var(--slate-on-dark);
+    padding-top: 0.4rem;
+  }
+  .m-lang a { color: var(--slate-on-dark); text-decoration: none; }
+  .m-lang a[aria-current] { color: var(--color-mist); }
+  .m-lang .sep { opacity: 0.5; margin: 0 0.3em; }
+
   @media (max-width: 720px) {
-    .links { display: none; }
-    .nav-inner { gap: 1rem; }
+    .links, .utility { display: none; }
+    .mnav { display: block; margin-inline-start: auto; }
   }
 </style>
