@@ -141,6 +141,7 @@ export const content = {
       sending: 'Sending…',
       sentTitle: 'Thanks — we have your message.',
       sentBody: 'We reply within two business days. For anything urgent, email hello@sizlon.io.',
+      verifyNeeded: 'Please wait for the verification to finish, then try again.',
     },
     solutions: {
       title: 'Products',
@@ -370,6 +371,7 @@ export const content = {
       sending: '보내는 중…',
       sentTitle: '감사합니다 — 문의가 접수됐습니다.',
       sentBody: '영업일 2일 내에 회신드립니다. 급한 건은 hello@sizlon.io로 메일 주세요.',
+      verifyNeeded: '확인이 끝날 때까지 잠시 기다린 뒤 다시 시도해 주세요.',
     },
     solutions: {
       title: '제품',

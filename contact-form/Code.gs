@@ -12,6 +12,10 @@
  *   4. Deploy -> New deployment -> Web app.
  *        Execute as: Me   |   Who has access: Anyone
  *      Copy the /exec URL into site.contactFormEndpoint.
+ *   5. (Turnstile, optional) Create a Cloudflare Turnstile widget for sizlon.io.
+ *      Put the SITE key in site.turnstileSiteKey (src/config/site.ts) and the
+ *      SECRET key in Project Settings -> Script properties as TURNSTILE_SECRET,
+ *      then redeploy. Both must be set for verification to take effect.
  *
  * REDEPLOY (after editing this code — keeps the SAME /exec URL)
  *   Deploy -> Manage deployments -> edit (pencil) -> Version: New version -> Deploy.
@@ -23,16 +27,20 @@
  *      submit is bot-fast and is dropped. Absent (no-JS) is allowed to pass.
  *   3. Validation — required name/email/message, email format.
  *   4. Length caps — reject oversized payloads.
- *   5. Hourly cap — a global circuit breaker so a flood cannot drain the Gmail
+ *   5. Turnstile — verify the Cloudflare token server-side. Enforced only when a
+ *      TURNSTILE_SECRET script property is set (Project Settings -> Script
+ *      properties); until then the check is skipped. Pair with turnstileSiteKey
+ *      in src/config/site.ts (the client widget).
+ *   6. Hourly cap — a global circuit breaker so a flood cannot drain the Gmail
  *      send quota and block legitimate mail (Apps Script gives doPost no client
  *      IP, so per-IP limiting is not possible — this is a total-volume guard).
- *   5. Formula-injection scrub — values starting with = + - @ get a leading
+ *   7. Formula-injection scrub — values starting with = + - @ get a leading
  *      quote so opening the Sheet cannot execute them (CSV/Sheets injection).
  *   Dropped requests still return "ok" so bots do not learn they were filtered.
  *
- * NOTE: the min-fill-time and length caps are paired with the front-end form
- * (src/sections/Contact.astro). The two are independently safe to deploy — an
- * extra/absent `elapsed` field is simply ignored on the side that lacks it.
+ * NOTE: the min-fill-time, length caps, and Turnstile are paired with the
+ * front-end form (src/sections/Contact.astro). Each side is independently safe
+ * to deploy — a field absent on one side is simply ignored on the other.
  */
 
 const NOTIFY = 'hello@sizlon.io';
@@ -53,13 +61,16 @@ function doPost(e) {
   if (name.length > 200 || email.length > 200 ||
       company.length > 200 || message.length > 5000) return ok(); // 4. length caps
 
-  const cache = CacheService.getScriptCache(); // 5. hourly cap
+  const secret = PropertiesService.getScriptProperties().getProperty('TURNSTILE_SECRET');
+  if (secret && !turnstileOk_(secret, p['cf-turnstile-response'])) return ok(); // 5. Turnstile
+
+  const cache = CacheService.getScriptCache(); // 6. hourly cap
   const key = 'cnt_' + Math.floor(Date.now() / 3600000);
   const count = Number(cache.get(key) || 0);
   const over = count >= HOURLY_CAP;
   if (!over) cache.put(key, String(count + 1), 3600);
 
-  SpreadsheetApp.getActiveSpreadsheet().getActiveSheet() // 6. log (injection-scrubbed)
+  SpreadsheetApp.getActiveSpreadsheet().getActiveSheet() // 7. log (injection-scrubbed)
     .appendRow([new Date(), scrub_(name), scrub_(email),
                 scrub_(company), scrub_(message), over ? 'RATE-LIMITED' : '']);
 
@@ -73,6 +84,22 @@ function doPost(e) {
     });
   }
   return ok();
+}
+
+// Verify a Cloudflare Turnstile token against the siteverify API. Returns true
+// only on a confirmed success; any error/timeout/empty token is treated as fail.
+function turnstileOk_(secret, token) {
+  if (!token) return false;
+  try {
+    const res = UrlFetchApp.fetch('https://challenges.cloudflare.com/turnstile/v0/siteverify', {
+      method: 'post',
+      payload: { secret: secret, response: token },
+      muteHttpExceptions: true,
+    });
+    return JSON.parse(res.getContentText()).success === true;
+  } catch (err) {
+    return false;
+  }
 }
 
 // Neutralize Google Sheets formula injection: a cell beginning with one of
