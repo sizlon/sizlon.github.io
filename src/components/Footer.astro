@@ -1,5 +1,5 @@
 ---
-import { site, nav, crawlerPages, legalLinks } from '../config/site';
+import { site, solutions, crawlerPages, legalLinks } from '../config/site';
 import type { Lang } from '../i18n/content';
 import { t, localizePath } from '../i18n/utils';
 
@@ -15,9 +15,11 @@ const tr = t(lang);
       <p class="tag">{tr.footer.tagline}</p>
     </div>
 
-    <nav class="col" aria-label="Site">
-      <span class="eyebrow">{tr.footer.site}</span>
-      {nav.map((item) => <a href={localizePath(item.href, lang)}>{tr.nav[item.key]}</a>)}
+    <nav class="col" aria-label="Products">
+      <span class="eyebrow">{tr.footer.products}</span>
+      {solutions.filter((s) => s.href).map((s) => (
+        <a href={localizePath(s.href!, lang)}>{s.name}</a>
+      ))}
     </nav>
 
     <nav class="col" aria-label="Crawler Platform">
@@ -47,7 +49,7 @@ const tr = t(lang);
   .footer { border-top: 1px solid var(--hairline-dark); padding-top: var(--section-y); }
   .footer-inner {
     display: grid;
-    grid-template-columns: 1.6fr 1fr 1fr 1.2fr;
+    grid-template-columns: 1.6fr 1fr 1fr 1fr 1.2fr;
     gap: 2rem;
     padding-bottom: 3rem;
   }

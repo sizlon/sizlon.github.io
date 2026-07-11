@@ -26,6 +26,7 @@ export const content = {
     footer: {
       tagline: 'AI proposes. A deterministic layer verifies.',
       site: 'Site',
+      products: 'Products',
       crawler: 'Crawler Platform',
       legal: 'Legal',
       getInTouch: 'Get in touch',
@@ -206,6 +207,7 @@ export const content = {
     footer: {
       tagline: 'AI가 제안하고, 결정적 레이어가 검증합니다.',
       site: '사이트',
+      products: '제품',
       crawler: 'Crawler Platform',
       legal: '법적 고지',
       getInTouch: '문의하기',
