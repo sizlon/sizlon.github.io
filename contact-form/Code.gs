@@ -14,8 +14,10 @@
  *      Copy the /exec URL into site.contactFormEndpoint.
  *   5. (Turnstile, optional) Create a Cloudflare Turnstile widget for sizlon.io.
  *      Put the SITE key in site.turnstileSiteKey (src/config/site.ts) and the
- *      SECRET key in Project Settings -> Script properties as TURNSTILE_SECRET,
- *      then redeploy. Both must be set for verification to take effect.
+ *      SECRET key in Project Settings -> Script properties as TURNSTILE_SECRET.
+ *      Then run authorizeExternalRequest() once from the editor and accept the
+ *      permission prompt (grants script.external_request for UrlFetchApp), and
+ *      redeploy. Both keys must be set for verification to take effect.
  *
  * REDEPLOY (after editing this code — keeps the SAME /exec URL)
  *   Deploy -> Manage deployments -> edit (pencil) -> Version: New version -> Deploy.
@@ -127,4 +129,16 @@ function scrub_(v) {
 
 function ok() {
   return ContentService.createTextOutput('ok');
+}
+
+// One-time authorization. After adding UrlFetchApp (Turnstile), the script needs
+// the script.external_request scope. Select this function in the editor and click
+// Run once, then accept the permission prompt. Harmless to leave in place; the
+// request uses dummy values and its result is ignored.
+function authorizeExternalRequest() {
+  UrlFetchApp.fetch('https://challenges.cloudflare.com/turnstile/v0/siteverify', {
+    method: 'post',
+    payload: { secret: 'setup', response: 'setup' },
+    muteHttpExceptions: true,
+  });
 }
