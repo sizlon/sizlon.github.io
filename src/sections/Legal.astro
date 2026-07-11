@@ -14,11 +14,33 @@ const c = tr.legal[doc];
     <span class="eyebrow">{tr.footer.legal}</span>
     <h1>{c.title}</h1>
     <p class="lede">{c.lede}</p>
-    <p class="stub">{tr.legal.stub}</p>
+    <p class="meta">{tr.legal.updatedLabel}: {tr.legal.updated}</p>
+
+    {c.sections.map((s) => (
+      <div class="block">
+        <h2>{s.h}</h2>
+        {s.p.map((para) => <p>{para}</p>)}
+      </div>
+    ))}
+
+    <p class="stub">{tr.legal.draftNote}</p>
   </section>
 </Base>
 
 <style>
   .legal { max-width: var(--measure); display: flex; flex-direction: column; gap: 1rem; }
-  .stub { color: var(--color-slate); font-family: var(--font-mono); font-size: var(--step--1); }
+  .meta { font-family: var(--font-mono); font-size: var(--step--1); color: var(--color-slate); margin-top: -0.25rem; }
+  .block { display: flex; flex-direction: column; gap: 0.6rem; margin-top: 1.25rem; }
+  .block h2 { font-size: var(--step-1); }
+  .block p { color: color-mix(in srgb, var(--color-ink) 82%, var(--color-vellum)); }
+  .stub {
+    margin-top: 2rem;
+    padding: 1rem 1.25rem;
+    border: 1px solid var(--hairline);
+    border-radius: var(--radius);
+    background: var(--color-mist);
+    color: var(--color-slate);
+    font-family: var(--font-mono);
+    font-size: var(--step--1);
+  }
 </style>
