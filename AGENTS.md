@@ -1,22 +1,94 @@
-## Development
+# AGENTS.md
 
-When starting the dev server, use background mode:
+Guidance for anyone (human or agent) working on this repo. Aliased as `CLAUDE.md`.
+
+## What this is
+
+The public Sizlon marketing site: a **static** Astro site, **bilingual**
+(English default + Korean), deployed to GitHub Pages at
+[sizlon.io](https://sizlon.io). No SSR, no database — output is plain HTML/CSS
+with a little inline JS. See `README.md` for the file-tree overview.
+
+## Dev / build / verify
 
 ```
-astro dev --background
+npm run dev      # local dev server at localhost:4321
+npm run build    # static build to ./dist/  (22 routes today)
+npm run preview  # serve the built ./dist/ locally
 ```
 
-Manage the background server with `astro dev stop`, `astro dev status`, and `astro dev logs`.
+When starting the dev server here, use background mode: `astro dev --background`,
+and manage it with `astro dev stop` / `status` / `logs`.
 
-## Documentation
+**Verify changes with `npm run build`** and inspect the emitted files under
+`dist/` (e.g. `dist/contact/index.html`). The build is the source of truth for
+what ships — grep the output to confirm a change rendered on both the en page
+and its `dist/ko/...` counterpart.
 
-Full documentation: https://docs.astro.build
+## Content & i18n — the core convention
 
-Consult these guides before working on related tasks:
+**All copy lives in `src/i18n/content.ts`, keyed by locale (`en`, `ko`).** Markup
+stays language-free: pages and sections read `content[lang]` via `t(lang)` from
+`src/i18n/utils.ts`. When you add or change a user-facing string:
 
-- [Adding pages, dynamic routes, or middleware](https://docs.astro.build/en/guides/routing/)
-- [Working with Astro components](https://docs.astro.build/en/basics/astro-components/)
-- [Using React, Vue, Svelte, or other framework components](https://docs.astro.build/en/guides/framework-components/)
-- [Adding or managing content](https://docs.astro.build/en/guides/content-collections/)
-- [Adding styles or using Tailwind](https://docs.astro.build/en/guides/styling/)
-- [Supporting multiple languages](https://docs.astro.build/en/guides/internationalization/)
+- Add it to **both** `en` and `ko`. A missing key breaks the typed `as const`
+  content object.
+- Keep product/proper nouns (Crawler Platform, Miriboa, Postgres, …) in English
+  in both locales.
+- Routing: en at the root, ko under `/ko`. Every page has an en and a ko variant.
+  Use `localizePath` / `logicalPath` (utils) for locale-aware hrefs.
+
+## Structure & where things go
+
+- `src/config/site.ts` — the single config/coupling point: `nav`, `crawlerPages`,
+  the product list (`solutions[]`), and the contact-form/Turnstile keys.
+- `src/pages/**` — thin route files that just render a section (en at root, ko
+  mirror under `src/pages/ko/**`).
+- `src/sections/**` — the actual page bodies.
+- `src/components/**` — shared chrome (`Nav`, `Footer`, `SolutionCard`, …).
+- `src/layouts/Base.astro` — the html shell + `<head>` meta.
+
+**Adding a page:** create a section, then thin en + ko page files that render it;
+wire nav/product entries in `site.ts` and copy in `content.ts` (both locales).
+
+## Products & navigation
+
+The company umbrella is *AI proposes, a deterministic layer verifies* — product-
+neutral. Products live in `solutions[]` (Crawler Platform, Miriboa, Verify) and
+each has a `/products/<slug>` page. Crawler-specific pages (How it works,
+Security, Editions) are **scoped under Crawler Platform** (`crawlerPages`), not
+in the global nav. Keep that split when adding product-specific pages.
+
+## Contact form
+
+The contact form has a Google Apps Script backend that is **not** part of the
+Astro build and is deployed by hand. Do not treat `contact-form/Code.gs` as
+live — see **[contact-form/README.md](contact-form/README.md)** before touching
+the form, the `site.ts` endpoint/keys, or the privacy copy.
+
+## Gotchas
+
+- **Scoped styles vs `[hidden]`:** Astro-scoped CSS beats the UA
+  `[hidden]{display:none}` rule, so an element that has both a `display` rule and
+  the `hidden` attribute stays visible. Add a scoped
+  `[hidden]{display:none!important}` when you toggle visibility via the attribute.
+- **External scripts:** use `<script is:inline src="…">` so Astro leaves a CDN
+  script untouched (e.g. the Turnstile api.js). There is no CSP on the site.
+- **New UI strings must be bilingual** — the `as const` content object fails the
+  build if a locale is missing a key.
+
+## Deploy
+
+`deploy.yml` builds and publishes to GitHub Pages on every **push to `main`**
+(and manual dispatch). There is no separate release step — merging to `main`
+ships the site. (This is a standalone repo; the sizlon-platform monorepo's
+manual-CI constraints do not apply here.)
+
+## Astro reference
+
+Full docs: https://docs.astro.build — most relevant here:
+
+- [Routing / pages](https://docs.astro.build/en/guides/routing/)
+- [Astro components](https://docs.astro.build/en/basics/astro-components/)
+- [Styling](https://docs.astro.build/en/guides/styling/)
+- [Internationalization](https://docs.astro.build/en/guides/internationalization/)
