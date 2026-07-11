@@ -61,8 +61,22 @@ function doPost(e) {
   if (name.length > 200 || email.length > 200 ||
       company.length > 200 || message.length > 5000) return ok(); // 4. length caps
 
-  const secret = PropertiesService.getScriptProperties().getProperty('TURNSTILE_SECRET');
-  if (secret && !turnstileOk_(secret, p['cf-turnstile-response'])) return ok(); // 5. Turnstile
+  const props = PropertiesService.getScriptProperties();
+  const secret = props.getProperty('TURNSTILE_SECRET');
+  if (secret) { // 5. Turnstile
+    const tv = turnstileVerify_(secret, p['cf-turnstile-response']);
+    if (!tv.success) {
+      // Silent drop in production. Set a TURNSTILE_DEBUG script property to log
+      // the Cloudflare error-codes to the sheet while diagnosing a bad config.
+      if (props.getProperty('TURNSTILE_DEBUG')) {
+        SpreadsheetApp.getActiveSpreadsheet().getActiveSheet()
+          .appendRow([new Date(), scrub_((p.name || '').trim()), scrub_((p.email || '').trim()),
+                      scrub_((p.company || '').trim()), scrub_((p.message || '').trim()),
+                      'TURNSTILE-FAIL: ' + tv.codes]);
+      }
+      return ok();
+    }
+  }
 
   const cache = CacheService.getScriptCache(); // 6. hourly cap
   const key = 'cnt_' + Math.floor(Date.now() / 3600000);
@@ -86,19 +100,21 @@ function doPost(e) {
   return ok();
 }
 
-// Verify a Cloudflare Turnstile token against the siteverify API. Returns true
-// only on a confirmed success; any error/timeout/empty token is treated as fail.
-function turnstileOk_(secret, token) {
-  if (!token) return false;
+// Verify a Cloudflare Turnstile token against the siteverify API. Returns
+// { success, codes } — codes carries Cloudflare's error-codes for diagnosis
+// (e.g. invalid-input-secret, hostname-mismatch, timeout-or-duplicate).
+function turnstileVerify_(secret, token) {
+  if (!token) return { success: false, codes: 'missing-token' };
   try {
     const res = UrlFetchApp.fetch('https://challenges.cloudflare.com/turnstile/v0/siteverify', {
       method: 'post',
       payload: { secret: secret, response: token },
       muteHttpExceptions: true,
     });
-    return JSON.parse(res.getContentText()).success === true;
+    const data = JSON.parse(res.getContentText());
+    return { success: data.success === true, codes: (data['error-codes'] || []).join(',') };
   } catch (err) {
-    return false;
+    return { success: false, codes: 'fetch-error:' + err };
   }
 }
 
