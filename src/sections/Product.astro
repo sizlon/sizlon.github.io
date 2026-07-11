@@ -1,6 +1,7 @@
 ---
 import Base from '../layouts/Base.astro';
 import StrategyLadder from '../components/StrategyLadder.astro';
+import { crawlerPages } from '../config/site';
 import type { Lang } from '../i18n/content';
 import { t, localizePath } from '../i18n/utils';
 
@@ -48,6 +49,15 @@ const c = tr.product;
       {c.modelNote} <a href={localizePath('/editions', lang)}>{c.compareEditions} &rarr;</a>
     </p>
   </section>
+
+  <section class="section wrap more">
+    <span class="eyebrow">{c.moreOn}</span>
+    <nav class="more-links" aria-label={c.moreOn}>
+      {crawlerPages.map((p) => (
+        <a href={localizePath(p.href, lang)}>{tr.nav[p.key]} <span class="arrow">&rarr;</span></a>
+      ))}
+    </nav>
+  </section>
 </Base>
 
 <style>
@@ -60,5 +70,10 @@ const c = tr.product;
   .model { max-width: var(--measure); }
   .model-note { font-size: var(--step-1); }
   .model-note a { color: var(--color-ink); font-weight: 600; text-decoration: underline; text-decoration-color: var(--color-recovered); text-underline-offset: 3px; white-space: nowrap; }
+  .more { display: flex; flex-direction: column; gap: 1rem; border-top: 1px solid var(--hairline); }
+  .more-links { display: flex; gap: 1.5rem; flex-wrap: wrap; }
+  .more-links a { font-weight: 600; font-size: var(--step--1); text-decoration: none; color: var(--color-ink); }
+  .more-links a:hover .arrow { transform: translateX(3px); }
+  .more-links .arrow { display: inline-block; transition: transform 0.15s ease; color: var(--color-recovered); }
   @media (max-width: 760px) { .ladder-section { grid-template-columns: 1fr; } }
 </style>

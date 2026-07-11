@@ -10,13 +10,21 @@ export const site = {
   contactEmail: 'hello@sizlon.io',
 };
 
-// Nav/legal hrefs and keys are language-neutral; labels come from content[lang].
+// Global nav — product-neutral only. How it works / Security / Editions describe
+// Crawler Platform specifically, so they live under that product (see crawlerPages),
+// not in the company-level nav. Hrefs/keys are language-neutral; labels come from content[lang].
 export const nav = [
   { href: '/products', key: 'Products' },
+  { href: '/contact', key: 'Contact' },
+] as const;
+
+// Crawler Platform's own sub-pages. Surfaced from the crawler product page and
+// the footer — scoped under the product rather than the global nav. The routes
+// stay top-level; only their placement in navigation is scoped.
+export const crawlerPages = [
   { href: '/how-it-works', key: 'How it works' },
   { href: '/security', key: 'Security' },
   { href: '/editions', key: 'Editions' },
-  { href: '/contact', key: 'Contact' },
 ] as const;
 
 // The product line. `categoryKey` labels the domain (product-neutral — the

@@ -9,6 +9,7 @@ export const content = {
     common: {
       requestDemo: 'Request a demo',
       howItWorks: 'How it works',
+      exploreProducts: 'Explore products',
       skip: 'Skip to content',
       portalLogin: 'Portal login',
       categories: { extraction: 'Web extraction', verification: 'Document verification', quality: 'Data quality' },
@@ -24,6 +25,7 @@ export const content = {
     footer: {
       tagline: 'AI proposes. A deterministic layer verifies.',
       site: 'Site',
+      crawler: 'Crawler Platform',
       legal: 'Legal',
       getInTouch: 'Get in touch',
       baseline: 'Vendor-operated · confidence-scored · human-in-the-loop',
@@ -71,6 +73,7 @@ export const content = {
       modelEyebrow: 'how you get it',
       modelNote: 'Crawler Platform is delivered under a vendor-issued license — there is no self-serve signup. Capabilities are set by your edition; licensing validates offline and runs on-prem or connected.',
       compareEditions: 'Compare editions',
+      moreOn: 'More on Crawler Platform',
     },
     how: {
       title: 'How it works',
@@ -185,6 +188,7 @@ export const content = {
     common: {
       requestDemo: '데모 요청',
       howItWorks: '작동 원리',
+      exploreProducts: '제품 둘러보기',
       skip: '본문으로 건너뛰기',
       portalLogin: '포털 로그인',
       categories: { extraction: '웹 추출', verification: '문서 검증', quality: '데이터 품질' },
@@ -200,6 +204,7 @@ export const content = {
     footer: {
       tagline: 'AI가 제안하고, 결정적 레이어가 검증합니다.',
       site: '사이트',
+      crawler: 'Crawler Platform',
       legal: '법적 고지',
       getInTouch: '문의하기',
       baseline: '벤더 운영 · 신뢰도 점수 · 사람 검토',
@@ -247,6 +252,7 @@ export const content = {
       modelEyebrow: '도입 방법',
       modelNote: 'Crawler Platform은 벤더가 발급한 라이선스로 제공됩니다 — 셀프 가입은 없습니다. 역량은 에디션으로 정해지며, 라이선스는 오프라인으로 검증되고 온프레미스 또는 연결형으로 운영됩니다.',
       compareEditions: '에디션 비교',
+      moreOn: 'Crawler Platform 더 보기',
     },
     how: {
       title: '작동 원리',

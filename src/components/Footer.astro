@@ -1,5 +1,5 @@
 ---
-import { site, nav, legalLinks } from '../config/site';
+import { site, nav, crawlerPages, legalLinks } from '../config/site';
 import type { Lang } from '../i18n/content';
 import { t, localizePath } from '../i18n/utils';
 
@@ -18,6 +18,11 @@ const tr = t(lang);
     <nav class="col" aria-label="Site">
       <span class="eyebrow">{tr.footer.site}</span>
       {nav.map((item) => <a href={localizePath(item.href, lang)}>{tr.nav[item.key]}</a>)}
+    </nav>
+
+    <nav class="col" aria-label="Crawler Platform">
+      <span class="eyebrow">{tr.footer.crawler}</span>
+      {crawlerPages.map((item) => <a href={localizePath(item.href, lang)}>{tr.nav[item.key]}</a>)}
     </nav>
 
     <nav class="col" aria-label="Legal">
