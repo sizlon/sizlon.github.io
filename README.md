@@ -27,6 +27,8 @@ Content lives in `src/i18n/content.ts` so markup stays language-free; pages read
 
 ## Documentation
 
+- **[AGENTS.md](AGENTS.md)** (aliased as `CLAUDE.md`) — dev-server notes
+  (background mode) and the Astro guides to consult when working on the site.
 - **[Contact form](contact-form/README.md)** ([한국어](contact-form/README.ko.md)) —
   architecture, configuration, the Apps Script backend, Cloudflare Turnstile
   setup, and troubleshooting for the contact form.
