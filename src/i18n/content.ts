@@ -208,7 +208,7 @@ export const content = {
         lede: 'This policy explains what personal information Sizlon collects through this website and how we use it. Data your organization processes with Sizlon products is handled separately — see "Product data" below.',
         sections: [
           { h: 'Scope', p: ['This policy covers sizlon.io and the business inquiries we receive through it. It does not cover data you process inside a licensed Sizlon product, which runs in your own environment.'] },
-          { h: 'What we collect', p: ['When you use the contact form we collect the details you provide — name, work email, company, and your message.', 'This site is served as static pages; we do not use advertising trackers. Our hosting provider may keep standard server logs for security and reliability.'] },
+          { h: 'What we collect', p: ['When you use the contact form we collect the details you provide — name, work email, company, and your message.', 'This site is served as static pages; we do not use advertising trackers. Our hosting provider may keep standard server logs for security and reliability. The contact form uses Cloudflare Turnstile to block spam — Cloudflare runs a lightweight challenge to confirm you are human and does not use it to track you across sites.'] },
           { h: 'How we use it', p: ['We use your information only to respond to your inquiry, provide the information you asked for, and follow up about a possible deployment. We do not sell personal information.'] },
           { h: 'Product data', p: ['Sizlon products are deployed on-prem or connected, under your control. Data extracted or processed by a product stays in your environment. Sizlon does not access your product runtime data except where a support engagement expressly requires it and you have authorized it.'] },
           { h: 'Sharing', p: ['We share personal information only with service providers who help us operate (for example, email or hosting), and where required by law. Any such providers are bound to protect it.'] },
@@ -438,7 +438,7 @@ export const content = {
         lede: '본 방침은 Sizlon이 본 웹사이트를 통해 수집하는 개인정보와 그 이용 방법을 설명합니다. 귀 조직이 Sizlon 제품으로 처리하는 데이터는 별도로 취급됩니다 — 아래 "제품 데이터" 참조.',
         sections: [
           { h: '적용 범위', p: ['본 방침은 sizlon.io 및 이를 통해 접수되는 업무 문의에 적용됩니다. 라이선스된 Sizlon 제품 내부에서 귀하가 처리하는 데이터에는 적용되지 않으며, 해당 데이터는 귀하의 환경에서 실행됩니다.'] },
-          { h: '수집 항목', p: ['문의 양식 이용 시 귀하가 제공하는 정보 — 이름, 업무 이메일, 회사, 문의 내용 —를 수집합니다.', '본 사이트는 정적 페이지로 제공되며 광고 추적기를 사용하지 않습니다. 호스팅 제공자는 보안·안정성을 위해 표준 서버 로그를 보관할 수 있습니다.'] },
+          { h: '수집 항목', p: ['문의 양식 이용 시 귀하가 제공하는 정보 — 이름, 업무 이메일, 회사, 문의 내용 —를 수집합니다.', '본 사이트는 정적 페이지로 제공되며 광고 추적기를 사용하지 않습니다. 호스팅 제공자는 보안·안정성을 위해 표준 서버 로그를 보관할 수 있습니다. 문의 양식은 스팸 차단을 위해 Cloudflare Turnstile을 사용합니다 — Cloudflare가 사람인지 확인하는 가벼운 챌린지를 수행하며, 이를 사이트 간 추적에 사용하지 않습니다.'] },
           { h: '이용 목적', p: ['수집한 정보는 문의 응대, 요청 정보 제공, 도입 관련 후속 연락에만 사용합니다. 개인정보를 판매하지 않습니다.'] },
           { h: '제품 데이터', p: ['Sizlon 제품은 귀하의 통제 하에 온프레미스 또는 연결형으로 배포됩니다. 제품이 추출·처리하는 데이터는 귀하 환경에 머뭅니다. Sizlon은 지원 업무상 명시적으로 필요하고 귀하가 승인한 경우를 제외하고 제품 런타임 데이터에 접근하지 않습니다.'] },
           { h: '제공 및 위탁', p: ['개인정보는 운영을 돕는 서비스 제공자(예: 이메일·호스팅)와 법률상 요구되는 경우에만 공유합니다. 해당 제공자는 정보 보호 의무를 부담합니다.'] },

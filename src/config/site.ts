@@ -15,7 +15,7 @@ export const site = {
   // Cloudflare Turnstile site key (public). Set this AND the TURNSTILE_SECRET
   // script property in Apps Script to activate bot verification. While empty,
   // the widget is not rendered and the server skips the Turnstile check.
-  turnstileSiteKey: '',
+  turnstileSiteKey: '0x4AAAAAADzkjelT6SU8nIio',
 };
 
 // Global nav — product-neutral only. How it works / Security / Editions describe
