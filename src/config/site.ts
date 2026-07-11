@@ -8,6 +8,10 @@ export const site = {
   tagline: 'AI proposes, a deterministic layer verifies',
   portalLoginUrl: 'https://portal.sizlon.io',
   contactEmail: 'hello@sizlon.io',
+  // Contact form endpoint — a Google Apps Script web-app /exec URL. Paste the
+  // deployed URL here to activate the form; while empty, the form no-ops on
+  // submit and the mailto fallback carries. Not a secret (it's client-visible).
+  contactFormEndpoint: 'https://script.google.com/macros/s/AKfycbwJ0qPfptzdPshTQ5wEjMSjshp_31toeRyLD7oxIcEOPLwy94OlvmQEBR9n7qAh4JfW/exec',
 };
 
 // Global nav — product-neutral only. How it works / Security / Editions describe

@@ -3,13 +3,16 @@ import Base from '../layouts/Base.astro';
 import { site } from '../config/site';
 import type { Lang } from '../i18n/content';
 import { t } from '../i18n/utils';
-// Form backend is an open scaffold item — wire to a static form service or
-// scheduling embed later. For now it posts nowhere and the email is the fallback.
+// The form POSTs to a Google Apps Script web app (site.contactFormEndpoint),
+// targeting a hidden iframe so there is no CORS/preflight to fight. The script
+// appends to a Google Sheet and emails contactEmail. `company_url` is a honeypot.
+// While the endpoint is empty the submit no-ops and the mailto fallback carries.
 
 interface Props { lang: Lang }
 const { lang } = Astro.props;
 const tr = t(lang);
 const c = tr.contact;
+const endpoint = site.contactFormEndpoint;
 ---
 
 <Base title={c.title} description={c.description} lang={lang}>
@@ -21,28 +24,77 @@ const c = tr.contact;
       <p class="alt">{c.altPrefix} <a href={`mailto:${site.contactEmail}`}>{site.contactEmail}</a></p>
     </div>
 
-    <form class="form" method="post" action="#">
-      <label>
-        <span>{c.labels.name}</span>
-        <input type="text" name="name" autocomplete="name" required />
-      </label>
-      <label>
-        <span>{c.labels.email}</span>
-        <input type="email" name="email" autocomplete="email" required />
-      </label>
-      <label>
-        <span>{c.labels.company}</span>
-        <input type="text" name="company" autocomplete="organization" />
-      </label>
-      <label>
-        <span>{c.labels.message}</span>
-        <textarea name="message" rows="4"></textarea>
-      </label>
-      <button class="btn btn-primary" type="submit">{tr.common.requestDemo} <span class="arrow">&rarr;</span></button>
-      <p class="note eyebrow">{c.note}</p>
-    </form>
+    <div class="formcol">
+      <form
+        class="form"
+        method="post"
+        action={endpoint || undefined}
+        target={endpoint ? 'sizlon-form-frame' : undefined}
+        data-contact-form
+        data-sending={c.sending}
+      >
+        <label>
+          <span>{c.labels.name}</span>
+          <input type="text" name="name" autocomplete="name" required />
+        </label>
+        <label>
+          <span>{c.labels.email}</span>
+          <input type="email" name="email" autocomplete="email" required />
+        </label>
+        <label>
+          <span>{c.labels.company}</span>
+          <input type="text" name="company" autocomplete="organization" />
+        </label>
+        <label>
+          <span>{c.labels.message}</span>
+          <textarea name="message" rows="4"></textarea>
+        </label>
+
+        <div class="hp" aria-hidden="true">
+          <label>Company URL
+            <input type="text" name="company_url" tabindex="-1" autocomplete="off" />
+          </label>
+        </div>
+
+        <button class="btn btn-primary" type="submit">{tr.common.requestDemo} <span class="arrow">&rarr;</span></button>
+        <p class="note eyebrow">{c.note}</p>
+      </form>
+
+      <div class="sent" hidden data-contact-sent>
+        <h2>{c.sentTitle}</h2>
+        <p>{c.sentBody}</p>
+      </div>
+
+      <iframe name="sizlon-form-frame" class="hidden-frame" title="form target" aria-hidden="true" tabindex="-1"></iframe>
+    </div>
   </section>
 </Base>
+
+<script>
+  // Progressive enhancement for the hidden-iframe form: show a "sending" state,
+  // then swap the form for an inline confirmation when the iframe finishes the
+  // POST. The honeypot is enforced server-side too; this just avoids a bot spin.
+  const form = document.querySelector<HTMLFormElement>('[data-contact-form]');
+  const sent = document.querySelector<HTMLElement>('[data-contact-sent]');
+  const frame = document.querySelector<HTMLIFrameElement>('iframe[name="sizlon-form-frame"]');
+  if (form && sent && frame) {
+    let pending = false;
+    form.addEventListener('submit', (e) => {
+      const hp = form.querySelector<HTMLInputElement>('[name="company_url"]');
+      if (hp && hp.value) { e.preventDefault(); return; }
+      if (!form.getAttribute('action')) { e.preventDefault(); return; } // endpoint not set yet
+      pending = true;
+      const btn = form.querySelector<HTMLButtonElement>('button[type="submit"]');
+      if (btn) { btn.disabled = true; btn.textContent = form.dataset.sending || 'Sending…'; }
+    });
+    frame.addEventListener('load', () => {
+      if (!pending) return; // ignore the initial (empty) load
+      form.hidden = true;
+      sent.hidden = false;
+      sent.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    });
+  }
+</script>
 
 <style>
   .grid { display: grid; grid-template-columns: 1fr 1fr; gap: clamp(2rem, 1rem + 4vw, 4rem); align-items: start; }
@@ -56,5 +108,17 @@ const c = tr.contact;
   input:focus, textarea:focus { outline: 2px solid var(--color-recovered); outline-offset: 1px; border-color: transparent; }
   .form .btn { align-self: flex-start; }
   .note { margin-top: 0.25rem; }
+  .hp { position: absolute; left: -9999px; width: 1px; height: 1px; overflow: hidden; }
+  .hidden-frame { position: absolute; width: 0; height: 0; border: 0; }
+  .sent {
+    padding: 1.75rem;
+    border: 1px solid var(--color-recovered);
+    border-radius: var(--radius);
+    background: var(--color-mist);
+    display: flex;
+    flex-direction: column;
+    gap: 0.6rem;
+  }
+  .sent h2 { font-size: var(--step-1); }
   @media (max-width: 760px) { .grid { grid-template-columns: 1fr; } }
 </style>

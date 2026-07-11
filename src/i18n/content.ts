@@ -138,6 +138,9 @@ export const content = {
       altPrefix: 'Prefer email?',
       labels: { name: 'Name', email: 'Work email', company: 'Company', message: 'What are you trying to extract or keep reliable?' },
       note: 'No self-serve signup · we reply within two business days',
+      sending: 'Sending…',
+      sentTitle: 'Thanks — we have your message.',
+      sentBody: 'We reply within two business days. For anything urgent, email hello@sizlon.io.',
     },
     solutions: {
       title: 'Products',
@@ -364,6 +367,9 @@ export const content = {
       altPrefix: '이메일이 편하세요?',
       labels: { name: '이름', email: '업무 이메일', company: '회사', message: '무엇을 추출하거나 안정적으로 유지하고 싶으신가요?' },
       note: '셀프 가입 없음 · 영업일 2일 내 회신',
+      sending: '보내는 중…',
+      sentTitle: '감사합니다 — 문의가 접수됐습니다.',
+      sentBody: '영업일 2일 내에 회신드립니다. 급한 건은 hello@sizlon.io로 메일 주세요.',
     },
     solutions: {
       title: '제품',
