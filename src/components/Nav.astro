@@ -12,7 +12,9 @@ const homeHref = localizePath('/', lang);
 
 <header class="nav band-ink">
   <div class="wrap nav-inner">
-    <a class="brand" href={homeHref}>sizlon</a>
+    <a class="brand" href={homeHref}>
+      <img src="/logo/sizlon-logo-white.svg" alt="Sizlon" width="107" height="27" />
+    </a>
 
     <nav class="links" aria-label="Primary">
       {nav.map((item) => (
@@ -102,13 +104,10 @@ const homeHref = localizePath('/', lang);
     min-height: 64px;
   }
   .brand {
-    font-family: var(--font-display);
-    font-weight: 700;
-    font-size: var(--step-1);
-    letter-spacing: -0.03em;
-    text-decoration: none;
-    color: var(--color-mist);
+    display: inline-flex;
+    align-items: center;
   }
+  .brand img { display: block; height: 27px; width: auto; }
   .links {
     display: flex;
     gap: 1.25rem;
