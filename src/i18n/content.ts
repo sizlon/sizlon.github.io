@@ -14,7 +14,7 @@ export const content = {
       skip: 'Skip to content',
       portalLogin: 'Portal login',
       categories: { extraction: 'Web extraction', verification: 'Document verification', quality: 'Data quality' },
-      solutionStatus: { live: 'Available now', next: 'Coming next', roadmap: 'On the roadmap' },
+      solutionStatus: { live: 'Available now', pilot: 'Pilots open', next: 'Coming next', roadmap: 'On the roadmap' },
       explore: 'Explore',
       solutionBlurbs: {
         'crawler-platform': "Self-healing web extraction. When a page changes, the extraction recovers itself instead of breaking quietly.",
@@ -261,7 +261,7 @@ export const content = {
       skip: '본문으로 건너뛰기',
       portalLogin: '포털 로그인',
       categories: { extraction: '웹 추출', verification: '문서 검증', quality: '데이터 품질' },
-      solutionStatus: { live: '지금 사용 가능', next: '다음 출시 예정', roadmap: '로드맵 예정' },
+      solutionStatus: { live: '지금 사용 가능', pilot: '파일럿 진행 중', next: '다음 출시 예정', roadmap: '로드맵 예정' },
       explore: '자세히',
       solutionBlurbs: {
         'crawler-platform': '스스로 치유하는 웹 추출. 페이지가 바뀌면 추출이 조용히 깨지는 대신 스스로 복구합니다.',

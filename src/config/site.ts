@@ -41,13 +41,13 @@ export type Solution = {
   slug: 'crawler-platform' | 'miriboa' | 'verify';
   name: string; // product name — same in every locale
   categoryKey: 'extraction' | 'verification' | 'quality';
-  status: 'live' | 'next' | 'roadmap';
+  status: 'live' | 'pilot' | 'next' | 'roadmap';
   href?: string;
 };
 
 export const solutions: Solution[] = [
   { slug: 'crawler-platform', name: 'Crawler Platform', categoryKey: 'extraction', status: 'live', href: '/products/crawler-platform' },
-  { slug: 'miriboa', name: 'Miriboa', categoryKey: 'verification', status: 'next', href: '/products/miriboa' },
+  { slug: 'miriboa', name: 'Miriboa', categoryKey: 'verification', status: 'pilot', href: '/products/miriboa' },
   { slug: 'verify', name: 'Verify', categoryKey: 'quality', status: 'roadmap' },
 ];
 
