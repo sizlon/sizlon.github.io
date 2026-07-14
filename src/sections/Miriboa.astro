@@ -19,6 +19,25 @@ const c = tr.miriboa;
     </div>
   </section>
 
+  <section class="section wrap market">
+    <div class="market-copy">
+      <span class="eyebrow">{c.marketEyebrow}</span>
+      <h2>{c.marketH2}</h2>
+      <p class="lede">{c.marketLede}</p>
+    </div>
+    <div class="market-figures">
+      <dl class="stats">
+        {c.marketStats.map((s) => (
+          <div class="stat">
+            <dt>{s.value}</dt>
+            <dd>{s.label}</dd>
+          </div>
+        ))}
+      </dl>
+      <p class="market-note">{c.marketNote}</p>
+    </div>
+  </section>
+
   <section class="section wrap">
     <ul class="caps">
       {c.caps.map((cap) => (
@@ -69,6 +88,7 @@ const c = tr.miriboa;
     <p class="model-note">
       {c.modelNote} <a href={localizePath('/contact', lang)}>{c.contactBtn} &rarr;</a>
     </p>
+    <p class="sample-note">{c.sampleNote}</p>
   </section>
 </Base>
 
@@ -77,6 +97,11 @@ const c = tr.miriboa;
   .cta-row { display: flex; gap: 0.75rem; flex-wrap: wrap; margin-top: 0.5rem; }
   .caps { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 1.25rem; }
   .cap { border: 1px solid var(--hairline); border-radius: var(--radius); padding: 1.5rem; background: var(--color-mist); display: flex; flex-direction: column; gap: 0.5rem; }
+
+  .market { display: grid; grid-template-columns: 0.9fr 1.1fr; gap: clamp(2rem, 1rem + 4vw, 4rem); align-items: center; }
+  .market-copy { display: flex; flex-direction: column; gap: 1rem; max-width: var(--measure); }
+  .market-figures { display: flex; flex-direction: column; gap: 0.75rem; }
+  .market-note { font-size: var(--step--1); color: color-mix(in srgb, var(--color-ink) 60%, var(--color-mist)); }
 
   .flow { display: grid; grid-template-columns: 1fr 1fr; gap: clamp(2rem, 1rem + 4vw, 4rem); align-items: start; }
   .flow-copy { display: flex; flex-direction: column; gap: 1rem; }
@@ -94,9 +119,10 @@ const c = tr.miriboa;
 
   .model { max-width: var(--measure); }
   .model-note { font-size: var(--step-1); }
+  .sample-note { margin-top: 0.75rem; font-size: var(--step--1); color: color-mix(in srgb, var(--color-ink) 72%, var(--color-mist)); }
   .model-note a { color: var(--color-ink); font-weight: 600; text-decoration: underline; text-decoration-color: var(--color-recovered); text-underline-offset: 3px; white-space: nowrap; }
 
   @media (max-width: 760px) {
-    .flow, .proof { grid-template-columns: 1fr; }
+    .market, .flow, .proof { grid-template-columns: 1fr; }
   }
 </style>
