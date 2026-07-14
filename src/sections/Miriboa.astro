@@ -83,12 +83,30 @@ const c = tr.miriboa;
     </dl>
   </section>
 
+  <section class="section wrap samples">
+    <div class="samples-copy">
+      <span class="eyebrow">{c.samplesEyebrow}</span>
+      <h2>{c.samplesH2}</h2>
+      <p class="lede">{c.samplesLede}</p>
+    </div>
+    <ul class="sample-list">
+      {c.samples.map((s) => (
+        <li>
+          <a class="sample-card" href={s.href} download>
+            <span class="sample-name">{s.name}</span>
+            <span class="sample-meta">{s.meta}</span>
+            <span class="sample-get">PDF &darr;</span>
+          </a>
+        </li>
+      ))}
+    </ul>
+  </section>
+
   <section class="section wrap model">
     <span class="eyebrow">{c.modelEyebrow}</span>
     <p class="model-note">
       {c.modelNote} <a href={localizePath('/contact', lang)}>{c.contactBtn} &rarr;</a>
     </p>
-    <p class="sample-note">{c.sampleNote}</p>
   </section>
 </Base>
 
@@ -117,9 +135,22 @@ const c = tr.miriboa;
   .stat dt { font-family: var(--font-display); font-weight: 700; font-size: var(--step-2); letter-spacing: -0.02em; }
   .stat dd { margin: 0; font-size: var(--step--1); color: color-mix(in srgb, var(--color-ink) 72%, var(--color-mist)); }
 
+  .samples { display: grid; grid-template-columns: 0.9fr 1.1fr; gap: clamp(2rem, 1rem + 4vw, 4rem); align-items: center; }
+  .samples-copy { display: flex; flex-direction: column; gap: 1rem; max-width: var(--measure); }
+  .sample-list { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 1rem; }
+  .sample-card {
+    display: flex; align-items: baseline; gap: 1rem; flex-wrap: wrap;
+    border: 1px solid var(--hairline); border-radius: var(--radius); padding: 1.25rem 1.5rem;
+    background: var(--color-mist); color: inherit; text-decoration: none;
+    transition: border-color 0.15s ease, transform 0.15s ease;
+  }
+  .sample-card:hover { border-color: var(--color-recovered); transform: translateY(-2px); }
+  .sample-name { font-weight: 600; }
+  .sample-meta { font-family: var(--font-mono); font-size: var(--step--1); color: var(--color-slate); }
+  .sample-get { margin-left: auto; font-weight: 600; font-size: var(--step--1); color: var(--color-recovered); white-space: nowrap; }
+
   .model { max-width: var(--measure); }
   .model-note { font-size: var(--step-1); }
-  .sample-note { margin-top: 0.75rem; font-size: var(--step--1); color: color-mix(in srgb, var(--color-ink) 72%, var(--color-mist)); }
   .model-note a { color: var(--color-ink); font-weight: 600; text-decoration: underline; text-decoration-color: var(--color-recovered); text-underline-offset: 3px; white-space: nowrap; }
 
   @media (max-width: 760px) {
