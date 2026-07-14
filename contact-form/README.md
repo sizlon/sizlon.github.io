@@ -50,20 +50,25 @@ must paste it into the Apps Script editor and redeploy (see below).
   sends from the owner account. Because `hello@` is an alias of `admin@`, the
   owner-sent notification shows as "me" in Gmail (self-to-self); set a distinct
   send-as alias here to change that. Cosmetic — left empty by choice.
-- `HOURLY_CAP` — max notification emails per hour (quota circuit breaker).
+- `HOURLY_CAP` / `MIN_FILL_MS` — committed *defaults* for the send-rate breaker
+  and the min-fill-time gate. Production may override both via script
+  properties, so the repo values are not necessarily what is enforced live.
 
-**Apps Script → Project Settings → Script properties** (secrets, never in repo):
+**Apps Script → Project Settings → Script properties** (secrets/overrides,
+never in repo):
 - `TURNSTILE_SECRET` — Cloudflare Turnstile secret key. Set ⇒ server enforces
   Turnstile. Read at runtime, so changing it takes effect **without** redeploy.
 - `TURNSTILE_DEBUG` — set to any value to log Turnstile *failures* to the sheet
   as `TURNSTILE-FAIL: <error-codes>` for diagnosis. Remove in normal operation
   (otherwise bots with bad tokens fill the sheet).
+- `MIN_FILL_MS` / `HOURLY_CAP` — optional numeric overrides of the committed
+  defaults; read at runtime (no redeploy needed).
 
 ## Defenses (in order, all in `Code.gs::doPost`)
 
 1. **Honeypot** — hidden `company_url` field; filled ⇒ dropped.
-2. **Min fill time** — form stamps `elapsed` (ms since page load); `< 3000` ⇒
-   dropped (bot-fast). Absent (no-JS) passes.
+2. **Min fill time** — form stamps `elapsed` (ms since page load); faster than
+   the threshold ⇒ dropped (bot-fast). Absent (no-JS) passes.
 3. **Validation** — required name/email/message, email format.
 4. **Length caps** — oversized fields dropped (client `maxlength` mirrors this).
 5. **Turnstile** — server-side `siteverify`, enforced only when `TURNSTILE_SECRET`

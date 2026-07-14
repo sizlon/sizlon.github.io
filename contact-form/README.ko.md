@@ -50,20 +50,24 @@ Cloudflare Turnstile이 맡는다.
   있으면 소유자 계정으로 발송한다. `hello@`는 `admin@`의 별칭이라 소유자 발송 알림은
   Gmail에서 "me"(자기발송)로 표시된다 — 별도 send-as 별칭을 넣으면 바뀐다. 표시상의
   문제라 비워 두기로 결정함.
-- `HOURLY_CAP` — 시간당 최대 알림 메일 수(쿼터 차단기).
+- `HOURLY_CAP` / `MIN_FILL_MS` — 발송 차단기와 최소 작성시간 게이트의 *기본값*.
+  운영에서는 둘 다 스크립트 속성으로 오버라이드할 수 있으므로, 레포의 값이
+  실제로 강제되는 값이라는 보장은 없다.
 
-**Apps Script → 프로젝트 설정 → 스크립트 속성** (비밀, 레포에 절대 넣지 않음):
+**Apps Script → 프로젝트 설정 → 스크립트 속성** (비밀/오버라이드, 레포에 절대 넣지 않음):
 - `TURNSTILE_SECRET` — Cloudflare Turnstile secret key. 설정되면 서버가 Turnstile을
   강제한다. 실행 시점에 읽히므로 값 변경은 **재배포 없이** 즉시 반영된다.
 - `TURNSTILE_DEBUG` — 아무 값이나 넣으면 Turnstile *실패*를 시트에
   `TURNSTILE-FAIL: <error-codes>`로 기록해 진단에 쓴다. 평상시엔 제거할 것(안 그러면
   잘못된 토큰의 봇이 시트를 채운다).
+- `MIN_FILL_MS` / `HOURLY_CAP` — 커밋된 기본값을 덮어쓰는 선택적 숫자 오버라이드.
+  실행 시점에 읽히므로 재배포가 필요 없다.
 
 ## 방어 (순서대로, 전부 `Code.gs::doPost`)
 
 1. **허니팟** — 숨은 `company_url` 필드. 채워져 있으면 드롭.
-2. **최소 작성시간** — 폼이 `elapsed`(페이지 로드 후 ms)를 스탬프. `< 3000`이면 드롭
-   (봇처럼 빠름). 없으면(no-JS) 통과.
+2. **최소 작성시간** — 폼이 `elapsed`(페이지 로드 후 ms)를 스탬프. 임계값보다 빠르면
+   드롭(봇처럼 빠름). 없으면(no-JS) 통과.
 3. **검증** — 필수 name/email/message, 이메일 형식.
 4. **길이 제한** — 과대 필드 드롭(클라이언트 `maxlength`가 이를 미러링).
 5. **Turnstile** — 서버측 `siteverify`. `TURNSTILE_SECRET`이 설정됐을 때만 강제.

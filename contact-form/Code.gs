@@ -25,8 +25,10 @@
  *
  * DEFENSES (in order)
  *   1. Honeypot  — the hidden `company_url` field; bots fill it, humans do not.
- *   2. Min fill time — the form stamps `elapsed` (ms since page load); a sub-3s
- *      submit is bot-fast and is dropped. Absent (no-JS) is allowed to pass.
+ *   2. Min fill time — the form stamps `elapsed` (ms since page load); a submit
+ *      faster than the threshold is bot-fast and is dropped. Absent (no-JS) is
+ *      allowed to pass. Threshold = MIN_FILL_MS script property, else the
+ *      committed default — production may run a different value than this repo.
  *   3. Validation — required name/email/message, email format.
  *   4. Length caps — reject oversized payloads.
  *   5. Turnstile — verify the Cloudflare token server-side. Enforced only when a
@@ -36,6 +38,8 @@
  *   6. Hourly cap — a global circuit breaker so a flood cannot drain the Gmail
  *      send quota and block legitimate mail (Apps Script gives doPost no client
  *      IP, so per-IP limiting is not possible — this is a total-volume guard).
+ *      Cap = HOURLY_CAP script property, else the committed default —
+ *      production may run a different value than this repo.
  *   7. Formula-injection scrub — values starting with = + - @ get a leading
  *      quote so opening the Sheet cannot execute them (CSV/Sheets injection).
  *   Dropped requests still return "ok" so bots do not learn they were filtered.
@@ -52,12 +56,18 @@ const FROM_NAME = 'Sizlon 웹 문의'; // sender display name on the notificatio
 // owner's own address — which stops Gmail from labelling it "me". Leave empty
 // to send from the owner account (shows as "me" when NOTIFY is that account).
 const FROM_ALIAS = '';
+// Defaults for the tunable thresholds. Both can be overridden at runtime via
+// Script Properties (MIN_FILL_MS / HOURLY_CAP) without a redeploy, so the
+// values committed here are not necessarily what production enforces.
+const MIN_FILL_MS = 3000; // drop submits faster than this (ms since page load)
 const HOURLY_CAP = 40; // max notification emails per hour; overflow is logged only
 
 function doPost(e) {
   const p = (e && e.parameter) || {};
+  const props = PropertiesService.getScriptProperties();
   if (p.company_url) return ok(); // 1. honeypot
-  if (p.elapsed && Number(p.elapsed) < 3000) return ok(); // 2. min fill time (bot-fast)
+  const minFill = Number(props.getProperty('MIN_FILL_MS')) || MIN_FILL_MS;
+  if (p.elapsed && Number(p.elapsed) < minFill) return ok(); // 2. min fill time (bot-fast)
 
   const name = (p.name || '').trim();
   const email = (p.email || '').trim();
@@ -69,7 +79,6 @@ function doPost(e) {
   if (name.length > 200 || email.length > 200 ||
       company.length > 200 || message.length > 5000) return ok(); // 4. length caps
 
-  const props = PropertiesService.getScriptProperties();
   const secret = props.getProperty('TURNSTILE_SECRET');
   if (secret) { // 5. Turnstile
     const tv = turnstileVerify_(secret, p['cf-turnstile-response']);
@@ -89,7 +98,8 @@ function doPost(e) {
   const cache = CacheService.getScriptCache(); // 6. hourly cap
   const key = 'cnt_' + Math.floor(Date.now() / 3600000);
   const count = Number(cache.get(key) || 0);
-  const over = count >= HOURLY_CAP;
+  const hourlyCap = Number(props.getProperty('HOURLY_CAP')) || HOURLY_CAP;
+  const over = count >= hourlyCap;
   if (!over) cache.put(key, String(count + 1), 3600);
 
   SpreadsheetApp.getActiveSpreadsheet().getActiveSheet() // 7. log (injection-scrubbed)
