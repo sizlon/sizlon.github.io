@@ -64,6 +64,15 @@ never in repo):
 - `MIN_FILL_MS` / `HOURLY_CAP` — optional numeric overrides of the committed
   defaults; read at runtime (no redeploy needed).
 
+## Topic field
+
+The form carries an optional `topic` select (`demo | pilot | pricing |
+security | other`) preselected from the referring CTA's `?topic=` query
+param. `Code.gs` whitelists it via `TOPIC_LABELS`, appends the Korean label as
+the sheet's **last** column, and prefixes the mail subject (`Sizlon 문의
+[가격] — …`). Absent/unknown values degrade to the pre-topic behavior, so the
+field is safe to deploy in either order (site first or script first).
+
 ## Defenses (in order, all in `Code.gs::doPost`)
 
 1. **Honeypot** — hidden `company_url` field; filled ⇒ dropped.

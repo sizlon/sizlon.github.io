@@ -15,7 +15,7 @@ const c = tr.miriboa;
     <h1>{c.h1}</h1>
     <p class="lede">{c.lede}</p>
     <div class="cta-row">
-      <a class="btn btn-primary" href={localizePath('/contact', lang)}>{c.ctaPrimary} <span class="arrow">&rarr;</span></a>
+      <a class="btn btn-primary" href={`${localizePath('/contact', lang)}?topic=pilot`}>{c.ctaPrimary} <span class="arrow">&rarr;</span></a>
     </div>
   </section>
 
@@ -105,7 +105,7 @@ const c = tr.miriboa;
   <section class="section wrap model">
     <span class="eyebrow">{c.modelEyebrow}</span>
     <p class="model-note">
-      {c.modelNote} <a href={localizePath('/contact', lang)}>{c.contactBtn} &rarr;</a>
+      {c.modelNote} <a href={`${localizePath('/contact', lang)}?topic=pilot`}>{c.contactBtn} &rarr;</a>
     </p>
   </section>
 </Base>

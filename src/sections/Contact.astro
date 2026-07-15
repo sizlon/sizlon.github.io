@@ -48,6 +48,15 @@ const turnstileKey = site.turnstileSiteKey;
           <input type="text" name="company" autocomplete="organization" maxlength="160" />
         </label>
         <label>
+          <span>{c.labels.topic}</span>
+          <select name="topic">
+            <option value="">{c.topicPlaceholder}</option>
+            {Object.entries(c.topics).map(([key, label]) => (
+              <option value={key}>{label}</option>
+            ))}
+          </select>
+        </label>
+        <label>
           <span>{c.labels.message}</span>
           <textarea name="message" rows="4" maxlength="4000" required></textarea>
         </label>
@@ -62,7 +71,7 @@ const turnstileKey = site.turnstileSiteKey;
         {turnstileKey && <div class="cf-turnstile" data-sitekey={turnstileKey}></div>}
         {turnstileKey && <p class="verr" hidden data-verify-error>{c.verifyNeeded}</p>}
 
-        <button class="btn btn-primary" type="submit">{tr.common.requestDemo} <span class="arrow">&rarr;</span></button>
+        <button class="btn btn-primary" type="submit">{c.submit} <span class="arrow">&rarr;</span></button>
         <p class="note eyebrow">{c.note}</p>
       </form>
 
@@ -88,6 +97,12 @@ const turnstileKey = site.turnstileSiteKey;
   const form = document.querySelector<HTMLFormElement>('[data-contact-form]');
   const sent = document.querySelector<HTMLElement>('[data-contact-sent]');
   const frame = document.querySelector<HTMLIFrameElement>('iframe[name="sizlon-form-frame"]');
+  // Preselect the topic carried by the referring CTA (?topic=demo|pilot|...).
+  const topicParam = new URLSearchParams(location.search).get('topic');
+  const topicSel = form?.querySelector<HTMLSelectElement>('select[name="topic"]');
+  if (topicSel && topicParam && [...topicSel.options].some((o) => o.value === topicParam)) {
+    topicSel.value = topicParam;
+  }
   if (form && sent && frame) {
     let pending = false;
     form.addEventListener('submit', (e) => {
@@ -132,8 +147,8 @@ const turnstileKey = site.turnstileSiteKey;
   .form { display: flex; flex-direction: column; gap: 1rem; padding: 1.75rem; border: 1px solid var(--hairline); border-radius: var(--radius); background: var(--color-mist); }
   label { display: flex; flex-direction: column; gap: 0.4rem; }
   label span { font-family: var(--font-mono); font-size: var(--step--1); color: var(--color-slate); }
-  input, textarea { font-family: var(--font-body); font-size: var(--step-0); color: var(--color-ink); background: var(--color-vellum); border: 1px solid var(--hairline); border-radius: var(--radius); padding: 0.7rem 0.85rem; }
-  input:focus, textarea:focus { outline: 2px solid var(--color-recovered); outline-offset: 1px; border-color: transparent; }
+  input, textarea, select { font-family: var(--font-body); font-size: var(--step-0); color: var(--color-ink); background: var(--color-vellum); border: 1px solid var(--hairline); border-radius: var(--radius); padding: 0.7rem 0.85rem; }
+  input:focus, textarea:focus, select:focus { outline: 2px solid var(--color-recovered); outline-offset: 1px; border-color: transparent; }
   .form .btn { align-self: flex-start; }
   .note { margin-top: 0.25rem; }
   .verr { color: #b3261e; font-size: var(--step--1); }

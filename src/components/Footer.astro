@@ -36,7 +36,7 @@ const tr = t(lang);
 
     <div class="col">
       <span class="eyebrow">{tr.footer.getInTouch}</span>
-      <a href={localizePath('/contact', lang)}>{tr.common.requestDemo}</a>
+      <a href={`${localizePath('/contact', lang)}?topic=demo`}>{tr.common.requestDemo}</a>
       <a href={`mailto:${site.contactEmail}`}>{site.contactEmail}</a>
     </div>
   </div>

@@ -63,6 +63,15 @@ Cloudflare Turnstile이 맡는다.
 - `MIN_FILL_MS` / `HOURLY_CAP` — 커밋된 기본값을 덮어쓰는 선택적 숫자 오버라이드.
   실행 시점에 읽히므로 재배포가 필요 없다.
 
+## 문의 유형(topic) 필드
+
+폼에는 선택적 `topic` 셀렉트(`demo | pilot | pricing | security | other`)가
+있고, 유입 CTA의 `?topic=` 쿼리 파라미터로 자동 선택된다. `Code.gs`는
+`TOPIC_LABELS` 화이트리스트로 검증해 한국어 라벨을 시트의 **마지막** 컬럼에
+추가하고, 메일 제목에 접두한다(`Sizlon 문의 [가격] — …`). 값이 없거나 미등록이면
+topic 도입 전과 동일하게 동작하므로, 사이트/스크립트 어느 쪽을 먼저 배포해도
+안전하다.
+
 ## 방어 (순서대로, 전부 `Code.gs::doPost`)
 
 1. **허니팟** — 숨은 `company_url` 필드. 채워져 있으면 드롭.

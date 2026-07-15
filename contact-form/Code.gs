@@ -62,6 +62,16 @@ const FROM_ALIAS = '';
 const MIN_FILL_MS = 3000; // drop submits faster than this (ms since page load)
 const HOURLY_CAP = 40; // max notification emails per hour; overflow is logged only
 
+// Inquiry-topic whitelist (the form's <select name="topic">). Unknown/absent
+// values map to '' so old clients and bots degrade to the pre-topic behavior.
+const TOPIC_LABELS = {
+  demo: '데모',
+  pilot: '파일럿',
+  pricing: '가격',
+  security: '보안검토',
+  other: '기타',
+};
+
 function doPost(e) {
   const p = (e && e.parameter) || {};
   const props = PropertiesService.getScriptProperties();
@@ -73,6 +83,7 @@ function doPost(e) {
   const email = (p.email || '').trim();
   const company = (p.company || '').trim();
   const message = (p.message || '').trim();
+  const topic = TOPIC_LABELS[(p.topic || '').trim()] || '';
 
   if (!name || !email || !message) return ok(); // 3. required
   if (!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(email)) return ok(); // email format
@@ -104,15 +115,17 @@ function doPost(e) {
 
   SpreadsheetApp.getActiveSpreadsheet().getActiveSheet() // 7. log (injection-scrubbed)
     .appendRow([new Date(), scrub_(name), scrub_(email),
-                scrub_(company), scrub_(message), over ? 'RATE-LIMITED' : '']);
+                scrub_(company), scrub_(message), over ? 'RATE-LIMITED' : '',
+                topic]); // topic appended last so existing sheet columns keep their meaning
 
   if (!over) {
     const mail = {
       to: NOTIFY,
       replyTo: email,
       name: FROM_NAME,
-      subject: 'Sizlon 문의 — ' + name,
-      body: '이름: ' + name + '\n이메일: ' + email +
+      subject: 'Sizlon 문의' + (topic ? ' [' + topic + ']' : '') + ' — ' + name,
+      body: (topic ? '유형: ' + topic + '\n' : '') +
+            '이름: ' + name + '\n이메일: ' + email +
             '\n회사: ' + company + '\n\n' + message,
     };
     if (FROM_ALIAS) mail.from = FROM_ALIAS;

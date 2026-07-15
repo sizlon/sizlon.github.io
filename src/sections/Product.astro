@@ -17,7 +17,7 @@ const c = tr.product;
     <h1>{c.h1}</h1>
     <p class="lede">{c.lede}</p>
     <div class="cta-row">
-      <a class="btn btn-primary" href={localizePath('/contact', lang)}>{tr.common.requestDemo} <span class="arrow">&rarr;</span></a>
+      <a class="btn btn-primary" href={`${localizePath('/contact', lang)}?topic=demo`}>{tr.common.requestDemo} <span class="arrow">&rarr;</span></a>
       <a class="btn btn-ghost" href={localizePath('/how-it-works', lang)}>{c.ctaHeal}</a>
     </div>
   </section>

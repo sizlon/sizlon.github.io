@@ -42,7 +42,7 @@ const c = tr.editions;
             <span class="amount">{c.priceAmount}</span>
             <span class="period">{c.pricePeriod}</span>
           </div>
-          <a class="btn btn-primary" href={localizePath('/contact', lang)}>{c.requestPricing} <span class="arrow">&rarr;</span></a>
+          <a class="btn btn-primary" href={`${localizePath('/contact', lang)}?topic=pricing`}>{c.requestPricing} <span class="arrow">&rarr;</span></a>
         </article>
       ))}
     </div>
