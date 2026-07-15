@@ -47,6 +47,14 @@ html {
   scroll-behavior: smooth;
 }
 
+/* Korean wraps per-syllable by default, splitting words mid-eojeol
+   ("데모를 요/청하세요"). keep-all breaks only between words; overflow-wrap
+   still rescues genuinely unbreakable runs (URLs). */
+:lang(ko) {
+  word-break: keep-all;
+  overflow-wrap: break-word;
+}
+
 body {
   margin: 0;
   background: var(--color-vellum);
