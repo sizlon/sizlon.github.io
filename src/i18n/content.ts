@@ -127,11 +127,12 @@ export const content = {
       closingBtn: 'Talk to us',
     },
     editions: {
-      title: 'Editions',
-      description: 'Sizlon editions and licensing — capabilities by edition. Pricing is provided on request.',
-      eyebrow: 'editions · licensing',
+      title: 'Editions — Crawler Platform',
+      description: 'Crawler Platform editions and licensing — capabilities by edition. Pricing is provided on request.',
+      eyebrow: 'crawler platform · editions · licensing',
       h1: "Pick the capabilities. We'll shape the license.",
-      lede: 'Editions are licensed annually and provisioned by Sizlon — there is no self-serve signup. Pricing depends on edition, installations, deployment profile, and support, so we quote it directly. Capabilities are public; the number comes from a quick conversation.',
+      lede: 'Crawler Platform ships in three editions, licensed annually and provisioned by Sizlon — there is no self-serve signup. Pricing depends on edition, installations, deployment profile, and support, so we quote it directly. Capabilities are public; the number comes from a quick conversation.',
+      productLink: 'About Crawler Platform',
       list: [
         { name: 'Basic', target: 'Small / single-project teams', rows: ['1 project', 'Core self-healing extraction', 'Standard output sinks', 'Connected deployment'] },
         { name: 'Professional', target: 'Multi-project teams', featured: true, rows: ['Multiple projects', 'Pipeline builder', 'AI-assisted configuration', 'AI self-healing + inspection'] },
@@ -140,6 +141,7 @@ export const content = {
       priceAmount: 'Contact',
       pricePeriod: 'annual license',
       requestPricing: 'Request pricing',
+      baselineNote: 'Every edition includes the control plane with role-based access, audit logging, backup-before-destroy, offline license validation, and the bilingual English/Korean UI. Editions differ in capacity and in how much runs automatically — from core self-healing up to fully automatic promotion.',
       anchor: 'enterprise, on-prem, annual · pricing on request',
     },
     contact: {
@@ -389,11 +391,12 @@ export const content = {
       closingBtn: '문의하기',
     },
     editions: {
-      title: '에디션',
-      description: 'Sizlon 에디션과 라이선스 — 에디션별 역량. 가격은 문의 시 제공됩니다.',
-      eyebrow: '에디션 · 라이선스',
+      title: '에디션 — Crawler Platform',
+      description: 'Crawler Platform 에디션과 라이선스 — 에디션별 역량. 가격은 문의 시 제공됩니다.',
+      eyebrow: 'Crawler Platform · 에디션 · 라이선스',
       h1: '역량을 고르세요. 라이선스는 저희가 맞춥니다.',
-      lede: '에디션은 연 단위로 라이선스되며 Sizlon이 프로비저닝합니다 — 셀프 가입은 없습니다. 가격은 에디션·설치 수·배포 프로파일·지원에 따라 달라지므로 직접 견적드립니다. 역량은 공개돼 있고, 숫자는 짧은 대화로 정해집니다.',
+      lede: 'Crawler Platform은 세 가지 에디션으로 제공됩니다 — 연 단위 라이선스이며 Sizlon이 프로비저닝합니다. 셀프 가입은 없습니다. 가격은 에디션·설치 수·배포 프로파일·지원에 따라 달라지므로 직접 견적드립니다. 역량은 공개돼 있고, 숫자는 짧은 대화로 정해집니다.',
+      productLink: 'Crawler Platform 소개',
       list: [
         { name: 'Basic', target: '소규모 / 단일 프로젝트 팀', rows: ['프로젝트 1개', '핵심 자가치유 추출', '표준 출력 싱크', '연결형 배포'] },
         { name: 'Professional', target: '멀티 프로젝트 팀', featured: true, rows: ['다중 프로젝트', '파이프라인 빌더', 'AI 보조 구성', 'AI 자가치유 + 검사'] },
@@ -402,6 +405,7 @@ export const content = {
       priceAmount: '문의',
       pricePeriod: '연간 라이선스',
       requestPricing: '가격 문의',
+      baselineNote: '모든 에디션에 역할 기반 접근의 컨트롤 플레인, 감사 로깅, 파괴 전 백업, 오프라인 라이선스 검증, 영어·한국어 이중 언어 UI가 포함됩니다. 에디션 간 차이는 용량과 자동화의 폭입니다 — 핵심 자가치유부터 완전 자동 승격까지.',
       anchor: '엔터프라이즈, 온프레미스, 연 단위 · 가격은 문의',
     },
     contact: {
