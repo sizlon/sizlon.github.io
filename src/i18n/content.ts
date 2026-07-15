@@ -135,8 +135,8 @@ export const content = {
       productLink: 'About Crawler Platform',
       list: [
         { name: 'Basic', target: 'Small / single-project teams', rows: ['1 project', 'Core self-healing extraction', 'Standard output sinks', 'Connected deployment'] },
-        { name: 'Professional', target: 'Multi-project teams', featured: true, rows: ['Multiple projects', 'Pipeline builder', 'AI-assisted configuration', 'AI self-healing + inspection'] },
-        { name: 'Enterprise', target: 'On-prem / regulated / scale', rows: ['Highest caps', 'Auto-promotion', 'On-prem / air-gapped', 'Dedicated support'] },
+        { name: 'Professional', target: 'Multi-project teams', featured: true, includes: 'Everything in Basic, plus:', rows: ['Multiple projects & higher caps', 'Pipeline builder', 'AI-assisted configuration', 'AI self-healing (advisory) + inspection'] },
+        { name: 'Enterprise', target: 'On-prem / regulated / scale', includes: 'Everything in Professional, plus:', rows: ['Highest caps', 'Auto-promotion — confident recoveries apply themselves', 'Domain Studio (AI-proposed, human-approved project seeding)', 'On-prem / air-gapped deployment', 'Dedicated support'] },
       ],
       priceAmount: 'Contact',
       pricePeriod: 'annual license',
@@ -399,8 +399,8 @@ export const content = {
       productLink: 'Crawler Platform 소개',
       list: [
         { name: 'Basic', target: '소규모 / 단일 프로젝트 팀', rows: ['프로젝트 1개', '핵심 자가치유 추출', '표준 출력 싱크', '연결형 배포'] },
-        { name: 'Professional', target: '멀티 프로젝트 팀', featured: true, rows: ['다중 프로젝트', '파이프라인 빌더', 'AI 보조 구성', 'AI 자가치유 + 검사'] },
-        { name: 'Enterprise', target: '온프레미스 / 규제 / 대규모', rows: ['최고 한도', '자동 승격', '온프레미스 / 에어갭', '전담 지원'] },
+        { name: 'Professional', target: '멀티 프로젝트 팀', featured: true, includes: 'Basic의 모든 것 +', rows: ['다중 프로젝트·상향된 한도', '파이프라인 빌더', 'AI 보조 구성', 'AI 자가치유(권고) + 검사'] },
+        { name: 'Enterprise', target: '온프레미스 / 규제 / 대규모', includes: 'Professional의 모든 것 +', rows: ['최고 한도', '자동 승격 — 확신 있는 복구는 스스로 적용', 'Domain Studio (AI 제안·사람 승인 프로젝트 시딩)', '온프레미스 / 에어갭 배포', '전담 지원'] },
       ],
       priceAmount: '문의',
       pricePeriod: '연간 라이선스',
