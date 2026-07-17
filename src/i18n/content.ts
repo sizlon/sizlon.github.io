@@ -215,8 +215,8 @@ export const content = {
       samplesH2: 'Read a full report first.',
       samplesLede: 'Three complete verification reports. Open one right in your browser — filter findings, unfold the source evidence, tick items off as you fix them — or download the PDF. All three are demo reports: each tender package is a real, published public tender; each bid package is synthetic, written for the demonstration — as the report itself discloses on page one.',
       samples: [
-        { href: '/samples/miriboa-sample-media.pdf', interactive: '/samples/miriboa-sample-media.html', name: 'Content & media services tender', meta: '30 confirmed findings · 7 critical' },
-        { href: '/samples/miriboa-sample-research.pdf', interactive: '/samples/miriboa-sample-research.html', name: 'Research & consulting tender', meta: '36 confirmed findings · 7 critical' },
+        { href: '/samples/miriboa-sample-media.pdf', interactive: '/samples/miriboa-sample-media.html', name: 'Content & media services tender', meta: '25 confirmed findings · 5 critical' },
+        { href: '/samples/miriboa-sample-research.pdf', interactive: '/samples/miriboa-sample-research.html', name: 'Research & consulting tender', meta: '32 confirmed findings · 6 critical' },
         { href: '/samples/miriboa-sample-engineering.pdf', interactive: '/samples/miriboa-sample-engineering.html', name: 'Engineering & design services tender', meta: '22 confirmed findings · 9 critical' },
       ],
       sampleOpen: 'Open in browser',
@@ -487,8 +487,8 @@ export const content = {
       samplesH2: '먼저 리포트 전문을 읽어보세요.',
       samplesLede: '완성된 검증 리포트 3건입니다. 브라우저에서 바로 열어 발견사항을 필터링하고, 근거 원문을 펼쳐 보고, 보완한 항목을 체크해 볼 수 있습니다 — PDF 다운로드도 함께 제공합니다. 시연용 리포트입니다 — 공고 패키지는 공개된 실제 공공 입찰 공고이고, 응찰 패키지는 시연을 위해 작성된 합성 데이터이며, 리포트 1페이지에도 그렇게 명시돼 있습니다.',
       samples: [
-        { href: '/samples/miriboa-sample-media.pdf', interactive: '/samples/miriboa-sample-media.html', name: '콘텐츠·미디어 용역 공고', meta: '확정 30건 · 중대 7건' },
-        { href: '/samples/miriboa-sample-research.pdf', interactive: '/samples/miriboa-sample-research.html', name: '리서치·컨설팅 용역 공고', meta: '확정 36건 · 중대 7건' },
+        { href: '/samples/miriboa-sample-media.pdf', interactive: '/samples/miriboa-sample-media.html', name: '콘텐츠·미디어 용역 공고', meta: '확정 25건 · 중대 5건' },
+        { href: '/samples/miriboa-sample-research.pdf', interactive: '/samples/miriboa-sample-research.html', name: '리서치·컨설팅 용역 공고', meta: '확정 32건 · 중대 6건' },
         { href: '/samples/miriboa-sample-engineering.pdf', interactive: '/samples/miriboa-sample-engineering.html', name: '엔지니어링·설계 용역 공고', meta: '확정 22건 · 중대 9건' },
       ],
       sampleOpen: '브라우저에서 체험',
