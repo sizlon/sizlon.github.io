@@ -217,7 +217,7 @@ export const content = {
       samples: [
         { href: '/samples/miriboa-sample-media.pdf', interactive: '/samples/miriboa-sample-media.html', name: 'Content & media services tender', meta: '30 confirmed findings · 7 critical' },
         { href: '/samples/miriboa-sample-research.pdf', interactive: '/samples/miriboa-sample-research.html', name: 'Research & consulting tender', meta: '36 confirmed findings · 7 critical' },
-        { href: '/samples/miriboa-sample-engineering.pdf', interactive: null, name: 'Engineering & design services tender', meta: '21 confirmed findings · 10 critical' },
+        { href: '/samples/miriboa-sample-engineering.pdf', interactive: '/samples/miriboa-sample-engineering.html', name: 'Engineering & design services tender', meta: '22 confirmed findings · 9 critical' },
       ],
       sampleOpen: 'Open in browser',
       modelNote: 'Miriboa is a vendor-operated verification service: you send the tender and bid package, we run the verification, and you get the report back — nothing to install, nothing to integrate. It starts as a pilot on your real tenders; there is no self-serve signup.',
@@ -489,7 +489,7 @@ export const content = {
       samples: [
         { href: '/samples/miriboa-sample-media.pdf', interactive: '/samples/miriboa-sample-media.html', name: '콘텐츠·미디어 용역 공고', meta: '확정 30건 · 중대 7건' },
         { href: '/samples/miriboa-sample-research.pdf', interactive: '/samples/miriboa-sample-research.html', name: '리서치·컨설팅 용역 공고', meta: '확정 36건 · 중대 7건' },
-        { href: '/samples/miriboa-sample-engineering.pdf', interactive: null, name: '엔지니어링·설계 용역 공고', meta: '확정 21건 · 중대 10건' },
+        { href: '/samples/miriboa-sample-engineering.pdf', interactive: '/samples/miriboa-sample-engineering.html', name: '엔지니어링·설계 용역 공고', meta: '확정 22건 · 중대 9건' },
       ],
       sampleOpen: '브라우저에서 체험',
       modelNote: '미리보아는 벤더가 직접 운영하는 검증 서비스입니다: 공고·응찰 패키지를 보내주시면 저희가 검증을 수행하고 리포트를 돌려드립니다 — 설치할 것도, 연동할 것도 없습니다. 당신의 실제 공고를 대상으로 한 파일럿으로 시작하며, 셀프 가입은 없습니다.',
