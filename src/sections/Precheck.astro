@@ -1,0 +1,155 @@
+---
+import Base from '../layouts/Base.astro';
+import type { Lang } from '../i18n/content';
+import { t, localizePath } from '../i18n/utils';
+
+interface Props { lang: Lang }
+const { lang } = Astro.props;
+const tr = t(lang);
+const c = tr.precheck;
+const apiUrl = 'https://check.sizlon.io/api/precheck';
+const contactUrl = `${localizePath('/contact', lang)}?topic=pilot`;
+---
+
+<Base title={c.title} description={c.description} lang={lang}>
+  <section class="head section wrap">
+    <span class="eyebrow">{c.eyebrow}</span>
+    <h1>{c.h1}</h1>
+    <p class="lede">{c.lede}</p>
+    <p class="privacy"><strong>{c.privacyStrong}</strong>{c.privacyRest}</p>
+  </section>
+
+  <section class="section wrap tool">
+    <label class="drop" id="drop" tabindex="0">
+      <span class="big">{c.dropBig}</span>
+      <span class="hint">{c.dropHint}</span>
+      <input type="file" id="fileinput" multiple accept=".hwp,.hwpx,.pdf,.docx,.xlsx,.xlsm,.txt,.md">
+    </label>
+
+    <p class="status-line" id="statusline"></p>
+    <div class="banner" id="banner"></div>
+    <div class="results" id="results"></div>
+
+    <div class="cta" id="cta">
+      <a class="btn btn-primary" href={contactUrl}>{c.ctaBtn} <span class="arrow">&rarr;</span></a>
+      <p class="why">{c.ctaWhy}</p>
+    </div>
+  </section>
+</Base>
+
+<style>
+  .head { padding-bottom: 0; }
+  .head h1 { max-width: 24ch; }
+  .lede { max-width: var(--measure); }
+  .privacy { font-size: var(--step--1); color: var(--color-slate); max-width: var(--measure); }
+  .privacy strong { color: var(--color-recovered); }
+
+  .tool { max-width: 860px; }
+  .drop {
+    display: block;
+    border: 2px dashed var(--hairline); border-radius: var(--radius);
+    background: var(--color-mist); padding: 3rem 1.5rem; text-align: center;
+    cursor: pointer; transition: border-color .15s ease, background .15s ease;
+  }
+  .drop:hover, .drop.over { border-color: var(--color-recovered); }
+  .drop .big { display: block; font-weight: 600; font-size: var(--step-0); }
+  .drop .hint { display: block; font-family: var(--font-mono); font-size: var(--step--1); color: var(--color-slate); margin-top: .5rem; }
+  .drop input { display: none; }
+
+  .status-line { font-size: var(--step--1); color: var(--color-slate); margin: 1rem 0; min-height: 1.5em; }
+  .spinner { display: inline-block; width: 12px; height: 12px; border: 2px solid var(--hairline); border-top-color: var(--color-recovered); border-radius: 50%; animation: spin .8s linear infinite; vertical-align: -2px; margin-right: 6px; }
+  @keyframes spin { to { transform: rotate(360deg); } }
+  @media (prefers-reduced-motion: reduce) { .spinner { animation: none; } }
+
+  .banner { border-radius: var(--radius); padding: 1rem 1.25rem; font-weight: 600; display: none; margin-bottom: .75rem; }
+  .banner.good { display: block; background: color-mix(in srgb, var(--color-recovered) 13%, transparent); color: var(--color-recovered); border: 1px solid var(--color-recovered); }
+  .banner.bad  { display: block; background: color-mix(in srgb, var(--color-fault) 13%, transparent); color: var(--color-fault); border: 1px solid var(--color-fault); }
+  .banner :global(.sub) { display: block; font-weight: 400; font-size: var(--step--1); margin-top: .25rem; color: var(--color-slate); }
+
+  .results { display: flex; flex-direction: column; gap: .5rem; }
+  .results :global(.row) {
+    background: var(--color-mist); border: 1px solid var(--hairline);
+    border-left: 3px solid var(--hairline); border-radius: var(--radius);
+    padding: .7rem 1rem;
+    display: grid; grid-template-columns: auto 1fr auto; gap: .25rem .8rem; align-items: center;
+  }
+  .results :global(.row.ok) { border-left-color: var(--color-recovered); }
+  .results :global(.row.suspect) { border-left-color: var(--color-fault); }
+  .results :global(.row.failed) { border-left-color: var(--color-fault); }
+  .results :global(.badge) { font-size: 11.5px; font-weight: 700; border-radius: 4px; padding: 2px 8px; white-space: nowrap; }
+  .results :global(.badge.ok) { background: color-mix(in srgb, var(--color-recovered) 13%, transparent); color: var(--color-recovered); }
+  .results :global(.badge.suspect), .results :global(.badge.failed) { background: color-mix(in srgb, var(--color-fault) 13%, transparent); color: var(--color-fault); }
+  .results :global(.badge.unsupported) { background: color-mix(in srgb, var(--color-slate) 15%, transparent); color: var(--color-slate); }
+  .results :global(.fname) { font-weight: 600; font-size: var(--step-0); }
+  .results :global(.chars) { font-family: var(--font-mono); font-size: var(--step--1); color: var(--color-slate); font-variant-numeric: tabular-nums; white-space: nowrap; }
+  .results :global(.note) { grid-column: 2 / 4; font-size: var(--step--1); color: var(--color-slate); }
+
+  .cta { margin-top: 2rem; display: none; }
+  .cta.show { display: block; }
+  .cta .why { font-size: var(--step--1); color: var(--color-slate); margin-top: .75rem; max-width: var(--measure); }
+</style>
+
+<script define:vars={{ apiUrl, msgs: c.msgs }}>
+  const drop = document.getElementById('drop');
+  const input = document.getElementById('fileinput');
+  const statusline = document.getElementById('statusline');
+  const banner = document.getElementById('banner');
+  const resultsEl = document.getElementById('results');
+  const cta = document.getElementById('cta');
+  let busy = false;
+
+  ['dragenter', 'dragover'].forEach(ev => drop.addEventListener(ev, e => { e.preventDefault(); drop.classList.add('over'); }));
+  ['dragleave', 'drop'].forEach(ev => drop.addEventListener(ev, e => { e.preventDefault(); drop.classList.remove('over'); }));
+  drop.addEventListener('drop', e => check([...e.dataTransfer.files]));
+  drop.addEventListener('keydown', e => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); input.click(); } });
+  input.addEventListener('change', () => check([...input.files]));
+
+  async function check(files) {
+    if (busy || !files.length) return;
+    busy = true;
+    banner.className = 'banner'; cta.className = 'cta';
+    resultsEl.innerHTML = '';
+    statusline.innerHTML = '<span class="spinner"></span>' + msgs.checking;
+    const fd = new FormData();
+    files.slice(0, 20).forEach(f => fd.append('files', f, f.name));
+    try {
+      const res = await fetch(apiUrl, { method: 'POST', body: fd });
+      const data = await res.json();
+      statusline.textContent = '';
+      if (!res.ok || data.error) {
+        banner.className = 'banner bad';
+        banner.textContent = data.error || msgs.requestFail;
+        return;
+      }
+      render(data);
+    } catch (e) {
+      statusline.textContent = '';
+      banner.className = 'banner bad';
+      banner.textContent = msgs.connectFail;
+    } finally {
+      busy = false;
+      input.value = '';
+    }
+  }
+
+  function render(data) {
+    const esc = s => String(s ?? '').replace(/[&<>"']/g, ch => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[ch]));
+    resultsEl.innerHTML = data.files.map(f =>
+      '<div class="row ' + f.status + '">' +
+      '<span class="badge ' + f.status + '">' + msgs.badges[f.status] + '</span>' +
+      '<span class="fname">' + esc(f.name) + '</span>' +
+      '<span class="chars">' + (f.chars ? f.chars.toLocaleString() + msgs.chars : '—') + '</span>' +
+      (f.note ? '<span class="note">' + esc(f.note) + '</span>' : '') +
+      '</div>').join('');
+    if (data.ok) {
+      banner.className = 'banner good';
+      banner.innerHTML = esc(msgs.bannerGood) +
+        (data.n_warn ? '<span class="sub">' + esc(msgs.bannerGoodWarnSub) + '</span>' : '');
+    } else {
+      banner.className = 'banner bad';
+      banner.innerHTML = data.n_issue + esc(msgs.bannerBad) +
+        '<span class="sub">' + esc(msgs.bannerBadSub) + '</span>';
+    }
+    cta.className = 'cta show';
+  }
+</script>
