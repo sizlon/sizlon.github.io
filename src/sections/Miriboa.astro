@@ -91,12 +91,15 @@ const c = tr.miriboa;
     </div>
     <ul class="sample-list">
       {c.samples.map((s) => (
-        <li>
-          <a class="sample-card" href={s.href} download>
-            <span class="sample-name">{s.name}</span>
-            <span class="sample-meta">{s.meta}</span>
-            <span class="sample-get">PDF &darr;</span>
-          </a>
+        <li class="sample-card">
+          <span class="sample-name">{s.name}</span>
+          <span class="sample-meta">{s.meta}</span>
+          <span class="sample-actions">
+            {s.interactive && (
+              <a class="sample-open" href={s.interactive} target="_blank" rel="noopener">{c.sampleOpen} &rarr;</a>
+            )}
+            <a class="sample-get" href={s.href} download>PDF &darr;</a>
+          </span>
         </li>
       ))}
     </ul>
@@ -141,13 +144,17 @@ const c = tr.miriboa;
   .sample-card {
     display: flex; align-items: baseline; gap: 1rem; flex-wrap: wrap;
     border: 1px solid var(--hairline); border-radius: var(--radius); padding: 1.25rem 1.5rem;
-    background: var(--color-mist); color: inherit; text-decoration: none;
+    background: var(--color-mist);
     transition: border-color 0.15s ease, transform 0.15s ease;
   }
   .sample-card:hover { border-color: var(--color-recovered); transform: translateY(-2px); }
   .sample-name { font-weight: 600; }
   .sample-meta { font-family: var(--font-mono); font-size: var(--step--1); color: var(--color-slate); }
-  .sample-get { margin-left: auto; font-weight: 600; font-size: var(--step--1); color: var(--color-recovered); white-space: nowrap; }
+  .sample-actions { margin-left: auto; display: flex; gap: 1.25rem; align-items: baseline; }
+  .sample-open, .sample-get { font-weight: 600; font-size: var(--step--1); white-space: nowrap; text-decoration: none; }
+  .sample-open { color: var(--color-recovered); }
+  .sample-get { color: var(--color-slate); }
+  .sample-get:hover, .sample-open:hover { text-decoration: underline; text-underline-offset: 3px; }
 
   .model { max-width: var(--measure); }
   .model-note { font-size: var(--step-1); }
