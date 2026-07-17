@@ -38,13 +38,13 @@ const contactUrl = `${localizePath('/contact', lang)}?topic=pilot`;
 </Base>
 
 <style>
+  /* 집중형 도구 페이지: 히어로와 도구 영역이 같은 860px 중앙 컬럼을 공유
+     (.wrap의 margin-inline:auto가 max-width에 걸려 가운데 정렬됨) */
+  .head, .tool { max-width: 860px; }
   .head { padding-bottom: 0; }
-  .head h1 { max-width: 24ch; }
   .lede { max-width: var(--measure); }
   .privacy { font-size: var(--step--1); color: var(--color-slate); max-width: var(--measure); }
   .privacy strong { color: var(--color-recovered); }
-
-  .tool { max-width: 860px; }
   .drop {
     display: block;
     border: 2px dashed var(--hairline); border-radius: var(--radius);
