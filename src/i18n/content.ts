@@ -221,6 +221,8 @@ export const content = {
       ],
       sampleOpen: 'Open in browser',
       modelNote: 'Miriboa is a vendor-operated verification service: you send the tender and bid package, we run the verification, and you get the report back — nothing to install, nothing to integrate. It starts as a pilot on your real tenders; there is no self-serve signup.',
+      precheckNote: 'Not sure your files will even parse? Drop them into the free pre-check — it tells you in seconds whether each file is readable, and deletes everything immediately.',
+      precheckBtn: 'Run a free pre-check',
       contactBtn: 'Talk to us',
     },
     legal: {
@@ -493,6 +495,8 @@ export const content = {
       ],
       sampleOpen: '브라우저에서 체험',
       modelNote: '미리보아는 벤더가 직접 운영하는 검증 서비스입니다: 공고·응찰 패키지를 보내주시면 저희가 검증을 수행하고 리포트를 돌려드립니다 — 설치할 것도, 연동할 것도 없습니다. 당신의 실제 공고를 대상으로 한 파일럿으로 시작하며, 셀프 가입은 없습니다.',
+      precheckNote: '파일이 제대로 읽힐지부터 궁금하다면, 무료 사전 점검에 올려보세요 — 파일별로 읽히는지 수 초 안에 알려드리고, 파일은 즉시 삭제됩니다.',
+      precheckBtn: '무료 사전 점검 해보기',
       contactBtn: '문의하기',
     },
     legal: {
