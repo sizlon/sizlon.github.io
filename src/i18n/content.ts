@@ -271,7 +271,7 @@ export const content = {
     },
     legal: {
       updatedLabel: 'Last updated',
-      updated: '2026-07-15',
+      updated: '2026-07-18',
       terms: {
         title: 'Terms of Service',
         description: 'Terms governing use of the Sizlon website.',
@@ -295,10 +295,10 @@ export const content = {
         lede: 'This policy explains what personal information Sizlon collects through this website and how we use it. Data your organization processes with Sizlon products is handled separately — see "Product data" below.',
         sections: [
           { h: 'Scope', p: ['This policy covers sizlon.io and the business inquiries we receive through it. It does not cover data you process inside a licensed Sizlon product, which runs in your own environment.'] },
-          { h: 'What we collect', p: ['When you use the contact form we collect the details you provide — name, work email, company, and your message.', 'This site is served as static pages; we do not use advertising trackers and the site sets no cookies of its own. Our hosting provider may keep standard server logs for security and reliability. The contact form uses Cloudflare Turnstile to block spam — Cloudflare runs a lightweight challenge to confirm you are human and does not use it to track you across sites.'] },
+          { h: 'What we collect', p: ['When you use the contact form we collect the details you provide — name, work email, company, and your message.', 'This site is served as static pages; we do not use advertising trackers and the site sets no cookies of its own. Our hosting provider may keep standard server logs for security and reliability. The contact form uses Cloudflare Turnstile to block spam — Cloudflare runs a lightweight challenge to confirm you are human and does not use it to track you across sites.', 'To understand how the site is used, we also keep minimal, cookieless visit statistics on Sizlon’s own server: page path, page language, referring page, how far the page was scrolled, and time on page. These records contain no name, account, or cookie; the IP address is not stored — visits are counted with a hash that changes daily and cannot be linked across days — and browsers that send “Do Not Track” are excluded.'] },
           { h: 'How we use it', p: ['We use your information only to respond to your inquiry, provide the information you asked for, and follow up about a possible deployment. We do not sell personal information.'] },
           { h: 'Product data', p: ['Licensed Sizlon software is deployed on-prem or connected, under your control — data it extracts or processes stays in your environment, and Sizlon does not access it except where a support engagement expressly requires it and you have authorized it.', 'For vendor-operated services such as Miriboa, the documents you submit are used only to perform the requested verification, are not shared with third parties, and are retained and deleted according to the engagement agreement (including any NDA).'] },
-          { h: 'Service providers and international transfer', p: ['We use a small number of service providers to operate this site and handle inquiries; their servers may be located outside Korea, primarily in the United States. GitHub, Inc. hosts this website (GitHub Pages; standard server logs). Google LLC receives, stores, and relays contact-form submissions and the related notification email (Google Workspace). Cloudflare, Inc. provides the Turnstile anti-spam check.', 'Each provider processes personal information only to deliver its service and is bound by its own data-protection commitments. Beyond these providers, we share personal information only where required by law.'] },
+          { h: 'Service providers and international transfer', p: ['We use a small number of service providers to operate this site and handle inquiries; their servers may be located outside Korea, primarily in the United States. GitHub, Inc. hosts this website (GitHub Pages; standard server logs). Contact-form submissions and visit statistics are stored on Sizlon’s own server; Google LLC relays the notification email about new inquiries (Gmail). Cloudflare, Inc. provides the Turnstile anti-spam check.', 'Each provider processes personal information only to deliver its service and is bound by its own data-protection commitments. Beyond these providers, we share personal information only where required by law.'] },
           { h: 'Retention', p: ['We keep inquiry records for up to three years from receipt — to respond, follow up, and maintain business records — and then delete them without undue delay. Electronic files are deleted by irrecoverable means.'] },
           { h: 'Security', p: ['We apply reasonable technical and organizational measures to protect the information we hold. No method of transmission or storage is completely secure.'] },
           { h: 'Your rights', p: ['Subject to applicable law — including the Personal Information Protection Act (PIPA) of the Republic of Korea — you may request access to, correction of, or deletion of your personal information. Email hello@sizlon.io to exercise these rights; we respond without undue delay.'] },
@@ -589,7 +589,7 @@ export const content = {
     },
     legal: {
       updatedLabel: '최종 수정',
-      updated: '2026-07-15',
+      updated: '2026-07-18',
       terms: {
         title: '이용약관',
         description: 'Sizlon 웹사이트 이용에 관한 약관.',
@@ -613,10 +613,10 @@ export const content = {
         lede: '본 방침은 Sizlon이 본 웹사이트를 통해 수집하는 개인정보와 그 이용 방법을 설명합니다. 귀 조직이 Sizlon 제품으로 처리하는 데이터는 별도로 취급됩니다 — 아래 "제품 데이터" 참조.',
         sections: [
           { h: '적용 범위', p: ['본 방침은 sizlon.io 및 이를 통해 접수되는 업무 문의에 적용됩니다. 라이선스된 Sizlon 제품 내부에서 귀하가 처리하는 데이터에는 적용되지 않으며, 해당 데이터는 귀하의 환경에서 실행됩니다.'] },
-          { h: '수집 항목', p: ['문의 양식 이용 시 귀하가 제공하는 정보 — 이름, 업무 이메일, 회사, 문의 내용 —를 수집합니다.', '본 사이트는 정적 페이지로 제공되며 광고 추적기를 사용하지 않고, 자체 쿠키도 설정하지 않습니다. 호스팅 제공자는 보안·안정성을 위해 표준 서버 로그를 보관할 수 있습니다. 문의 양식은 스팸 차단을 위해 Cloudflare Turnstile을 사용합니다 — Cloudflare가 사람인지 확인하는 가벼운 챌린지를 수행하며, 이를 사이트 간 추적에 사용하지 않습니다.'] },
+          { h: '수집 항목', p: ['문의 양식 이용 시 귀하가 제공하는 정보 — 이름, 업무 이메일, 회사, 문의 내용 —를 수집합니다.', '본 사이트는 정적 페이지로 제공되며 광고 추적기를 사용하지 않고, 자체 쿠키도 설정하지 않습니다. 호스팅 제공자는 보안·안정성을 위해 표준 서버 로그를 보관할 수 있습니다. 문의 양식은 스팸 차단을 위해 Cloudflare Turnstile을 사용합니다 — Cloudflare가 사람인지 확인하는 가벼운 챌린지를 수행하며, 이를 사이트 간 추적에 사용하지 않습니다.', '사이트 이용 현황 파악을 위해 최소한의 쿠키 없는 방문 통계를 Sizlon 자체 서버에 보관합니다: 페이지 경로, 페이지 언어, 유입 경로(리퍼러), 스크롤 깊이, 체류 시간. 이 기록에는 이름·계정·쿠키가 포함되지 않고, IP 주소는 저장하지 않으며 — 방문 집계는 매일 바뀌어 날짜를 넘어 연결할 수 없는 해시로만 수행합니다 — “Do Not Track”을 설정한 브라우저는 수집에서 제외됩니다.'] },
           { h: '이용 목적', p: ['수집한 정보는 문의 응대, 요청 정보 제공, 도입 관련 후속 연락에만 사용합니다. 개인정보를 판매하지 않습니다.'] },
           { h: '제품 데이터', p: ['라이선스된 Sizlon 소프트웨어는 귀하의 통제 하에 온프레미스 또는 연결형으로 배포됩니다 — 추출·처리되는 데이터는 귀하 환경에 머물며, Sizlon은 지원 업무상 명시적으로 필요하고 귀하가 승인한 경우를 제외하고 접근하지 않습니다.', '미리보아 같은 벤더 운영 서비스의 경우, 보내주신 서류는 요청하신 검증 수행에만 사용하고 제3자와 공유하지 않으며, (NDA를 포함한) 업무 계약에 따라 보관·삭제합니다.'] },
-          { h: '처리 위탁 및 국외 이전', p: ['사이트 운영과 문의 처리를 위해 소수의 서비스 제공자를 이용하며, 이들의 서버는 대한민국 외(주로 미국)에 위치할 수 있습니다. GitHub, Inc. — 웹사이트 호스팅(GitHub Pages, 표준 서버 로그). Google LLC — 문의 양식 접수·보관 및 알림 메일 전달(Google Workspace). Cloudflare, Inc. — Turnstile 스팸 방지.', '각 제공자는 해당 서비스 제공 목적으로만 개인정보를 처리하며 자체 개인정보 보호 약정의 적용을 받습니다. 이들 외의 제3자에게는 법률상 요구되는 경우를 제외하고 개인정보를 제공하지 않습니다.'] },
+          { h: '처리 위탁 및 국외 이전', p: ['사이트 운영과 문의 처리를 위해 소수의 서비스 제공자를 이용하며, 이들의 서버는 대한민국 외(주로 미국)에 위치할 수 있습니다. GitHub, Inc. — 웹사이트 호스팅(GitHub Pages, 표준 서버 로그). 문의 양식 접수 내용과 방문 통계는 Sizlon 자체 서버에 보관됩니다. Google LLC — 신규 문의 알림 메일 전달(Gmail). Cloudflare, Inc. — Turnstile 스팸 방지.', '각 제공자는 해당 서비스 제공 목적으로만 개인정보를 처리하며 자체 개인정보 보호 약정의 적용을 받습니다. 이들 외의 제3자에게는 법률상 요구되는 경우를 제외하고 개인정보를 제공하지 않습니다.'] },
           { h: '보유 기간', p: ['문의 관련 개인정보는 응대·후속 연락·사업 기록 유지를 위해 접수일로부터 최대 3년간 보관한 뒤 지체 없이 파기합니다. 전자적 파일은 복구할 수 없는 방법으로 삭제합니다.'] },
           { h: '보안', p: ['보유 정보를 보호하기 위해 합리적인 기술적·관리적 조치를 적용합니다. 다만 어떠한 전송·저장 방식도 완전히 안전하지는 않습니다.'] },
           { h: '정보주체의 권리', p: ['관련 법 — 대한민국 개인정보 보호법(PIPA) 포함 —에 따라 귀하는 개인정보의 열람·정정·삭제를 요청할 수 있습니다. 권리 행사는 hello@sizlon.io로 요청하시면 지체 없이 처리합니다.'] },
