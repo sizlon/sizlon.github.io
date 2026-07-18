@@ -15,6 +15,7 @@ export const content = {
       portalLogin: 'Portal login',
       categories: { extraction: 'Web extraction', verification: 'Document verification' },
       solutionStatus: { live: 'Available now', pilot: 'Pilots open', next: 'Coming next', roadmap: 'On the roadmap' },
+      deliveries: { selfHosted: 'Self-hosted', managed: 'Managed', service: 'Service' },
       explore: 'Explore',
       solutionBlurbs: {
         'crawler-platform': "Web data that doesn't stop arriving. When a page changes, the self-healing extraction recovers itself instead of breaking quietly.",
@@ -143,6 +144,10 @@ export const content = {
       priceAmount: 'Contact',
       pricePeriod: 'annual license',
       requestPricing: 'Request pricing',
+      managedEyebrow: 'managed · data delivered as a subscription',
+      managedTitle: "Don't want to run it yourself?",
+      managedBody: 'The same platform is also available managed: you name the targets and the schedule, Sizlon operates the platform, and only data that passed validation and confidence scoring is delivered — a monthly subscription with nothing to install. When you later want the platform in your own environment, the work transfers to a license above.',
+      managedCta: 'Ask about managed delivery',
       anchor: 'enterprise, on-prem, annual · pricing on request',
     },
     contact: {
@@ -154,7 +159,7 @@ export const content = {
       altPrefix: 'Prefer email?',
       labels: { name: 'Name', email: 'Work email', company: 'Company', topic: 'Topic', message: 'What can we help with?' },
       topicPlaceholder: 'Choose a topic (optional)',
-      topics: { demo: 'Crawler Platform demo', pilot: 'Miriboa pilot', pricing: 'Pricing / editions', security: 'Security / enterprise review', other: 'Something else' },
+      topics: { demo: 'Crawler Platform demo', pilot: 'Miriboa pilot', managed: 'Managed data delivery', pricing: 'Pricing / editions', security: 'Security / enterprise review', other: 'Something else' },
       submit: 'Send',
       note: 'No self-serve signup · we reply within two business days',
       sending: 'Sending…',
@@ -168,7 +173,7 @@ export const content = {
       description: "Sizlon's products — AI proposes, a deterministic layer verifies. Crawler Platform today, with more to follow.",
       eyebrow: 'products',
       h1: 'One discipline, applied where being wrong is expensive.',
-      lede: 'Each Sizlon product stands on its own and inherits the same foundation: let AI propose, verify it deterministically, score the confidence, isolate the uncertain for review, and keep everything auditable and reversible.',
+      lede: 'Each Sizlon product stands on its own and inherits the same foundation: let AI propose, verify it deterministically, score the confidence, isolate the uncertain for review, and keep everything auditable and reversible. Install and run it yourself, or have Sizlon operate it and deliver the verified results — each product states how it ships.',
     },
     miriboa: {
       title: 'Miriboa',
@@ -313,6 +318,7 @@ export const content = {
       portalLogin: '포털 로그인',
       categories: { extraction: '웹 추출', verification: '문서 검증' },
       solutionStatus: { live: '지금 사용 가능', pilot: '파일럿 진행 중', next: '다음 출시 예정', roadmap: '로드맵 예정' },
+      deliveries: { selfHosted: '설치형', managed: '운영 대행', service: '서비스형' },
       explore: '자세히',
       solutionBlurbs: {
         'crawler-platform': '끊기지 않고 도착하는 웹 데이터. 페이지가 바뀌면 자가치유 추출이 조용히 깨지는 대신 스스로 복구합니다.',
@@ -441,6 +447,10 @@ export const content = {
       priceAmount: '문의',
       pricePeriod: '연간 라이선스',
       requestPricing: '가격 문의',
+      managedEyebrow: '운영 대행 · 데이터 배달 구독',
+      managedTitle: '직접 운영하고 싶지 않다면.',
+      managedBody: '같은 플랫폼을 운영 대행으로도 이용할 수 있습니다: 타깃과 주기를 정해주시면 Sizlon이 플랫폼을 운영하고, 검증과 신뢰도 평가를 통과한 데이터만 배달됩니다 — 설치할 것 없는 월 구독입니다. 나중에 플랫폼을 직접 보유하고 싶어지면, 그 작업은 위의 라이선스로 그대로 이어집니다.',
+      managedCta: '운영 대행 문의',
       anchor: '엔터프라이즈, 온프레미스, 연 단위 · 가격은 문의',
     },
     contact: {
@@ -452,7 +462,7 @@ export const content = {
       altPrefix: '이메일이 편하세요?',
       labels: { name: '이름', email: '업무 이메일', company: '회사', topic: '문의 유형', message: '무엇을 도와드릴까요?' },
       topicPlaceholder: '유형 선택 (선택사항)',
-      topics: { demo: 'Crawler Platform 데모', pilot: '미리보아 파일럿', pricing: '가격 / 에디션', security: '보안 / 엔터프라이즈 검토', other: '기타 문의' },
+      topics: { demo: 'Crawler Platform 데모', pilot: '미리보아 파일럿', managed: '데이터 배달 구독 (운영 대행)', pricing: '가격 / 에디션', security: '보안 / 엔터프라이즈 검토', other: '기타 문의' },
       submit: '보내기',
       note: '셀프 가입 없음 · 영업일 2일 내 회신',
       sending: '보내는 중…',
@@ -466,7 +476,7 @@ export const content = {
       description: 'Sizlon 제품 — AI가 제안하고 결정적 레이어가 검증합니다. 오늘은 Crawler Platform, 그 뒤로 이어집니다.',
       eyebrow: '제품',
       h1: '하나의 원칙, 틀리면 값비싼 곳에 적용.',
-      lede: '각 Sizlon 제품은 독립적으로 작동하며 동일한 토대를 공유합니다: AI가 제안하고, 결정적 계층이 검증하고, 신뢰도를 매기고, 불확실한 것은 검토를 위해 격리하고, 모든 것을 감사 가능·되돌림 가능하게 유지합니다.',
+      lede: '각 Sizlon 제품은 독립적으로 작동하며 동일한 토대를 공유합니다: AI가 제안하고, 결정적 계층이 검증하고, 신뢰도를 매기고, 불확실한 것은 검토를 위해 격리하고, 모든 것을 감사 가능·되돌림 가능하게 유지합니다. 직접 설치해 운영할 수도, Sizlon이 운영하고 검증된 결과만 받아볼 수도 있습니다 — 제공 방식은 각 제품에 표시되어 있습니다.',
     },
     miriboa: {
       title: '미리보아',

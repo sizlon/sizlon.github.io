@@ -46,6 +46,14 @@ const c = tr.editions;
         </article>
       ))}
     </div>
+    <aside class="managed">
+      <div class="managed-copy">
+        <span class="eyebrow">{c.managedEyebrow}</span>
+        <h2>{c.managedTitle}</h2>
+        <p>{c.managedBody}</p>
+      </div>
+      <a class="btn btn-ghost" href={`${localizePath('/contact', lang)}?topic=managed`}>{c.managedCta} <span class="arrow">&rarr;</span></a>
+    </aside>
     <p class="anchor eyebrow">{c.anchor}</p>
   </section>
 </Base>
@@ -73,5 +81,19 @@ const c = tr.editions;
   .common-rows { list-style: none; margin: 0; padding: 0; display: flex; flex-wrap: wrap; gap: 0.5rem 1.5rem; }
   .common-rows li { padding-left: 1.25rem; position: relative; font-size: var(--step--1); }
   .common-rows li::before { content: ''; position: absolute; left: 0; top: 0.5em; width: 8px; height: 8px; border-radius: 50%; background: var(--color-recovered); }
+  .managed {
+    margin-top: 1.25rem;
+    padding: 1.75rem;
+    border: 1px solid var(--hairline);
+    border-radius: var(--radius);
+    background: var(--color-vellum);
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1.25rem 2.5rem;
+    align-items: center;
+    justify-content: space-between;
+  }
+  .managed-copy { display: flex; flex-direction: column; gap: 0.5rem; max-width: var(--measure); }
+  .managed-copy h2 { font-size: var(--step-1); }
   .anchor { margin-top: 1.5rem; text-align: center; }
 </style>

@@ -37,17 +37,21 @@ export const crawlerPages = [
 
 // The product line. `categoryKey` labels the domain (product-neutral — the
 // company umbrella is the shared "propose then verify" DNA, not one lifecycle).
+// `deliveryKeys` states how the product ships (secondary metadata, not a
+// top-level taxonomy): self-hosted license, managed subscription, or a
+// vendor-operated service. Labels come from content[lang].common.deliveries.
 export type Solution = {
   slug: 'crawler-platform' | 'miriboa';
   name: string; // product name — same in every locale
   categoryKey: 'extraction' | 'verification';
+  deliveryKeys: Array<'selfHosted' | 'managed' | 'service'>;
   status: 'live' | 'pilot' | 'next' | 'roadmap';
   href?: string;
 };
 
 export const solutions: Solution[] = [
-  { slug: 'crawler-platform', name: 'Crawler Platform', categoryKey: 'extraction', status: 'live', href: '/products/crawler-platform' },
-  { slug: 'miriboa', name: 'Miriboa', categoryKey: 'verification', status: 'pilot', href: '/products/miriboa' },
+  { slug: 'crawler-platform', name: 'Crawler Platform', categoryKey: 'extraction', deliveryKeys: ['selfHosted', 'managed'], status: 'live', href: '/products/crawler-platform' },
+  { slug: 'miriboa', name: 'Miriboa', categoryKey: 'verification', deliveryKeys: ['service'], status: 'pilot', href: '/products/miriboa' },
 ];
 
 export const legalLinks = [
