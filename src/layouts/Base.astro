@@ -46,6 +46,47 @@ const tr = t(lang);
     </main>
     <Footer lang={lang} />
 
+    <script>
+      // 쿠키 없는 자체 방문 비콘 — 페이지 이탈 시점에 경로·언어·리퍼러·최대
+      // 스크롤 깊이·체류시간만 svc.sizlon.io(/api/hit)로 보낸다. 식별자와
+      // 쿠키는 없고, 서버도 IP를 저장하지 않는다(일일 salt 해시만). DNT 존중.
+      // text/plain 문자열로 보내 CORS preflight 없는 단순 요청을 유지한다.
+      const local = ['localhost', '127.0.0.1'].includes(location.hostname);
+      const dnt = navigator.doNotTrack === '1';
+      let t0 = Date.now();
+      let maxScroll = 0;
+      let sent = false;
+      const measure = () => {
+        const total = document.documentElement.scrollHeight - innerHeight;
+        const pct = total > 0 ? Math.round((scrollY / total) * 100) : 100;
+        if (pct > maxScroll) maxScroll = Math.min(pct, 100);
+      };
+      const send = () => {
+        if (sent || local || dnt) return;
+        sent = true;
+        navigator.sendBeacon(
+          'https://svc.sizlon.io/api/hit',
+          JSON.stringify({
+            p: location.pathname,
+            l: document.documentElement.lang,
+            r: document.referrer,
+            s: maxScroll,
+            d: Date.now() - t0,
+          }),
+        );
+      };
+      addEventListener('scroll', measure, { passive: true });
+      measure();
+      addEventListener('pagehide', send);
+      document.addEventListener('visibilitychange', () => {
+        if (document.visibilityState === 'hidden') send();
+      });
+      // bfcache 복원(뒤로가기)은 새 방문으로 다시 계측한다.
+      addEventListener('pageshow', (e) => {
+        if (e.persisted) { sent = false; t0 = Date.now(); maxScroll = 0; measure(); }
+      });
+    </script>
+
     <style>
       .skip {
         position: absolute;
