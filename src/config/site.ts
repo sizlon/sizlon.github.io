@@ -11,7 +11,7 @@ export const site = {
   // Contact form endpoint — a Google Apps Script web-app /exec URL. Paste the
   // deployed URL here to activate the form; while empty, the form no-ops on
   // submit and the mailto fallback carries. Not a secret (it's client-visible).
-  contactFormEndpoint: 'https://script.google.com/macros/s/AKfycbwJ0qPfptzdPshTQ5wEjMSjshp_31toeRyLD7oxIcEOPLwy94OlvmQEBR9n7qAh4JfW/exec',
+  contactFormEndpoint: 'https://svc.sizlon.io/api/contact',
   // Cloudflare Turnstile site key (public). Set this AND the TURNSTILE_SECRET
   // script property in Apps Script to activate bot verification. While empty,
   // the widget is not rendered and the server skips the Turnstile check.

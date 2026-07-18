@@ -3,10 +3,11 @@ import Base from '../layouts/Base.astro';
 import { site } from '../config/site';
 import type { Lang } from '../i18n/content';
 import { t } from '../i18n/utils';
-// The form POSTs to a Google Apps Script web app (site.contactFormEndpoint),
-// targeting a hidden iframe so there is no CORS/preflight to fight. The script
-// appends to a Google Sheet and emails contactEmail. `company_url` is a honeypot.
-// While the endpoint is empty the submit no-ops and the mailto fallback carries.
+// The form fetch-POSTs to the site backend (site.contactFormEndpoint →
+// svc.sizlon.io, source: sizlon-platform repo `site-backend/`), which verifies
+// Turnstile server-side, stores the submission, and emails contactEmail.
+// `company_url` is a honeypot. While the endpoint is empty the submit no-ops
+// and the mailto fallback carries.
 
 interface Props { lang: Lang }
 const { lang } = Astro.props;
@@ -30,7 +31,6 @@ const turnstileKey = site.turnstileSiteKey;
         class="form"
         method="post"
         action={endpoint || undefined}
-        target={endpoint ? 'sizlon-form-frame' : undefined}
         data-contact-form
         data-sending={c.sending}
         data-turnstile={turnstileKey ? 'on' : undefined}
@@ -70,6 +70,7 @@ const turnstileKey = site.turnstileSiteKey;
 
         {turnstileKey && <div class="cf-turnstile" data-sitekey={turnstileKey}></div>}
         {turnstileKey && <p class="verr" hidden data-verify-error>{c.verifyNeeded}</p>}
+        <p class="verr" hidden data-send-error>{c.sendError}</p>
 
         <button class="btn btn-primary" type="submit">{c.submit} <span class="arrow">&rarr;</span></button>
         <p class="note eyebrow">{c.note}</p>
@@ -79,8 +80,6 @@ const turnstileKey = site.turnstileSiteKey;
         <h2>{c.sentTitle}</h2>
         <p>{c.sentBody}</p>
       </div>
-
-      <iframe name="sizlon-form-frame" class="hidden-frame" title="form target" aria-hidden="true" tabindex="-1"></iframe>
     </div>
   </section>
 </Base>
@@ -90,48 +89,60 @@ const turnstileKey = site.turnstileSiteKey;
 )}
 
 <script>
-  // Progressive enhancement for the hidden-iframe form: show a "sending" state,
-  // then swap the form for an inline confirmation when the iframe finishes the
-  // POST. The honeypot is enforced server-side too; this just avoids a bot spin.
+  // fetch 제출: 성공/검증실패/오류를 서버 응답으로 구분해 표시한다.
+  // 허니팟·최소 작성시간·Turnstile은 서버가 최종 강제하고, 여기서는 UX만 돕는다.
   const loadedAt = Date.now();
   const form = document.querySelector<HTMLFormElement>('[data-contact-form]');
   const sent = document.querySelector<HTMLElement>('[data-contact-sent]');
-  const frame = document.querySelector<HTMLIFrameElement>('iframe[name="sizlon-form-frame"]');
   // Preselect the topic carried by the referring CTA (?topic=demo|pilot|...).
   const topicParam = new URLSearchParams(location.search).get('topic');
   const topicSel = form?.querySelector<HTMLSelectElement>('select[name="topic"]');
   if (topicSel && topicParam && [...topicSel.options].some((o) => o.value === topicParam)) {
     topicSel.value = topicParam;
   }
-  if (form && sent && frame) {
-    let pending = false;
-    form.addEventListener('submit', (e) => {
+  if (form && sent) {
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
       const hp = form.querySelector<HTMLInputElement>('[name="company_url"]');
-      if (hp && hp.value) { e.preventDefault(); return; }
-      if (!form.getAttribute('action')) { e.preventDefault(); return; } // endpoint not set yet
+      if (hp && hp.value) return; // bot — silent no-op (server enforces too)
+      const endpoint = form.getAttribute('action');
+      if (!endpoint) return; // endpoint not set yet — mailto fallback carries
+      const verr = document.querySelector<HTMLElement>('[data-verify-error]');
+      const serr = document.querySelector<HTMLElement>('[data-send-error]');
       // Turnstile: block submit until the widget has produced a token.
       if (form.dataset.turnstile) {
         const tok = form.querySelector<HTMLInputElement>('[name="cf-turnstile-response"]');
-        const verr = document.querySelector<HTMLElement>('[data-verify-error]');
         if (!tok || !tok.value) {
-          e.preventDefault();
           if (verr) verr.hidden = false;
           return;
         }
         if (verr) verr.hidden = true;
       }
-      // Stamp elapsed ms since load; the script drops sub-3s (bot-fast) posts.
+      if (serr) serr.hidden = true;
+      // Stamp elapsed ms since load; the backend drops bot-fast posts.
       const elapsed = form.querySelector<HTMLInputElement>('[data-elapsed]');
       if (elapsed) elapsed.value = String(Date.now() - loadedAt);
-      pending = true;
       const btn = form.querySelector<HTMLButtonElement>('button[type="submit"]');
+      const btnLabel = btn ? btn.innerHTML : '';
       if (btn) { btn.disabled = true; btn.textContent = form.dataset.sending || 'Sending…'; }
-    });
-    frame.addEventListener('load', () => {
-      if (!pending) return; // ignore the initial (empty) load
-      form.hidden = true;
-      sent.hidden = false;
-      sent.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      try {
+        const res = await fetch(endpoint, { method: 'POST', body: new FormData(form) });
+        const data = await res.json().catch(() => null);
+        if (res.ok && data && data.ok) {
+          form.hidden = true;
+          sent.hidden = false;
+          sent.scrollIntoView({ behavior: 'smooth', block: 'center' });
+          return;
+        }
+        if (res.status === 403 && verr) verr.hidden = false;
+        else if (serr) serr.hidden = false;
+      } catch {
+        if (serr) serr.hidden = false;
+      }
+      // 실패 — 재시도 가능 상태로 복원 (Turnstile 토큰은 1회용이라 리셋)
+      if (btn) { btn.disabled = false; btn.innerHTML = btnLabel; }
+      const ts = (window as { turnstile?: { reset: () => void } }).turnstile;
+      if (ts) ts.reset();
     });
   }
 </script>
@@ -153,7 +164,6 @@ const turnstileKey = site.turnstileSiteKey;
   .note { margin-top: 0.25rem; }
   .verr { color: #b3261e; font-size: var(--step--1); }
   .hp { position: absolute; left: -9999px; width: 1px; height: 1px; overflow: hidden; }
-  .hidden-frame { position: absolute; width: 0; height: 0; border: 0; }
   .sent {
     padding: 1.75rem;
     border: 1px solid var(--color-recovered);

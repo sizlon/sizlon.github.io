@@ -19,7 +19,6 @@ src/
 ├── config/       # site.ts — nav, product list, endpoints, keys
 ├── i18n/         # content.ts (en + ko copy) + utils
 └── styles/       # global.css
-contact-form/     # contact-form backend (Google Apps Script) + docs
 ```
 
 Content lives in `src/i18n/content.ts` so markup stays language-free; pages read
@@ -29,7 +28,6 @@ Content lives in `src/i18n/content.ts` so markup stays language-free; pages read
 
 - **[AGENTS.md](AGENTS.md)** (aliased as `CLAUDE.md`) — dev-server notes
   (background mode) and the Astro guides to consult when working on the site.
-- **[Contact form](contact-form/README.md)** ([한국어](contact-form/README.ko.md)) —
   architecture, configuration, the Apps Script backend, Cloudflare Turnstile
   setup, and troubleshooting for the contact form.
 

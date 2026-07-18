@@ -61,10 +61,13 @@ in the global nav. Keep that split when adding product-specific pages.
 
 ## Contact form
 
-The contact form has a Google Apps Script backend that is **not** part of the
-Astro build and is deployed by hand. Do not treat `contact-form/Code.gs` as
-live — see **[contact-form/README.md](contact-form/README.md)** before touching
-the form, the `site.ts` endpoint/keys, or the privacy copy.
+The contact form fetch-POSTs to the site backend at `svc.sizlon.io/api/contact`
+(source: **sizlon-platform repo, `site-backend/`** — runs in the portal-stack
+compose on the vendor host). It verifies Cloudflare Turnstile server-side,
+stores submissions, and emails hello@sizlon.io. This repo owns only the form UI
+(`src/sections/Contact.astro`) and the endpoint/site-key in `src/config/site.ts`;
+backend changes happen in sizlon-platform. (The previous Google Apps Script
+backend was retired 2026-07-18.)
 
 ## Gotchas
 
