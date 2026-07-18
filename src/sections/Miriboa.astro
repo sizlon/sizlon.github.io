@@ -1,5 +1,6 @@
 ---
 import Base from '../layouts/Base.astro';
+import JumpNav from '../components/JumpNav.astro';
 import type { Lang } from '../i18n/content';
 import { t, localizePath } from '../i18n/utils';
 
@@ -17,9 +18,10 @@ const c = tr.miriboa;
     <div class="cta-row">
       <a class="btn btn-primary" href={`${localizePath('/contact', lang)}?topic=pilot`}>{c.ctaPrimary} <span class="arrow">&rarr;</span></a>
     </div>
+    <JumpNav items={c.jump} label={c.jumpLabel} />
   </section>
 
-  <section class="section wrap market">
+  <section class="section wrap market" id="problem">
     <div class="market-copy">
       <span class="eyebrow">{c.marketEyebrow}</span>
       <h2>{c.marketH2}</h2>
@@ -38,7 +40,7 @@ const c = tr.miriboa;
     </div>
   </section>
 
-  <section class="section wrap">
+  <section class="section wrap" id="capabilities">
     <ul class="caps">
       {c.caps.map((cap) => (
         <li class="cap">
@@ -49,7 +51,7 @@ const c = tr.miriboa;
     </ul>
   </section>
 
-  <section class="section wrap flow">
+  <section class="section wrap flow" id="flow">
     <div class="flow-copy">
       <span class="eyebrow">{c.flowEyebrow}</span>
       <h2>{c.flowH2}</h2>
@@ -83,7 +85,7 @@ const c = tr.miriboa;
     </dl>
   </section>
 
-  <section class="section wrap samples">
+  <section class="section wrap samples" id="samples">
     <div class="samples-copy">
       <span class="eyebrow">{c.samplesEyebrow}</span>
       <h2>{c.samplesH2}</h2>

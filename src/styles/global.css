@@ -47,6 +47,11 @@ html {
   scroll-behavior: smooth;
 }
 
+/* Anchored sections (in-page jump links) must clear the sticky nav. */
+section[id] {
+  scroll-margin-top: 5rem;
+}
+
 /* Korean wraps per-syllable by default, splitting words mid-eojeol
    ("데모를 요/청하세요"). keep-all breaks only between words; overflow-wrap
    still rescues genuinely unbreakable runs (URLs). */

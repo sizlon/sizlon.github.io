@@ -1,5 +1,6 @@
 ---
 import Base from '../layouts/Base.astro';
+import JumpNav from '../components/JumpNav.astro';
 import StrategyLadder from '../components/StrategyLadder.astro';
 import { crawlerPages } from '../config/site';
 import type { Lang } from '../i18n/content';
@@ -20,9 +21,10 @@ const c = tr.product;
       <a class="btn btn-primary" href={`${localizePath('/contact', lang)}?topic=demo`}>{tr.common.requestDemo} <span class="arrow">&rarr;</span></a>
       <a class="btn btn-ghost" href={localizePath('/how-it-works', lang)}>{c.ctaHeal}</a>
     </div>
+    <JumpNav items={c.jump} label={c.jumpLabel} />
   </section>
 
-  <section class="section wrap">
+  <section class="section wrap" id="capabilities">
     <ul class="caps">
       {c.caps.map((cap) => (
         <li class="cap">
@@ -33,7 +35,7 @@ const c = tr.product;
     </ul>
   </section>
 
-  <section class="section wrap ladder-section">
+  <section class="section wrap ladder-section" id="strategy">
     <div class="ladder-copy">
       <span class="eyebrow">{c.ladderEyebrow}</span>
       <h2>{c.ladderH2}</h2>
@@ -43,7 +45,7 @@ const c = tr.product;
     <StrategyLadder lang={lang} />
   </section>
 
-  <section class="section wrap deploy">
+  <section class="section wrap deploy" id="deployment">
     <div class="deploy-copy">
       <span class="eyebrow">{c.deployEyebrow}</span>
       <h2>{c.deployH2}</h2>
@@ -59,7 +61,7 @@ const c = tr.product;
     </ul>
   </section>
 
-  <section class="section wrap model">
+  <section class="section wrap model" id="model">
     <span class="eyebrow">{c.modelEyebrow}</span>
     <p class="model-note">
       {c.modelNote} <a href={localizePath('/editions', lang)}>{c.compareEditions} &rarr;</a>
