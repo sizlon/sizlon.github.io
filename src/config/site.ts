@@ -38,9 +38,9 @@ export const crawlerPages = [
 // The product line. `categoryKey` labels the domain (product-neutral — the
 // company umbrella is the shared "propose then verify" DNA, not one lifecycle).
 export type Solution = {
-  slug: 'crawler-platform' | 'miriboa' | 'govern';
+  slug: 'crawler-platform' | 'miriboa';
   name: string; // product name — same in every locale
-  categoryKey: 'extraction' | 'verification' | 'compliance';
+  categoryKey: 'extraction' | 'verification';
   status: 'live' | 'pilot' | 'next' | 'roadmap';
   href?: string;
 };
@@ -48,7 +48,6 @@ export type Solution = {
 export const solutions: Solution[] = [
   { slug: 'crawler-platform', name: 'Crawler Platform', categoryKey: 'extraction', status: 'live', href: '/products/crawler-platform' },
   { slug: 'miriboa', name: 'Miriboa', categoryKey: 'verification', status: 'pilot', href: '/products/miriboa' },
-  { slug: 'govern', name: 'Govern', categoryKey: 'compliance', status: 'roadmap' },
 ];
 
 export const legalLinks = [
