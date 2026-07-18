@@ -17,7 +17,7 @@ export const content = {
       solutionStatus: { live: 'Available now', pilot: 'Pilots open', next: 'Coming next', roadmap: 'On the roadmap' },
       explore: 'Explore',
       solutionBlurbs: {
-        'crawler-platform': "Self-healing web extraction. When a page changes, the extraction recovers itself instead of breaking quietly.",
+        'crawler-platform': "Web data that doesn't stop arriving. When a page changes, the self-healing extraction recovers itself instead of breaking quietly.",
         miriboa: 'Pre-submission bid-document verification. It extracts the requirements from a tender package and checks your bid against them — missing documents, mismatched names, pricing errors — before submission, not after a rejection.',
       },
     },
@@ -57,10 +57,10 @@ export const content = {
     },
     product: {
       title: 'Crawler Platform',
-      description: "Crawler Platform — self-healing web extraction. The first product in Sizlon's propose-then-verify line.",
+      description: "Crawler Platform — web data that keeps arriving, powered by self-healing extraction. The first product in Sizlon's propose-then-verify line.",
       eyebrow: 'product · web extraction',
       h1: 'Crawler Platform',
-      lede: "Self-healing web extraction. When a page's structure changes, the extraction recovers itself — explored in cost order, validated, and promoted only when confident — so your data keeps arriving instead of quietly stopping.",
+      lede: "Web data that keeps arriving. When a page's structure changes, the self-healing extraction recovers itself — explored in cost order, validated, and promoted only when confident — instead of quietly stopping.",
       ctaHeal: 'See how it heals',
       caps: [
         { name: 'Self-healing extraction', text: 'Targets keep producing data as sites change — recovered strategies are validated, scored, and versioned.' },
@@ -84,7 +84,7 @@ export const content = {
         { name: 'Made for security review', text: 'Air-gapped deployment, audit logging, and a per-release SBOM give your security team something to verify — not just to trust.' },
       ],
       modelEyebrow: 'how you get it',
-      modelNote: 'Crawler Platform is delivered under a vendor-issued license — there is no self-serve signup. Capabilities are set by your edition, licensing validates offline, and the platform runs in your infrastructure — connected or air-gapped.',
+      modelNote: 'The easiest way to start is a vendor-operated data service: you name the targets, we run the platform, and the data arrives on schedule — nothing to install. When the data should live in your own environment, the same platform is delivered as installed software under a vendor-issued license — capabilities set by your edition, licensing validated offline, connected or air-gapped. There is no self-serve signup.',
       compareEditions: 'Compare editions',
       moreOn: 'More on Crawler Platform',
     },
@@ -315,7 +315,7 @@ export const content = {
       solutionStatus: { live: '지금 사용 가능', pilot: '파일럿 진행 중', next: '다음 출시 예정', roadmap: '로드맵 예정' },
       explore: '자세히',
       solutionBlurbs: {
-        'crawler-platform': '스스로 치유하는 웹 추출. 페이지가 바뀌면 추출이 조용히 깨지는 대신 스스로 복구합니다.',
+        'crawler-platform': '끊기지 않고 도착하는 웹 데이터. 페이지가 바뀌면 자가치유 추출이 조용히 깨지는 대신 스스로 복구합니다.',
         miriboa: '제출 전 입찰 서류 검증. 공고 패키지에서 요구조건을 추출해 응찰 서류와 대조합니다 — 서류 누락, 명의 불일치, 가격 오류를 탈락 후가 아니라 제출 전에 잡습니다.',
       },
     },
@@ -355,10 +355,10 @@ export const content = {
     },
     product: {
       title: 'Crawler Platform',
-      description: 'Crawler Platform — 스스로 치유하는 웹 추출. Sizlon "제안하고 검증한다" 제품군의 첫 제품.',
+      description: 'Crawler Platform — 끊기지 않고 도착하는 웹 데이터, 자가치유 추출로. Sizlon "제안하고 검증한다" 제품군의 첫 제품.',
       eyebrow: '제품 · 웹 추출',
       h1: 'Crawler Platform',
-      lede: '스스로 치유하는 웹 추출. 페이지 구조가 바뀌면 추출이 스스로 복구합니다 — 비용 순으로 탐색하고, 검증하고, 확신이 설 때만 승격하므로 데이터가 조용히 멈추지 않고 계속 도착합니다.',
+      lede: '끊기지 않고 도착하는 웹 데이터. 페이지 구조가 바뀌면 자가치유 추출이 스스로 복구합니다 — 비용 순으로 탐색하고, 검증하고, 확신이 설 때만 승격합니다. 데이터는 조용히 멈추지 않습니다.',
       ctaHeal: '복구 과정 보기',
       caps: [
         { name: '자가치유 추출', text: '사이트가 바뀌어도 타깃은 데이터를 계속 생산합니다 — 복구된 전략은 검증·점수화·버전관리됩니다.' },
@@ -382,7 +382,7 @@ export const content = {
         { name: '보안 검토를 위한 설계', text: '에어갭 배포, 감사 로깅, 릴리스별 SBOM — 보안팀이 그냥 믿는 게 아니라 직접 검증할 수 있는 대상을 갖게 됩니다.' },
       ],
       modelEyebrow: '도입 방법',
-      modelNote: 'Crawler Platform은 벤더가 발급한 라이선스로 제공됩니다 — 셀프 가입은 없습니다. 역량은 에디션으로 정해지고, 라이선스는 오프라인으로 검증되며, 플랫폼은 당신의 인프라에서 — 연결형 또는 에어갭으로 — 운영됩니다.',
+      modelNote: '가장 가벼운 시작은 벤더가 직접 운영하는 데이터 서비스입니다: 타깃을 알려주시면 저희가 플랫폼을 운영하고, 데이터가 정해진 주기로 도착합니다 — 설치할 것이 없습니다. 데이터가 당신의 환경 안에 있어야 할 때는, 같은 플랫폼이 벤더 발급 라이선스의 설치형으로 제공됩니다 — 역량은 에디션으로, 라이선스는 오프라인 검증으로, 연결형 또는 에어갭으로. 셀프 가입은 없습니다.',
       compareEditions: '에디션 비교',
       moreOn: 'Crawler Platform 더 보기',
     },
