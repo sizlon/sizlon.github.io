@@ -35,6 +35,22 @@ export const crawlerPages = [
   { href: '/editions', key: 'Editions' },
 ] as const;
 
+// Miriboa's own sub-pages — same scoping rule as crawlerPages: the routes stay
+// top-level, only their placement in navigation is scoped to the product.
+//
+// /precheck is deliberately NOT here. It answers "can our pipeline read this
+// file?", which only matters to someone already headed for the paid
+// verification — it is a step inside that path, not a free offer standing on
+// its own, so it is surfaced from the Miriboa page's delivery note instead.
+// (Demonstrating the parsing capability, its other original job, is now done
+// far better by the connector reading a real notice in chat.)
+export const miriboaPages = [
+  { href: '/connector', key: 'Connector' },
+] as const;
+
+// The MCP connector endpoint users paste into Claude. Public, no auth.
+export const connectorUrl = 'https://parse.sizlon.io/mcp/';
+
 // The product line. `categoryKey` labels the domain (product-neutral — the
 // company umbrella is the shared "propose then verify" DNA, not one lifecycle).
 // `deliveryKeys` states how the product ships (secondary metadata, not a

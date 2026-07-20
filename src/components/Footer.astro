@@ -1,5 +1,5 @@
 ---
-import { site, solutions, crawlerPages, legalLinks } from '../config/site';
+import { site, solutions, crawlerPages, miriboaPages, legalLinks } from '../config/site';
 import type { Lang } from '../i18n/content';
 import { t, localizePath } from '../i18n/utils';
 
@@ -29,6 +29,11 @@ const tr = t(lang);
       {crawlerPages.map((item) => <a href={localizePath(item.href, lang)}>{tr.nav[item.key]}</a>)}
     </nav>
 
+    <nav class="col" aria-label="Miriboa">
+      <span class="eyebrow">{tr.footer.miriboa}</span>
+      {miriboaPages.map((item) => <a href={localizePath(item.href, lang)}>{tr.nav[item.key]}</a>)}
+    </nav>
+
     <nav class="col" aria-label="Legal">
       <span class="eyebrow">{tr.footer.legal}</span>
       {legalLinks.map((item) => <a href={localizePath(item.href, lang)}>{tr.legalNav[item.key]}</a>)}
@@ -51,7 +56,7 @@ const tr = t(lang);
   .footer { border-top: 1px solid var(--hairline-dark); padding-top: var(--section-y); }
   .footer-inner {
     display: grid;
-    grid-template-columns: 1.6fr 1fr 1fr 1fr 1.2fr;
+    grid-template-columns: 1.6fr 1fr 1fr 1fr 1fr 1.2fr;
     gap: 2rem;
     padding-bottom: 3rem;
   }
@@ -75,6 +80,10 @@ const tr = t(lang);
     font-family: var(--font-mono);
     font-size: var(--step--1);
     color: var(--slate-on-dark);
+  }
+  /* 6열은 중간 폭에서 각 열이 너무 좁아진다 — 3열로 접었다가 모바일에서 2열로 */
+  @media (max-width: 1080px) {
+    .footer-inner { grid-template-columns: 1.6fr 1fr 1fr; }
   }
   @media (max-width: 720px) {
     .footer-inner { grid-template-columns: 1fr 1fr; }
