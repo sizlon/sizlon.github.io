@@ -10,6 +10,10 @@ interface Props { lang: Lang }
 const { lang } = Astro.props;
 const tr = t(lang);
 const c = tr.home;
+// Miriboa leads the card order on the home page — it is the revenue-priority
+// product, even though the global solutions[] order stays crawler-first.
+const homeSolutions = [...solutions].sort(
+  (a, b) => (a.slug === 'miriboa' ? 0 : 1) - (b.slug === 'miriboa' ? 0 : 1));
 ---
 
 <Base title={c.title} description={c.description} lang={lang}>
@@ -20,8 +24,8 @@ const c = tr.home;
         <h1>{c.h1}</h1>
         <p class="lede">{c.lede}</p>
         <div class="cta-row">
-          <a class="btn btn-primary" href={`${localizePath('/contact', lang)}?topic=demo`}>{tr.common.requestDemo} <span class="arrow">&rarr;</span></a>
-          <a class="btn btn-ghost" href={localizePath('/products', lang)}>{tr.common.exploreProducts}</a>
+          <a class="btn btn-primary" href={localizePath('/products/miriboa', lang)}>{tr.common.verifyDocs} <span class="arrow">&rarr;</span></a>
+          <a class="btn btn-ghost" href={`${localizePath('/contact', lang)}?topic=demo`}>{tr.common.requestDemo}</a>
         </div>
         <p class="trust eyebrow">{c.trust}</p>
       </div>
@@ -55,7 +59,7 @@ const c = tr.home;
       <p class="lede">{c.solLede}</p>
     </div>
     <div class="sol-grid">
-      {solutions.map((s) => <SolutionCard solution={s} lang={lang} />)}
+      {homeSolutions.map((s) => <SolutionCard solution={s} lang={lang} />)}
     </div>
   </section>
 

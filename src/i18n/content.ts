@@ -10,6 +10,7 @@ export const content = {
       requestDemo: 'Request a demo',
       howItWorks: 'How it works',
       exploreProducts: 'Explore products',
+      verifyDocs: 'Verify bid documents',
       menu: 'Menu',
       skip: 'Skip to content',
       portalLogin: 'Portal login',
@@ -22,7 +23,7 @@ export const content = {
         miriboa: 'Pre-submission bid-document verification. It extracts the requirements from a tender package and checks your bid against them — missing documents, mismatched names, pricing errors — before submission, not after a rejection.',
       },
     },
-    nav: { Products: 'Products', 'How it works': 'How it works', Security: 'Security', Editions: 'Editions', Contact: 'Contact', Connector: 'Claude connector' },
+    nav: { Products: 'Products', Miriboa: 'Miriboa', 'How it works': 'How it works', Security: 'Security', Editions: 'Editions', Contact: 'Contact', Connector: 'Claude connector' },
     footer: {
       tagline: 'AI proposes. A deterministic layer verifies.',
       site: 'Site',
@@ -55,7 +56,7 @@ export const content = {
       ],
       solEyebrow: 'our products',
       solH2: 'One discipline, applied to different high-stakes work.',
-      solLede: 'Crawler Platform leads today. Each product applies the same propose-then-verify foundation to a domain where being quietly wrong is expensive.',
+      solLede: 'Two products today, one foundation: an AI layer proposes, a deterministic layer verifies, and a result is promoted only when it holds — applied where being quietly wrong is expensive.',
       closingH2: 'See it work on your hardest case.',
     },
     product: {
@@ -420,6 +421,7 @@ export const content = {
       requestDemo: '데모 요청',
       howItWorks: '작동 원리',
       exploreProducts: '제품 둘러보기',
+      verifyDocs: '입찰 서류 검증',
       menu: '메뉴',
       skip: '본문으로 건너뛰기',
       portalLogin: '포털 로그인',
@@ -432,7 +434,7 @@ export const content = {
         miriboa: '제출 전 입찰 서류 검증. 공고 패키지에서 요구조건을 추출해 응찰 서류와 대조합니다 — 서류 누락, 명의 불일치, 가격 오류를 탈락 후가 아니라 제출 전에 잡습니다.',
       },
     },
-    nav: { Products: '제품', 'How it works': '작동 원리', Security: '보안', Editions: '에디션', Contact: '문의', Connector: 'Claude 커넥터' },
+    nav: { Products: '제품', Miriboa: '미리보아', 'How it works': '작동 원리', Security: '보안', Editions: '에디션', Contact: '문의', Connector: 'Claude 커넥터' },
     footer: {
       tagline: 'AI가 제안하고, 결정적 레이어가 검증합니다.',
       site: '사이트',
@@ -465,7 +467,7 @@ export const content = {
       ],
       solEyebrow: '제품',
       solH2: '하나의 원칙, 서로 다른 고위험 업무에 적용.',
-      solLede: '오늘은 Crawler Platform이 앞장섭니다. 각 제품은 "제안하고 검증한다"는 동일한 토대를, 조용히 틀렸을 때 대가가 큰 도메인에 적용합니다.',
+      solLede: '오늘 두 제품, 하나의 토대: AI 레이어가 제안하고 결정적 레이어가 검증하며, 확실히 성립할 때만 결과를 채택합니다 — 조용히 틀렸을 때 대가가 큰 곳에.',
       closingH2: '당신의 가장 까다로운 사례에서 직접 확인하세요.',
     },
     product: {
