@@ -119,6 +119,7 @@ const c = tr.miriboa;
     <p class="model-note precheck-note">
       {c.connectorNote} <a href={localizePath('/connector', lang)}>{c.connectorBtn} &rarr;</a>
     </p>
+    <p class="legal-note">{c.legalNote}</p>
   </section>
 </Base>
 
@@ -169,6 +170,7 @@ const c = tr.miriboa;
   .model { max-width: var(--measure); }
   .model-note { font-size: var(--step-1); }
   .model-note a { color: var(--color-ink); font-weight: 600; text-decoration: underline; text-decoration-color: var(--color-recovered); text-underline-offset: 3px; white-space: nowrap; }
+  .legal-note { font-size: var(--step--1); color: var(--color-slate); margin-top: 1.5rem; max-width: var(--measure); border-top: 1px solid var(--hairline); padding-top: 1rem; }
 
   @media (max-width: 760px) {
     .market, .flow, .proof { grid-template-columns: 1fr; }

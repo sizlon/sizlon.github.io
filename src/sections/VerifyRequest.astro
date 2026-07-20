@@ -115,7 +115,14 @@ const privacyHref = localizePath('/legal/privacy', lang);
         </div>
         <input type="hidden" name="elapsed" value="" data-elapsed />
 
-        <p class="consent">{c.consent} <a href={privacyHref}>{c.consentLink}</a>{lang === 'ko' ? '' : ' '}{c.consentAfter}</p>
+        <label class="check consent-check">
+          <input type="checkbox" name="consent" required data-consent />
+          <span class="checktext">
+            <span class="checklabel">{c.consentAgree}</span>
+            <small class="hint consent-detail">{c.consent} <a href={privacyHref}>{c.consentLink}</a>{lang === 'ko' ? '' : ' '}{c.consentAfter}</small>
+          </span>
+        </label>
+        <small class="verr" role="alert" hidden data-consent-error>{c.consentRequired}</small>
 
         {turnstileKey && <div class="cf-turnstile" data-sitekey={turnstileKey}></div>}
         {turnstileKey && <p class="verr" role="alert" hidden data-verify-error>{c.verifyNeeded}</p>}
@@ -123,6 +130,7 @@ const privacyHref = localizePath('/legal/privacy', lang);
 
         <button class="btn btn-primary" type="submit">{c.submit} <span class="arrow">&rarr;</span></button>
         <p class="note eyebrow">{c.note}</p>
+        <p class="legalnote">{c.legalNote}</p>
       </form>
 
       <div class="sent" tabindex="-1" hidden data-verify-sent>
@@ -198,6 +206,15 @@ const privacyHref = localizePath('/legal/privacy', lang);
       const verr = document.querySelector('[data-verify-error]');
       const serr = document.querySelector('[data-send-error]');
       if (serr) serr.hidden = true;
+      // 개인정보 수집 동의(필수) — 체크 없이는 접수하지 않는다(PIPA §15/§22).
+      const consent = form.querySelector('[data-consent]');
+      const cerr = document.querySelector('[data-consent-error]');
+      if (consent && !consent.checked) {
+        if (cerr) cerr.hidden = false;
+        consent.focus();
+        return;
+      }
+      if (cerr) cerr.hidden = true;
       // 사업자번호 클라이언트 게이트 — 서버가 재검증하지만 왕복을 한 번 아낀다.
       if (!checkBrn()) {
         if (brnErr) brnErr.hidden = false;
@@ -290,8 +307,10 @@ const privacyHref = localizePath('/legal/privacy', lang);
   .checktext { display: flex; flex-direction: column; gap: 0.15rem; }
   .checklabel { font-family: var(--font-body); font-size: var(--step-0); color: var(--color-ink); }
 
-  .consent { font-size: var(--step--1); color: var(--color-slate); margin: 0; }
-  .consent a { color: var(--color-ink); text-decoration: underline; text-decoration-color: var(--color-recovered); text-underline-offset: 3px; }
+  .consent-check { align-items: flex-start; }
+  .consent-detail { line-height: 1.55; }
+  .consent-detail a { color: var(--color-ink); text-decoration: underline; text-decoration-color: var(--color-recovered); text-underline-offset: 3px; }
+  .legalnote { font-size: var(--step--1); color: var(--color-slate); margin: 0; line-height: 1.55; }
 
   .form .btn { align-self: flex-start; }
   .note { margin-top: 0.25rem; }
