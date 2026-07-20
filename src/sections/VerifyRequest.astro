@@ -1,0 +1,303 @@
+---
+import Base from '../layouts/Base.astro';
+import { site } from '../config/site';
+import type { Lang } from '../i18n/content';
+import { t, localizePath } from '../i18n/utils';
+// The single Miriboa verification intake. The connector links here with the
+// notice facts it knows (?notice=…&notice_name=…&deadline=…&stakes=…&src=connector);
+// identity (company / 사업자번호 / email) is always typed by a human, never by the
+// model (CONTEXT §94). Posts to site.verifyRequestEndpoint → svc.sizlon.io, which
+// re-checks the BRN checksum, Turnstile, honeypot and min-fill time server-side.
+// `company_url` is a honeypot. While the endpoint is empty the submit no-ops.
+
+interface Props { lang: Lang }
+const { lang } = Astro.props;
+const tr = t(lang);
+const c = tr.verifyRequest;
+const endpoint = site.verifyRequestEndpoint;
+const turnstileKey = site.turnstileSiteKey;
+const privacyHref = localizePath('/legal/privacy', lang);
+---
+
+<Base title={c.title} description={c.description} lang={lang}>
+  <section class="section wrap grid">
+    <div class="copy">
+      <span class="eyebrow">{c.eyebrow}</span>
+      <h1>{c.h1}</h1>
+      <p class="lede">{c.lede}</p>
+
+      <div class="price">
+        <span class="ph eyebrow">{c.price.heading}</span>
+        <ul>
+          <li class="free"><strong>{c.price.first}</strong><span>{c.price.firstNote}</span></li>
+          <li>{c.price.standard}</li>
+          <li>{c.price.express}</li>
+        </ul>
+        <p class="refund">{c.price.refund}</p>
+      </div>
+
+      <p class="alt">{c.altPrefix} <a href={localizePath('/contact', lang)}>{c.altQuestion}</a></p>
+    </div>
+
+    <div class="formcol">
+      <form
+        class="form"
+        method="post"
+        action={endpoint || undefined}
+        data-verify-form
+        data-sending={c.sending}
+        data-turnstile={turnstileKey ? 'on' : undefined}
+      >
+        <fieldset>
+          <legend>{c.notice.heading}</legend>
+          <label>
+            <span>{c.notice.no}</span>
+            <input type="text" name="notice" inputmode="numeric" maxlength="80" required data-field-notice />
+            <small class="hint">{c.notice.noHint}</small>
+          </label>
+          <label>
+            <span>{c.notice.name}</span>
+            <input type="text" name="notice_name" maxlength="300" data-field-notice-name />
+          </label>
+          <label>
+            <span>{c.notice.deadline}</span>
+            <input type="text" name="deadline" maxlength="40" placeholder={c.notice.deadlinePlaceholder} data-field-deadline />
+          </label>
+          <p class="stakes" hidden data-stakes>
+            <span class="eyebrow">{c.stakesLabel}</span>
+            <span data-stakes-text></span>
+          </p>
+        </fieldset>
+
+        <fieldset>
+          <legend>{c.who.heading}</legend>
+          <label>
+            <span>{c.who.company}</span>
+            <input type="text" name="company" autocomplete="organization" maxlength="160" required />
+          </label>
+          <label>
+            <span>{c.who.brn}</span>
+            <input type="text" name="brn" inputmode="numeric" autocomplete="off" maxlength="14" required data-brn aria-describedby="brn-hint" />
+            <small class="hint" id="brn-hint">{c.who.brnHint}</small>
+            <small class="verr" hidden data-brn-error>{c.brnInvalid}</small>
+          </label>
+          <label>
+            <span>{c.who.person}</span>
+            <input type="text" name="person" autocomplete="name" maxlength="80" />
+          </label>
+          <label>
+            <span>{c.who.email}</span>
+            <input type="email" name="email" autocomplete="email" maxlength="180" required />
+          </label>
+        </fieldset>
+
+        <label>
+          <span>{c.noteLabel}</span>
+          <textarea name="note" rows="3" maxlength="2000" placeholder={c.notePlaceholder}></textarea>
+        </label>
+
+        <label class="check">
+          <input type="checkbox" name="express" value="1" />
+          <span class="checktext">
+            <span class="checklabel">{c.expressLabel}</span>
+            <small class="hint">{c.expressHint}</small>
+          </span>
+        </label>
+
+        <!-- Prefill-only fields the connector carries; hidden from the person. -->
+        <input type="hidden" name="stakes" value="" data-field-stakes />
+        <input type="hidden" name="src" value="site" data-field-src />
+
+        <div class="hp" aria-hidden="true">
+          <label>Company URL
+            <input type="text" name="company_url" tabindex="-1" autocomplete="off" />
+          </label>
+        </div>
+        <input type="hidden" name="elapsed" value="" data-elapsed />
+
+        <p class="consent">{c.consent} <a href={privacyHref}>{c.consentLink}</a>{lang === 'ko' ? '' : ' '}{c.consentAfter}</p>
+
+        {turnstileKey && <div class="cf-turnstile" data-sitekey={turnstileKey}></div>}
+        {turnstileKey && <p class="verr" hidden data-verify-error>{c.verifyNeeded}</p>}
+        <p class="verr" hidden data-send-error>{c.sendError}</p>
+
+        <button class="btn btn-primary" type="submit">{c.submit} <span class="arrow">&rarr;</span></button>
+        <p class="note eyebrow">{c.note}</p>
+      </form>
+
+      <div class="sent" hidden data-verify-sent>
+        <h2>{c.sentTitle}</h2>
+        <p hidden data-sent-first>{c.sentFirst}</p>
+        <p hidden data-sent-returning>{c.sentReturning}</p>
+      </div>
+    </div>
+  </section>
+</Base>
+
+{turnstileKey && (
+  <script is:inline src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>
+)}
+
+<script>
+  // fetch 제출 — Contact 폼과 동일한 방어(허니팟·최소 작성시간·Turnstile은 서버가
+  // 최종 강제, 여기서는 UX만)에 더해 ① 쿼리 프리필(커넥터가 아는 공고 정보만)과
+  // ② 사업자등록번호 클라이언트 체크섬을 추가한다.
+  const loadedAt = Date.now();
+  const form = document.querySelector('[data-verify-form]');
+  const sent = document.querySelector('[data-verify-sent]');
+
+  // 프리필 — 커넥터가 방금 조회한 공고 정보를 쿼리로 실어 보낸다. 신원은 안 실린다.
+  const q = new URLSearchParams(location.search);
+  const prefill = (sel, key) => {
+    const el = form && form.querySelector(sel);
+    const v = q.get(key);
+    if (el && v) el.value = v;
+  };
+  prefill('[data-field-notice]', 'notice');
+  prefill('[data-field-notice-name]', 'notice_name');
+  prefill('[data-field-deadline]', 'deadline');
+  prefill('[data-field-stakes]', 'stakes');
+  prefill('[data-field-src]', 'src');
+  // 판돈(추정가격·마감 등, 공고 원본에서 부착됨)이 있으면 읽기전용 맥락으로 보여준다.
+  const stakes = q.get('stakes');
+  const stakesBox = form && form.querySelector('[data-stakes]');
+  const stakesText = form && form.querySelector('[data-stakes-text]');
+  if (stakes && stakesBox && stakesText) {
+    stakesText.textContent = stakes;
+    stakesBox.hidden = false;
+  }
+
+  // 국세청 사업자등록번호 체크섬 — 서버 _valid_brn과 동일 알고리즘(오타를 문 앞에서 잡는다).
+  const brnValid = (raw) => {
+    const d = (raw || '').replace(/\D/g, '');
+    if (d.length !== 10) return false;
+    const w = [1, 3, 7, 1, 3, 7, 1, 3, 5];
+    let sum = 0;
+    for (let i = 0; i < 9; i++) sum += Number(d[i]) * w[i];
+    sum += Math.floor((Number(d[8]) * 5) / 10);
+    return (10 - (sum % 10)) % 10 === Number(d[9]);
+  };
+  const brnInput = form && form.querySelector('[data-brn]');
+  const brnErr = form && form.querySelector('[data-brn-error]');
+  const checkBrn = () => {
+    if (!brnInput) return true;
+    const ok = brnValid(brnInput.value);
+    // 비어 있으면 required가 처리하므로 에러를 띄우지 않는다.
+    if (brnErr) brnErr.hidden = ok || !brnInput.value;
+    return ok;
+  };
+  if (brnInput) brnInput.addEventListener('blur', checkBrn);
+
+  if (form && sent) {
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const hp = form.querySelector('[name="company_url"]');
+      if (hp && hp.value) return; // bot — silent no-op (server enforces too)
+      const endpoint = form.getAttribute('action');
+      if (!endpoint) return; // endpoint not set yet
+      const verr = document.querySelector('[data-verify-error]');
+      const serr = document.querySelector('[data-send-error]');
+      if (serr) serr.hidden = true;
+      // 사업자번호 클라이언트 게이트 — 서버가 재검증하지만 왕복을 한 번 아낀다.
+      if (!checkBrn()) {
+        if (brnErr) brnErr.hidden = false;
+        if (brnInput) brnInput.focus();
+        return;
+      }
+      // Turnstile: 토큰이 생기기 전엔 제출을 막는다.
+      if (form.dataset.turnstile) {
+        const tok = form.querySelector('[name="cf-turnstile-response"]');
+        if (!tok || !tok.value) {
+          if (verr) verr.hidden = false;
+          return;
+        }
+        if (verr) verr.hidden = true;
+      }
+      // 로드 후 경과 ms — 서버가 봇의 초고속 제출을 떨군다.
+      const elapsed = form.querySelector('[data-elapsed]');
+      if (elapsed) elapsed.value = String(Date.now() - loadedAt);
+      const btn = form.querySelector('button[type="submit"]');
+      const btnLabel = btn ? btn.innerHTML : '';
+      if (btn) { btn.disabled = true; btn.textContent = form.dataset.sending || 'Sending…'; }
+      try {
+        const res = await fetch(endpoint, { method: 'POST', body: new FormData(form) });
+        const data = await res.json().catch(() => null);
+        if (res.ok && data && data.ok) {
+          // 응답의 first_time으로 무료/재신청 안내를 가른다.
+          const first = !!data.first_time;
+          const pf = sent.querySelector('[data-sent-first]');
+          const pr = sent.querySelector('[data-sent-returning]');
+          if (pf) pf.hidden = !first;
+          if (pr) pr.hidden = first;
+          form.hidden = true;
+          sent.hidden = false;
+          sent.scrollIntoView({ behavior: 'smooth', block: 'center' });
+          return;
+        }
+        if (res.status === 422 && data && data.error === 'invalid_brn') {
+          if (brnErr) brnErr.hidden = false;
+          if (brnInput) brnInput.focus();
+        } else if (res.status === 403 && verr) {
+          verr.hidden = false;
+        } else if (serr) {
+          serr.hidden = false;
+        }
+      } catch {
+        if (serr) serr.hidden = false;
+      }
+      // 실패 — 재시도 가능 상태로 복원 (Turnstile 토큰은 1회용이라 리셋).
+      if (btn) { btn.disabled = false; btn.innerHTML = btnLabel; }
+      const ts = window.turnstile;
+      if (ts) ts.reset();
+    });
+  }
+</script>
+
+<style>
+  .grid { display: grid; grid-template-columns: 1fr 1fr; gap: clamp(2rem, 1rem + 4vw, 4rem); align-items: start; }
+  /* display 규칙이 UA [hidden] 규칙을 이기므로 복원한다: hidden 속성이 붙은
+     요소는 JS가 걷어낼 때까지 숨겨져 있어야 한다. */
+  [hidden] { display: none !important; }
+
+  .copy { display: flex; flex-direction: column; gap: 1.25rem; max-width: 46ch; }
+  .price { border: 1px solid var(--hairline); border-radius: var(--radius); padding: 1.1rem 1.25rem; background: var(--color-mist); display: flex; flex-direction: column; gap: 0.6rem; }
+  .price .ph { color: var(--color-slate); }
+  .price ul { list-style: none; padding: 0; margin: 0; display: flex; flex-direction: column; gap: 0.5rem; }
+  .price li { font-size: var(--step-0); color: var(--color-ink); }
+  .price li.free { display: flex; flex-direction: column; gap: 0.15rem; }
+  .price li.free span { font-size: var(--step--1); color: var(--color-slate); }
+  .price .refund { font-size: var(--step--1); color: var(--color-slate); margin: 0; }
+  .alt { color: var(--color-slate); }
+  .alt a { color: var(--color-ink); text-decoration: underline; text-decoration-color: var(--color-recovered); text-underline-offset: 3px; }
+
+  .form { display: flex; flex-direction: column; gap: 1.25rem; padding: 1.75rem; border: 1px solid var(--hairline); border-radius: var(--radius); background: var(--color-mist); }
+  fieldset { border: 0; padding: 0; margin: 0; display: flex; flex-direction: column; gap: 1rem; }
+  legend { font-family: var(--font-mono); font-size: var(--step--1); color: var(--color-slate); padding: 0; text-transform: uppercase; letter-spacing: 0.04em; }
+  label { display: flex; flex-direction: column; gap: 0.4rem; }
+  label > span { font-family: var(--font-mono); font-size: var(--step--1); color: var(--color-slate); }
+  input, textarea { font-family: var(--font-body); font-size: var(--step-0); color: var(--color-ink); background: var(--color-vellum); border: 1px solid var(--hairline); border-radius: var(--radius); padding: 0.7rem 0.85rem; }
+  input:focus, textarea:focus { outline: 2px solid var(--color-recovered); outline-offset: 1px; border-color: transparent; }
+  .hint { font-family: var(--font-body); font-size: var(--step--1); color: var(--color-slate); }
+  small.verr { font-family: var(--font-body); }
+
+  .stakes { display: flex; flex-direction: column; gap: 0.2rem; padding: 0.7rem 0.85rem; border: 1px dashed var(--hairline); border-radius: var(--radius); margin: 0; }
+  .stakes .eyebrow { color: var(--color-slate); }
+  .stakes [data-stakes-text] { font-size: var(--step-0); color: var(--color-ink); }
+
+  .check { flex-direction: row; align-items: flex-start; gap: 0.6rem; }
+  .check input { width: 1.1rem; height: 1.1rem; margin-top: 0.15rem; flex: none; padding: 0; accent-color: var(--color-recovered); }
+  .checktext { display: flex; flex-direction: column; gap: 0.15rem; }
+  .checklabel { font-family: var(--font-body); font-size: var(--step-0); color: var(--color-ink); }
+
+  .consent { font-size: var(--step--1); color: var(--color-slate); margin: 0; }
+  .consent a { color: var(--color-ink); text-decoration: underline; text-decoration-color: var(--color-recovered); text-underline-offset: 3px; }
+
+  .form .btn { align-self: flex-start; }
+  .note { margin-top: 0.25rem; }
+  .verr { color: #b3261e; font-size: var(--step--1); }
+  .hp { position: absolute; left: -9999px; width: 1px; height: 1px; overflow: hidden; }
+  .sent { padding: 1.75rem; border: 1px solid var(--color-recovered); border-radius: var(--radius); background: var(--color-mist); display: flex; flex-direction: column; gap: 0.6rem; }
+  .sent h2 { font-size: var(--step-1); }
+
+  @media (max-width: 760px) { .grid { grid-template-columns: 1fr; } }
+</style>

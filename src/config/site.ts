@@ -12,6 +12,10 @@ export const site = {
   // deployed URL here to activate the form; while empty, the form no-ops on
   // submit and the mailto fallback carries. Not a secret (it's client-visible).
   contactFormEndpoint: 'https://svc.sizlon.io/api/contact',
+  // Miriboa verification-request endpoint (site-backend, same host). The
+  // connector and the site post the SAME form here; only `src` differs so we can
+  // compare which surface converts (CONTEXT §94). While empty, the form no-ops.
+  verifyRequestEndpoint: 'https://svc.sizlon.io/api/verification-request',
   // Cloudflare Turnstile site key (public). Set this AND the TURNSTILE_SECRET
   // script property in Apps Script to activate bot verification. While empty,
   // the widget is not rendered and the server skips the Turnstile check.
@@ -67,7 +71,7 @@ export type Solution = {
 
 export const solutions: Solution[] = [
   { slug: 'crawler-platform', name: 'Crawler Platform', categoryKey: 'extraction', deliveryKeys: ['selfHosted', 'managed'], status: 'live', href: '/products/crawler-platform' },
-  { slug: 'miriboa', name: 'Miriboa', categoryKey: 'verification', deliveryKeys: ['service'], status: 'pilot', href: '/products/miriboa' },
+  { slug: 'miriboa', name: 'Miriboa', categoryKey: 'verification', deliveryKeys: ['service'], status: 'live', href: '/products/miriboa' },
 ];
 
 export const legalLinks = [

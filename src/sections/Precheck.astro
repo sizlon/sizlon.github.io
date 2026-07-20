@@ -8,7 +8,7 @@ const { lang } = Astro.props;
 const tr = t(lang);
 const c = tr.precheck;
 const apiUrl = 'https://check.sizlon.io/api/precheck';
-const contactUrl = `${localizePath('/contact', lang)}?topic=pilot`;
+const verifyUrl = localizePath('/verify-request', lang);
 ---
 
 <Base title={c.title} description={c.description} lang={lang}>
@@ -31,7 +31,7 @@ const contactUrl = `${localizePath('/contact', lang)}?topic=pilot`;
     <div class="results" id="results"></div>
 
     <div class="cta" id="cta">
-      <a class="btn btn-primary" href={contactUrl}>{c.ctaBtn} <span class="arrow">&rarr;</span></a>
+      <a class="btn btn-primary" href={verifyUrl}>{c.ctaBtn} <span class="arrow">&rarr;</span></a>
       <p class="why">{c.ctaWhy}</p>
     </div>
   </section>

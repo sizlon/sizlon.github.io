@@ -16,8 +16,9 @@ const c = tr.miriboa;
     <h1>{c.h1}</h1>
     <p class="lede">{c.lede}</p>
     <div class="cta-row">
-      <a class="btn btn-primary" href={`${localizePath('/contact', lang)}?topic=pilot`}>{c.ctaPrimary} <span class="arrow">&rarr;</span></a>
+      <a class="btn btn-primary" href={localizePath('/verify-request', lang)}>{c.ctaPrimary} <span class="arrow">&rarr;</span></a>
     </div>
+    <p class="price-note">{c.priceNote}</p>
     <JumpNav items={c.jump} label={c.jumpLabel} />
   </section>
 
@@ -110,7 +111,7 @@ const c = tr.miriboa;
   <section class="section wrap model">
     <span class="eyebrow">{c.modelEyebrow}</span>
     <p class="model-note">
-      {c.modelNote} <a href={`${localizePath('/contact', lang)}?topic=pilot`}>{c.contactBtn} &rarr;</a>
+      {c.modelNote} <a href={localizePath('/verify-request', lang)}>{c.contactBtn} &rarr;</a>
     </p>
     <p class="model-note precheck-note">
       {c.precheckNote} <a href={localizePath('/precheck', lang)}>{c.precheckBtn} &rarr;</a>
@@ -124,6 +125,7 @@ const c = tr.miriboa;
 <style>
   .head { display: flex; flex-direction: column; gap: 1rem; max-width: var(--measure); padding-bottom: 0; }
   .cta-row { display: flex; gap: 0.75rem; flex-wrap: wrap; margin-top: 0.5rem; }
+  .price-note { font-family: var(--font-mono); font-size: var(--step--1); color: var(--color-slate); margin-top: -0.25rem; }
   .caps { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 1.25rem; }
   .cap { border: 1px solid var(--hairline); border-radius: var(--radius); padding: 1.5rem; background: var(--color-mist); display: flex; flex-direction: column; gap: 0.5rem; }
 
