@@ -48,6 +48,7 @@ const privacyHref = localizePath('/legal/privacy', lang);
         data-sending={c.sending}
         data-turnstile={turnstileKey ? 'on' : undefined}
       >
+        <p class="prefill-note" hidden data-prefill-note>{c.prefillNote}</p>
         <fieldset>
           <legend>{c.notice.heading}</legend>
           <label>
@@ -157,24 +158,32 @@ const privacyHref = localizePath('/legal/privacy', lang);
 
   // 프리필 — 커넥터가 방금 조회한 공고 정보를 쿼리로 실어 보낸다. 신원은 안 실린다.
   const q = new URLSearchParams(location.search);
+  let prefilled = false;
   const prefill = (sel, key) => {
     const el = form && form.querySelector(sel);
     const v = q.get(key);
-    if (el && v) el.value = v;
+    if (el && v) { el.value = v; prefilled = true; }
   };
   prefill('[data-field-notice]', 'notice');
   prefill('[data-field-notice-name]', 'notice_name');
   prefill('[data-field-deadline]', 'deadline');
-  prefill('[data-field-stakes]', 'stakes');
-  prefill('[data-field-src]', 'src');
-  // 판돈(추정가격·마감 등, 공고 원본에서 부착됨)이 있으면 읽기전용 맥락으로 보여준다.
-  const stakes = q.get('stakes');
+  // src은 내부 유입값이라 프리필 안내 대상이 아니다(사용자에게 안 보임).
+  const srcEl = form && form.querySelector('[data-field-src]');
+  const srcV = q.get('src');
+  if (srcEl && srcV) srcEl.value = srcV;
+  // 판돈(공고 원본)은 200자로 잘라 표시·전송(백엔드 상한과 일치, 오염 링크 방어).
+  const stakes = (q.get('stakes') || '').slice(0, 200);
+  const stakesField = form && form.querySelector('[data-field-stakes]');
+  if (stakesField && stakes) { stakesField.value = stakes; prefilled = true; }
   const stakesBox = form && form.querySelector('[data-stakes]');
   const stakesText = form && form.querySelector('[data-stakes-text]');
   if (stakes && stakesBox && stakesText) {
     stakesText.textContent = stakes;
     stakesBox.hidden = false;
   }
+  // 커넥터가 채운 값이 있으면 사용자가 확인·수정하도록 알린다.
+  const prefillNote = form && form.querySelector('[data-prefill-note]');
+  if (prefilled && prefillNote) prefillNote.hidden = false;
 
   // 국세청 사업자등록번호 체크섬 — 서버 _valid_brn과 동일 알고리즘(오타를 문 앞에서 잡는다).
   const brnValid = (raw) => {
@@ -201,7 +210,13 @@ const privacyHref = localizePath('/legal/privacy', lang);
     form.addEventListener('submit', async (e) => {
       e.preventDefault();
       const hp = form.querySelector('[name="company_url"]');
-      if (hp && hp.value) return; // bot — silent no-op (server enforces too)
+      if (hp && hp.value) {
+        // 허니팟이 채워짐 — 봇이거나 공격적 자동완성. 조용히 죽이지 말고 오류로
+        // 알려 사용자가 이메일로 우회하게 한다(서버가 최종 차단하므로 접수는 안 됨).
+        const serr0 = document.querySelector('[data-send-error]');
+        if (serr0) serr0.hidden = false;
+        return;
+      }
       const endpoint = form.getAttribute('action');
       if (!endpoint) return; // endpoint not set yet
       const verr = document.querySelector('[data-verify-error]');
@@ -302,6 +317,7 @@ const privacyHref = localizePath('/legal/privacy', lang);
   .hint { font-family: var(--font-body); font-size: var(--step--1); color: var(--color-slate); }
   small.verr { font-family: var(--font-body); }
 
+  .prefill-note { font-size: var(--step--1); color: var(--color-ink); background: var(--color-mist); border: 1px solid var(--color-recovered); border-radius: var(--radius); padding: 0.6rem 0.85rem; margin: 0; }
   .stakes { display: flex; flex-direction: column; gap: 0.2rem; padding: 0.7rem 0.85rem; border: 1px dashed var(--hairline); border-radius: var(--radius); margin: 0; }
   .stakes .eyebrow { color: var(--color-slate); }
   .stakes [data-stakes-text] { font-size: var(--step-0); color: var(--color-ink); }

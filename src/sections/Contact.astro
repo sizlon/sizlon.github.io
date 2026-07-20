@@ -23,7 +23,7 @@ const turnstileKey = site.turnstileSiteKey;
       <span class="eyebrow">{c.eyebrow}</span>
       <h1>{c.h1}</h1>
       <p class="lede">{c.lede}</p>
-      <p class="alt">{c.applyPrefix} <a href={localizePath('/verify-request', lang)}>{c.applyLink} &rarr;</a></p>
+      <p class="alt">{c.applyPrefix} <a href={`${localizePath('/verify-request', lang)}?src=contact`}>{c.applyLink} &rarr;</a></p>
       <p class="alt">{c.altPrefix} <a href={`mailto:${site.contactEmail}`}>{site.contactEmail}</a></p>
     </div>
 

@@ -5,7 +5,7 @@
  */
 export const site = {
   name: 'Sizlon',
-  tagline: 'AI proposes, a deterministic layer verifies',
+  tagline: 'AI proposes. A deterministic layer verifies.',
   portalLoginUrl: 'https://portal.sizlon.io',
   contactEmail: 'hello@sizlon.io',
   // Contact form endpoint — a Google Apps Script web-app /exec URL. Paste the

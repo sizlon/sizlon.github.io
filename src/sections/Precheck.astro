@@ -8,7 +8,7 @@ const { lang } = Astro.props;
 const tr = t(lang);
 const c = tr.precheck;
 const apiUrl = 'https://check.sizlon.io/api/precheck';
-const verifyUrl = localizePath('/verify-request', lang);
+const verifyUrl = `${localizePath('/verify-request', lang)}?src=precheck`;
 ---
 
 <Base title={c.title} description={c.description} lang={lang}>

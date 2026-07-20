@@ -16,7 +16,7 @@ const c = tr.miriboa;
     <h1>{c.h1}</h1>
     <p class="lede">{c.lede}</p>
     <div class="cta-row">
-      <a class="btn btn-primary" href={localizePath('/verify-request', lang)}>{c.ctaPrimary} <span class="arrow">&rarr;</span></a>
+      <a class="btn btn-primary" href={`${localizePath('/verify-request', lang)}?src=miriboa_hero`}>{c.ctaPrimary} <span class="arrow">&rarr;</span></a>
     </div>
     <p class="price-note">{c.priceNote}</p>
     <p class="proof-teaser">{c.proofTeaser} <a href="#samples">{c.proofTeaserLink} &darr;</a></p>
@@ -112,7 +112,7 @@ const c = tr.miriboa;
   <section class="section wrap model">
     <span class="eyebrow">{c.modelEyebrow}</span>
     <p class="model-note">
-      {c.modelNote} <a href={localizePath('/verify-request', lang)}>{c.contactBtn} &rarr;</a>
+      {c.modelNote} <a href={`${localizePath('/verify-request', lang)}?src=miriboa_offer`}>{c.contactBtn} &rarr;</a>
     </p>
     <p class="diy-note">{c.diyNote}</p>
     <span class="eyebrow before-send">{c.beforeSend}</span>

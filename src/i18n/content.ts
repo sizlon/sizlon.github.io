@@ -178,7 +178,7 @@ export const content = {
       sending: 'Sending…',
       sentTitle: 'Thanks — we have your message.',
       sentBody: 'We reply within two business days. For anything urgent, email hello@sizlon.io.',
-      verifyNeeded: 'Please wait for the verification to finish, then try again.',
+      verifyNeeded: 'Please complete the verification and try again.',
       sendError: 'Something went wrong sending your message. Please try again in a moment, or email us directly.',
     },
     verifyRequest: {
@@ -206,6 +206,7 @@ export const content = {
         deadlinePlaceholder: 'e.g. 2026-08-15 18:00',
       },
       stakesLabel: 'From the notice',
+      prefillNote: 'The notice details below were filled in from your connector link — please confirm they are correct.',
       who: {
         heading: 'Who to verify for',
         company: 'Company name',
@@ -228,7 +229,7 @@ export const content = {
       submit: 'Request verification',
       sending: 'Sending…',
       note: 'First verification free · we reply within one business day',
-      verifyNeeded: 'Please wait for the verification to finish, then try again.',
+      verifyNeeded: 'Please complete the verification and try again.',
       sendError: 'Something went wrong sending your request. Please try again in a moment, or email us directly.',
       sentTitle: 'Thanks — your request is in.',
       sentFirst: 'This is your first verification, so it is free. We reply within one business day with next steps for sending your bid package.',
@@ -594,7 +595,7 @@ export const content = {
       sending: '보내는 중…',
       sentTitle: '감사합니다 — 문의가 접수됐습니다.',
       sentBody: '영업일 2일 내에 회신드립니다. 급한 건은 hello@sizlon.io로 메일 주세요.',
-      verifyNeeded: '확인이 끝날 때까지 잠시 기다린 뒤 다시 시도해 주세요.',
+      verifyNeeded: '인증을 완료한 뒤 다시 시도해 주세요.',
       sendError: '전송 중 문제가 발생했습니다. 잠시 후 다시 시도하시거나, 아래 이메일로 직접 보내주세요.',
     },
     verifyRequest: {
@@ -622,6 +623,7 @@ export const content = {
         deadlinePlaceholder: '예: 2026-08-15 18:00',
       },
       stakesLabel: '공고에서',
+      prefillNote: '아래 공고 정보는 커넥터 링크에서 자동으로 채워졌습니다 — 맞는지 확인해 주세요.',
       who: {
         heading: '누구를 위한 검증인가요',
         company: '회사명',
@@ -644,7 +646,7 @@ export const content = {
       submit: '검증 신청',
       sending: '보내는 중…',
       note: '첫 검증 무료 · 영업일 1일 내 회신',
-      verifyNeeded: '확인이 끝날 때까지 잠시 기다린 뒤 다시 시도해 주세요.',
+      verifyNeeded: '인증을 완료한 뒤 다시 시도해 주세요.',
       sendError: '전송 중 문제가 발생했습니다. 잠시 후 다시 시도하시거나, 아래 이메일로 직접 보내주세요.',
       sentTitle: '감사합니다 — 신청이 접수됐습니다.',
       sentFirst: '첫 검증이라 무료입니다. 영업일 1일 내에 서류 전달 방법과 함께 회신드립니다.',
