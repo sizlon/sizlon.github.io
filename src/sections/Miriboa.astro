@@ -19,6 +19,7 @@ const c = tr.miriboa;
       <a class="btn btn-primary" href={localizePath('/verify-request', lang)}>{c.ctaPrimary} <span class="arrow">&rarr;</span></a>
     </div>
     <p class="price-note">{c.priceNote}</p>
+    <p class="proof-teaser">{c.proofTeaser} <a href="#samples">{c.proofTeaserLink} &darr;</a></p>
     <JumpNav items={c.jump} label={c.jumpLabel} />
   </section>
 
@@ -113,6 +114,8 @@ const c = tr.miriboa;
     <p class="model-note">
       {c.modelNote} <a href={localizePath('/verify-request', lang)}>{c.contactBtn} &rarr;</a>
     </p>
+    <p class="diy-note">{c.diyNote}</p>
+    <span class="eyebrow before-send">{c.beforeSend}</span>
     <p class="model-note precheck-note">
       {c.precheckNote} <a href={localizePath('/precheck', lang)}>{c.precheckBtn} &rarr;</a>
     </p>
@@ -171,6 +174,12 @@ const c = tr.miriboa;
   .model-note { font-size: var(--step-1); }
   .model-note a { color: var(--color-ink); font-weight: 600; text-decoration: underline; text-decoration-color: var(--color-recovered); text-underline-offset: 3px; white-space: nowrap; }
   .legal-note { font-size: var(--step--1); color: var(--color-slate); margin-top: 1.5rem; max-width: var(--measure); border-top: 1px solid var(--hairline); padding-top: 1rem; }
+  .proof-teaser { font-size: var(--step--1); color: var(--color-slate); margin-top: -0.25rem; }
+  .proof-teaser a { color: var(--color-ink); font-weight: 600; text-decoration: underline; text-decoration-color: var(--color-recovered); text-underline-offset: 3px; white-space: nowrap; }
+  .diy-note { font-size: var(--step-0); color: color-mix(in srgb, var(--color-ink) 82%, var(--color-mist)); max-width: var(--measure); margin-top: 0.75rem; }
+  .before-send { display: block; margin-top: 2rem; color: var(--color-slate); }
+  /* precheck/connector are secondary to the primary "how you get it" note */
+  .precheck-note { font-size: var(--step-0); }
 
   @media (max-width: 760px) {
     .market, .flow, .proof { grid-template-columns: 1fr; }
