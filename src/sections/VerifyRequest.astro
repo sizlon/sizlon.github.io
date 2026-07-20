@@ -136,6 +136,7 @@ const privacyHref = localizePath('/legal/privacy', lang);
       <div class="sent" tabindex="-1" hidden data-verify-sent>
         <h2>{c.sentTitle}</h2>
         <p hidden data-sent-first>{c.sentFirst}</p>
+        <p hidden data-sent-first-express>{c.sentFirstExpress}</p>
         <p hidden data-sent-returning>{c.sentReturning}</p>
       </div>
     </div>
@@ -242,9 +243,12 @@ const privacyHref = localizePath('/legal/privacy', lang);
         if (res.ok && data && data.ok) {
           // 응답의 first_time으로 무료/재신청 안내를 가른다.
           const first = !!data.first_time;
+          const paid = Number(data.amount) > 0;  // 첫 건이라도 Express면 유료
           const pf = sent.querySelector('[data-sent-first]');
+          const pfx = sent.querySelector('[data-sent-first-express]');
           const pr = sent.querySelector('[data-sent-returning]');
-          if (pf) pf.hidden = !first;
+          if (pf) pf.hidden = !(first && !paid);
+          if (pfx) pfx.hidden = !(first && paid);
           if (pr) pr.hidden = first;
           form.hidden = true;
           sent.hidden = false;
