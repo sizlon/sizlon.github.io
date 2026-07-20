@@ -52,7 +52,7 @@ const privacyHref = localizePath('/legal/privacy', lang);
           <legend>{c.notice.heading}</legend>
           <label>
             <span>{c.notice.no}</span>
-            <input type="text" name="notice" inputmode="numeric" maxlength="80" required data-field-notice />
+            <input type="text" name="notice" maxlength="80" required data-field-notice />
             <small class="hint">{c.notice.noHint}</small>
           </label>
           <label>
@@ -77,9 +77,9 @@ const privacyHref = localizePath('/legal/privacy', lang);
           </label>
           <label>
             <span>{c.who.brn}</span>
-            <input type="text" name="brn" inputmode="numeric" autocomplete="off" maxlength="14" required data-brn aria-describedby="brn-hint" />
+            <input type="text" name="brn" inputmode="numeric" autocomplete="off" maxlength="14" required data-brn aria-describedby="brn-hint brn-err" />
             <small class="hint" id="brn-hint">{c.who.brnHint}</small>
-            <small class="verr" hidden data-brn-error>{c.brnInvalid}</small>
+            <small class="verr" id="brn-err" role="alert" hidden data-brn-error>{c.brnInvalid}</small>
           </label>
           <label>
             <span>{c.who.person}</span>
@@ -118,14 +118,14 @@ const privacyHref = localizePath('/legal/privacy', lang);
         <p class="consent">{c.consent} <a href={privacyHref}>{c.consentLink}</a>{lang === 'ko' ? '' : ' '}{c.consentAfter}</p>
 
         {turnstileKey && <div class="cf-turnstile" data-sitekey={turnstileKey}></div>}
-        {turnstileKey && <p class="verr" hidden data-verify-error>{c.verifyNeeded}</p>}
-        <p class="verr" hidden data-send-error>{c.sendError}</p>
+        {turnstileKey && <p class="verr" role="alert" hidden data-verify-error>{c.verifyNeeded}</p>}
+        <p class="verr" role="alert" hidden data-send-error>{c.sendError} <a href={`mailto:${site.contactEmail}`}>{site.contactEmail}</a></p>
 
         <button class="btn btn-primary" type="submit">{c.submit} <span class="arrow">&rarr;</span></button>
         <p class="note eyebrow">{c.note}</p>
       </form>
 
-      <div class="sent" hidden data-verify-sent>
+      <div class="sent" tabindex="-1" hidden data-verify-sent>
         <h2>{c.sentTitle}</h2>
         <p hidden data-sent-first>{c.sentFirst}</p>
         <p hidden data-sent-returning>{c.sentReturning}</p>
@@ -231,6 +231,7 @@ const privacyHref = localizePath('/legal/privacy', lang);
           if (pr) pr.hidden = first;
           form.hidden = true;
           sent.hidden = false;
+          sent.focus();  // 스크린리더 포커스를 완료 영역으로 옮긴다(성공을 알린다)
           sent.scrollIntoView({ behavior: 'smooth', block: 'center' });
           return;
         }

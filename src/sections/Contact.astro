@@ -2,7 +2,7 @@
 import Base from '../layouts/Base.astro';
 import { site } from '../config/site';
 import type { Lang } from '../i18n/content';
-import { t } from '../i18n/utils';
+import { t, localizePath } from '../i18n/utils';
 // The form fetch-POSTs to the site backend (site.contactFormEndpoint →
 // svc.sizlon.io, source: sizlon-platform repo `site-backend/`), which verifies
 // Turnstile server-side, stores the submission, and emails contactEmail.
@@ -23,6 +23,7 @@ const turnstileKey = site.turnstileSiteKey;
       <span class="eyebrow">{c.eyebrow}</span>
       <h1>{c.h1}</h1>
       <p class="lede">{c.lede}</p>
+      <p class="alt">{c.applyPrefix} <a href={localizePath('/verify-request', lang)}>{c.applyLink} &rarr;</a></p>
       <p class="alt">{c.altPrefix} <a href={`mailto:${site.contactEmail}`}>{site.contactEmail}</a></p>
     </div>
 
