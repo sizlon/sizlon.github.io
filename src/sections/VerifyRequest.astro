@@ -7,7 +7,8 @@ import { t, localizePath } from '../i18n/utils';
 //   1 Notice (공고번호 → auto-fill from parse.sizlon.io)
 //   2 Your details + PIPA consent + Turnstile  → creates a DRAFT (server row + token)
 //   3 Bid documents (required) — upload + inline precheck
-//   4 Done → finalize (draft → received)
+//   4 NDA / confidentiality agreement (required) → finalize (upload + draft→received)
+//   5 Done
 // A draft persists from step 2, resumable via the emailed manage link or magic-link
 // login (/manage). Documents can be replaced/deleted later from the manage page.
 
@@ -17,7 +18,8 @@ const tr = t(lang);
 const c = tr.verifyRequest;
 const turnstileKey = site.turnstileSiteKey;
 const privacyHref = localizePath('/legal/privacy', lang);
-const stepKeys = ['notice', 'who', 'docs', 'done'] as const;
+const termsHref = localizePath('/legal/terms', lang);
+const stepKeys = ['notice', 'who', 'docs', 'nda', 'done'] as const;
 ---
 
 <Base title={c.title} description={c.description} lang={lang}>
@@ -147,6 +149,22 @@ const stepKeys = ['notice', 'who', 'docs', 'done'] as const;
           <p class="verr" role="alert" hidden data-step-error="3">{c.sendError} <a href={`mailto:${site.contactEmail}`}>{site.contactEmail}</a></p>
           <div class="wnav">
             <button type="button" class="btn btn-ghost" data-back="3">&larr; {c.back}</button>
+            <button type="button" class="btn btn-primary" data-next="3" disabled>{c.next} <span class="arrow">&rarr;</span></button>
+          </div>
+        </fieldset>
+
+        <!-- STEP 4 · NDA / confidentiality agreement -->
+        <fieldset class="step" data-step="4" hidden>
+          <legend>{c.nda.heading}</legend>
+          <p class="hint nda-intro">{c.nda.intro} <a href={termsHref}>{c.nda.link}</a>.</p>
+          <label class="check consent-check">
+            <input type="checkbox" name="nda" data-nda />
+            <span class="checktext"><span class="checklabel">{c.nda.agree}</span></span>
+          </label>
+          <p class="verr" role="alert" hidden data-nda-error>{c.nda.required}</p>
+          <p class="verr" role="alert" hidden data-step-error="4">{c.sendError} <a href={`mailto:${site.contactEmail}`}>{site.contactEmail}</a></p>
+          <div class="wnav">
+            <button type="button" class="btn btn-ghost" data-back="4">&larr; {c.back}</button>
             <button type="button" class="btn btn-primary" data-submit disabled>{c.submitFinal} <span class="arrow">&rarr;</span></button>
           </div>
         </fieldset>
@@ -201,7 +219,7 @@ const stepKeys = ['notice', 'who', 'docs', 'done'] as const;
       });
       const top = form.closest('.formcol');
       if (top && top.scrollIntoView) top.scrollIntoView({ behavior: 'smooth', block: 'start' });
-      if (n === 2) refreshStep2(); else if (n === 3) refreshStep3();
+      if (n === 2) refreshStep2(); else if (n === 3) refreshStep3(); else if (n === 4) refreshStep4();
     }
     const stepErr = (n) => form.querySelector('[data-step-error="' + n + '"]');
     showStep(1);
@@ -325,9 +343,12 @@ const stepKeys = ['notice', 'who', 'docs', 'done'] as const;
 
     // ── STEP 3: 문서 드롭존 + precheck ──
     const docInput = $('[data-docs-input]'), drop = $('[data-drop]'), filelist = $('[data-filelist]'), docChecking = $('[data-docs-checking]');
-    const submitBtn = $('[data-submit]');
-    // 응찰서류가 하나라도 올라와야 '검증 신청'을 활성화한다.
-    function refreshStep3() { if (submitBtn) submitBtn.disabled = !(docInput && docInput.files && docInput.files.length); }
+    const next3 = $('[data-next="3"]'), submitBtn = $('[data-submit]'), ndaCheck = $('[data-nda]');
+    // step3: 응찰서류가 하나라도 올라와야 '다음'을 활성화한다.
+    function refreshStep3() { if (next3) next3.disabled = !(docInput && docInput.files && docInput.files.length); }
+    // step4: NDA(기밀유지)에 동의해야 '신청 완료'를 활성화한다.
+    function refreshStep4() { if (submitBtn) submitBtn.disabled = !(ndaCheck && ndaCheck.checked); }
+    if (ndaCheck) ndaCheck.addEventListener('change', refreshStep4);
     function renderFiles(arr, statuses) {
       if (!filelist) return; filelist.innerHTML = '';
       arr.forEach((f, i) => {
@@ -364,14 +385,16 @@ const stepKeys = ['notice', 'who', 'docs', 'done'] as const;
       drop.addEventListener('keydown', (e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); docInput.click(); } });
     }
     $('[data-back="3"]').addEventListener('click', () => showStep(2));
+    if (next3) next3.addEventListener('click', () => { if (!(docInput && docInput.files.length)) { refreshStep3(); return; } showStep(4); });
+    $('[data-back="4"]').addEventListener('click', () => showStep(3));
 
-    // ── STEP 3 → 확정 ──
+    // ── STEP 4 (NDA) → 확정 ──
     $('[data-submit]').addEventListener('click', async () => {
-      const derr = $('[data-docs-error]'), e3 = stepErr(3);
-      if (e3) e3.hidden = true;
-      if (!docInput || docInput.files.length === 0) { if (derr) derr.hidden = false; if (drop) drop.focus(); return; }
-      if (derr) derr.hidden = true;
-      if (!token) { if (e3) e3.hidden = false; return; }
+      const derr = $('[data-docs-error]'), e4 = stepErr(4), nerr = $('[data-nda-error]');
+      if (e4) e4.hidden = true; if (nerr) nerr.hidden = true;
+      if (!ndaCheck || !ndaCheck.checked) { if (nerr) nerr.hidden = false; refreshStep4(); return; }
+      if (!docInput || docInput.files.length === 0) { showStep(3); refreshStep3(); if (derr) derr.hidden = false; return; }
+      if (!token) { if (e4) e4.hidden = false; return; }
       const btn = $('[data-submit]'); const lbl = btn.innerHTML; btn.disabled = true; btn.textContent = '…';
       try {
         // 1) 문서 업로드
@@ -399,8 +422,8 @@ const stepKeys = ['notice', 'who', 'docs', 'done'] as const;
           return;
         }
         throw new Error('finalize');
-      } catch { if (e3) e3.hidden = false; }
-      btn.innerHTML = lbl; refreshStep3();
+      } catch { if (e4) e4.hidden = false; }
+      btn.innerHTML = lbl; refreshStep4();
     });
   }
 </script>
