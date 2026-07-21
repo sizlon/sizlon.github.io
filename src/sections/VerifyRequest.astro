@@ -523,16 +523,17 @@ const stepKeys = ['notice', 'who', 'docs', 'nda', 'done'] as const;
   .drop .drop-big { display: block; font-weight: 600; font-size: var(--step-0); }
   .drop .hint { display: block; margin-top: 0.4rem; }
   .drop input { display: none; }
+  /* 목록 항목(li·fname·fbadge·fdel)은 JS로 동적 생성돼 Astro 스코프 속성이
+     없다. 정적인 .filelist를 앵커로 두고 하위는 :global()로 풀어야 규칙이 먹는다. */
   .filelist { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 0.4rem; }
   .filelist:empty { display: none; }
-  .filelist li { display: flex; align-items: center; gap: 0.6rem; background: var(--color-vellum); border: 1px solid var(--hairline); border-radius: var(--radius); padding: 0.45rem 0.7rem; }
-  .filelist .fname { flex: 1; min-width: 0; font-size: var(--step--1); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-  .fdel { flex: none; border: none; background: none; cursor: pointer; font-size: 1.15rem; line-height: 1; color: var(--color-slate); padding: 0 0.25rem; border-radius: 4px; }
-  .fdel:hover { color: var(--color-fault); }
-  .fbadge { font-family: var(--font-mono); font-size: var(--step--1); font-weight: 700; border-radius: 4px; padding: 0.1rem 0.45rem; white-space: nowrap; }
-  .fbadge.ok { background: color-mix(in srgb, var(--color-recovered) 14%, transparent); color: var(--color-recovered); }
-  .fbadge.suspect, .fbadge.failed { background: color-mix(in srgb, var(--color-fault) 14%, transparent); color: var(--color-fault); }
-  .fbadge.unsupported { background: color-mix(in srgb, var(--color-slate) 15%, transparent); color: var(--color-slate); }
+  .filelist :global(li) { display: flex; align-items: center; gap: 0.6rem; background: var(--color-vellum); border: 1px solid var(--hairline); border-radius: var(--radius); padding: 0.45rem 0.7rem; }
+  .filelist :global(.fname) { flex: 1; min-width: 0; font-size: var(--step--1); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .filelist :global(.fbadge) { flex: none; font-family: var(--font-mono); font-size: var(--step--1); font-weight: 700; border-radius: 4px; padding: 0.1rem 0.45rem; white-space: nowrap; }
+  .filelist :global(.fbadge.suspect), .filelist :global(.fbadge.failed) { background: color-mix(in srgb, var(--color-fault) 14%, transparent); color: var(--color-fault); }
+  .filelist :global(.fbadge.unsupported) { background: color-mix(in srgb, var(--color-slate) 15%, transparent); color: var(--color-slate); }
+  .filelist :global(.fdel) { flex: none; border: none; background: none; cursor: pointer; font-size: 1.15rem; line-height: 1; color: var(--color-slate); padding: 0 0.25rem; border-radius: 4px; }
+  .filelist :global(.fdel:hover) { color: var(--color-fault); }
 
   .wnav { display: flex; gap: 0.75rem; justify-content: space-between; margin-top: 0.25rem; }
   .wnav .btn-primary { margin-left: auto; }

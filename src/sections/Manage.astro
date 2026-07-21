@@ -317,22 +317,24 @@ const strings = {
   .acct-head { display: flex; justify-content: space-between; align-items: baseline; gap: 1rem; }
   .acct-email { font-family: var(--font-mono); font-size: var(--step--1); color: var(--color-slate); }
   .linkbtn { background: none; border: 0; color: var(--color-slate); cursor: pointer; text-decoration: underline; font: inherit; font-size: var(--step--1); }
+  /* 아래 목록들(reqlist·summary·filelist 내부)은 JS innerHTML로 그려져 Astro
+     스코프 속성이 없다. 정적 앵커(data-* 컨테이너) 하위는 :global()로 풀어야 먹는다. */
   .reqlist { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 0.5rem; }
-  .reqlist a { display: flex; justify-content: space-between; align-items: baseline; gap: 1rem; padding: 0.9rem 1.1rem; border: 1px solid var(--hairline); border-radius: var(--radius); background: var(--color-mist); text-decoration: none; color: var(--color-ink); transition: border-color .15s ease; }
-  .reqlist a:hover { border-color: var(--color-recovered); }
-  .rq-title { font-weight: 600; }
-  .rq-meta { font-family: var(--font-mono); font-size: var(--step--1); color: var(--color-slate); white-space: nowrap; }
-  .rq-status { font-weight: 700; }
-  .rq-status.s-draft { color: #a2570f; }
-  .rq-status.s-received { color: var(--color-recovered); }
+  .reqlist :global(a) { display: flex; justify-content: space-between; align-items: baseline; gap: 1rem; padding: 0.9rem 1.1rem; border: 1px solid var(--hairline); border-radius: var(--radius); background: var(--color-mist); text-decoration: none; color: var(--color-ink); transition: border-color .15s ease; }
+  .reqlist :global(a:hover) { border-color: var(--color-recovered); }
+  .reqlist :global(.rq-title) { font-weight: 600; }
+  .reqlist :global(.rq-meta) { font-family: var(--font-mono); font-size: var(--step--1); color: var(--color-slate); white-space: nowrap; }
+  .reqlist :global(.rq-status) { font-weight: 700; }
+  .reqlist :global(.rq-status.s-draft) { color: #a2570f; }
+  .reqlist :global(.rq-status.s-received) { color: var(--color-recovered); }
 
   .summary { margin: 0; display: grid; gap: 0.5rem; padding: 1.1rem 1.25rem; border: 1px solid var(--hairline); border-radius: var(--radius); background: var(--color-mist); }
-  .summary > div { display: grid; grid-template-columns: 6rem 1fr; gap: 0.6rem; align-items: baseline; }
-  .summary dt { font-family: var(--font-mono); font-size: var(--step--1); color: var(--color-slate); margin: 0; }
-  .summary dd { margin: 0; }
-  .docnames { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 0.15rem; }
-  .docnames .muted { color: var(--color-slate); }
-  .summary .purge { font-size: var(--step--1); color: var(--color-slate); margin: 0.35rem 0 0; }
+  .summary :global(> div) { display: grid; grid-template-columns: 6rem 1fr; gap: 0.6rem; align-items: baseline; }
+  .summary :global(dt) { font-family: var(--font-mono); font-size: var(--step--1); color: var(--color-slate); margin: 0; }
+  .summary :global(dd) { margin: 0; }
+  .summary :global(.docnames) { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 0.15rem; }
+  .summary :global(.docnames .muted) { color: var(--color-slate); }
+  .summary :global(.purge) { font-size: var(--step--1); color: var(--color-slate); margin: 0.35rem 0 0; }
 
   .editblock { display: flex; flex-direction: column; gap: 1.5rem; }
   .block { display: flex; flex-direction: column; gap: 0.7rem; padding: 1.25rem; border: 1px solid var(--hairline); border-radius: var(--radius); }
@@ -349,12 +351,12 @@ const strings = {
   .drop input { display: none; }
   .filelist { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 0.4rem; }
   .filelist:empty { display: none; }
-  .filelist li { display: flex; align-items: center; gap: 0.6rem; justify-content: space-between; background: var(--color-vellum); border: 1px solid var(--hairline); border-radius: var(--radius); padding: 0.45rem 0.7rem; }
-  .filelist .fname { font-size: var(--step--1); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-  .fbadge { font-family: var(--font-mono); font-size: var(--step--1); font-weight: 700; border-radius: 4px; padding: 0.1rem 0.45rem; white-space: nowrap; }
-  .fbadge.ok { background: color-mix(in srgb, var(--color-recovered) 14%, transparent); color: var(--color-recovered); }
-  .fbadge.suspect, .fbadge.failed { background: color-mix(in srgb, var(--color-fault) 14%, transparent); color: var(--color-fault); }
-  .fbadge.unsupported { background: color-mix(in srgb, var(--color-slate) 15%, transparent); color: var(--color-slate); }
+  .filelist :global(li) { display: flex; align-items: center; gap: 0.6rem; background: var(--color-vellum); border: 1px solid var(--hairline); border-radius: var(--radius); padding: 0.45rem 0.7rem; }
+  .filelist :global(.fname) { flex: 1; min-width: 0; font-size: var(--step--1); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .filelist :global(.fbadge) { flex: none; font-family: var(--font-mono); font-size: var(--step--1); font-weight: 700; border-radius: 4px; padding: 0.1rem 0.45rem; white-space: nowrap; }
+  .filelist :global(.fbadge.ok) { background: color-mix(in srgb, var(--color-recovered) 14%, transparent); color: var(--color-recovered); }
+  .filelist :global(.fbadge.suspect), .filelist :global(.fbadge.failed) { background: color-mix(in srgb, var(--color-fault) 14%, transparent); color: var(--color-fault); }
+  .filelist :global(.fbadge.unsupported) { background: color-mix(in srgb, var(--color-slate) 15%, transparent); color: var(--color-slate); }
 
   .btn-danger { align-self: flex-start; background: #b3261e; color: #fff; border-color: #b3261e; }
   .btn-danger:hover { background: #8f1e18; }
