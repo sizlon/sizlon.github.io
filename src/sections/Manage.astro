@@ -56,14 +56,26 @@ const strings = {
       <p class="ok" role="status" hidden data-login-sent>{c.loginSent}</p>
     </div>
 
-    <!-- ACCOUNT (list of requests) -->
+    <!-- ACCOUNT hub — one Sizlon account across Miriboa + Crawler Platform -->
     <div class="panel" hidden data-account>
       <div class="acct-head">
         <span class="acct-email" data-acct-email></span>
         <button class="linkbtn" type="button" data-logout>{c.logout}</button>
       </div>
-      <ul class="reqlist" data-reqlist></ul>
-      <p class="statusnote" hidden data-account-empty>{c.accountEmpty}</p>
+      <div class="prodgrid">
+        <section class="prodcard">
+          <h2>{c.miriboaHeading}</h2>
+          <p class="hint">{c.miriboaIntro}</p>
+          <ul class="reqlist" data-reqlist></ul>
+          <p class="statusnote" hidden data-account-empty>{c.accountEmpty}</p>
+          <a class="btn btn-primary prodcta" href={localizePath('/verify-request', lang)}>{c.newVerify} <span class="arrow">&rarr;</span></a>
+        </section>
+        <section class="prodcard">
+          <h2>{c.crawlerHeading}</h2>
+          <p class="hint">{c.crawlerIntro}</p>
+          <a class="btn btn-ghost prodcta" href={site.portalLoginUrl} rel="noopener">{c.crawlerPortal} <span class="arrow">&rarr;</span></a>
+        </section>
+      </div>
       <div class="block setpw" data-setpw hidden>
         <h2>{c.setPw.heading}</h2>
         <p class="hint" data-setpw-intro>{c.setPw.intro}</p>
@@ -426,6 +438,12 @@ const strings = {
   .acct-head { display: flex; justify-content: space-between; align-items: baseline; gap: 1rem; }
   .acct-email { font-family: var(--font-mono); font-size: var(--step--1); color: var(--color-slate); }
   .linkbtn { background: none; border: 0; color: var(--color-slate); cursor: pointer; text-decoration: underline; font: inherit; font-size: var(--step--1); }
+  /* Sizlon 계정 허브: 미리보아·Crawler Platform 두 제품 카드 */
+  .prodgrid { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+  @media (max-width: 640px) { .prodgrid { grid-template-columns: 1fr; } }
+  .prodcard { display: flex; flex-direction: column; gap: 0.7rem; padding: 1.25rem; border: 1px solid var(--hairline); border-radius: var(--radius); background: var(--color-mist); }
+  .prodcard h2 { font-size: var(--step-1); margin: 0; }
+  .prodcta { align-self: flex-start; margin-top: auto; }
   /* 아래 목록들(reqlist·summary·filelist 내부)은 JS innerHTML로 그려져 Astro
      스코프 속성이 없다. 정적 앵커(data-* 컨테이너) 하위는 :global()로 풀어야 먹는다. */
   .reqlist { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 0.5rem; }
