@@ -89,7 +89,7 @@ const stepKeys = ['notice', 'who', 'docs', 'nda', 'done'] as const;
           <label><span>{c.who.company}</span>
             <input type="text" name="company" autocomplete="organization" maxlength="160" /></label>
           <label><span>{c.who.brn}</span>
-            <input type="text" name="brn" inputmode="numeric" autocomplete="off" maxlength="14" data-brn aria-describedby="brn-hint brn-err" />
+            <input type="text" name="brn" inputmode="numeric" autocomplete="off" maxlength="12" placeholder="123-45-67890" data-brn aria-describedby="brn-hint brn-err" />
             <small class="hint" id="brn-hint">{c.who.brnHint}</small>
             <small class="verr" id="brn-err" role="alert" hidden data-brn-error>{c.brnInvalid}</small></label>
           <label><span>{c.who.person}</span>
@@ -290,6 +290,10 @@ const stepKeys = ['notice', 'who', 'docs', 'nda', 'done'] as const;
       return (10 - (sum % 10)) % 10 === Number(d[9]);
     };
     const brnInput = $('[data-brn]'), brnErr = $('[data-brn-error]');
+    // 고객은 숫자만 입력해도 화면엔 사업자번호 형식(3-2-5)의 하이픈이 붙는다.
+    // 서버는 _normalize_brn으로 숫자만 추출하므로 하이픈이 있어도 무방하다.
+    const formatBrn = (v) => { const d = (v || '').replace(/\D/g, '').slice(0, 10); return [d.slice(0, 3), d.slice(3, 5), d.slice(5, 10)].filter(Boolean).join('-'); };
+    if (brnInput) brnInput.addEventListener('input', () => { brnInput.value = formatBrn(brnInput.value); });
     if (brnInput) brnInput.addEventListener('blur', () => { if (brnErr) brnErr.hidden = brnValid(brnInput.value) || !brnInput.value; });
 
     // 필수 신원정보·동의·Turnstile이 온전할 때만 '다음'을 활성화한다.
