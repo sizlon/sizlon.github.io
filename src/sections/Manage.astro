@@ -18,7 +18,7 @@ const c = tr.verifyManage;
 const strings = {
   f: c.f, noDocs: c.noDocs, purgeAt: c.purgeAt, error: c.error, deleteConfirm: c.deleteConfirm,
   statusMap: c.statusMap, loginSent: c.loginSent, accountEmpty: c.accountEmpty, open: c.open,
-  setPw: c.setPw,
+  setPw: c.setPw, updatedLabel: c.updatedLabel, discardConfirm: c.discardConfirm,
 };
 ---
 
@@ -97,13 +97,19 @@ const strings = {
           <p class="ok" role="status" hidden data-saved>{c.saved}</p>
           <p class="verr" role="alert" hidden data-error>{c.error}</p>
         </div>
-        <div class="block danger">
+        <div class="block danger" data-purge-block>
           <h2>{c.deleteHeading}</h2>
           <p class="hint">{c.deleteIntro}</p>
           <button class="btn btn-danger" type="button" data-delete>{c.deleteBtn}</button>
         </div>
+        <div class="block danger" hidden data-discard-block>
+          <h2>{c.discardHeading}</h2>
+          <p class="hint">{c.discardIntro}</p>
+          <button class="btn btn-danger" type="button" data-discard>{c.discardBtn}</button>
+        </div>
       </div>
       <p class="ok" role="status" hidden data-deleted>{c.deleted}</p>
+      <p class="ok" role="status" hidden data-discarded>{c.discarded}</p>
       <p class="alt"><a data-back-account href="#">&larr; {c.accountHeading}</a></p>
     </div>
 
@@ -217,14 +223,17 @@ const strings = {
     const list = $('[data-reqlist]'), empty = $('[data-account-empty]');
     if (list) {
       list.innerHTML = '';
+      const fmtWhen = (iso) => { if (!iso) return ''; return String(iso).slice(0, 16).replace('T', ' '); };
       requests.forEach((r) => {
         const st = (S.statusMap && S.statusMap[r.status]) || r.status;
         const title = ((r.notice_no || '') + ' ' + (r.notice_name || '')).trim() || '—';
+        const when = fmtWhen(r.updated_at || r.created_at);
         const li = document.createElement('li');
         li.innerHTML = '<a href="' + esc(managePath) + '?t=' + encodeURIComponent(r.token) + '">'
-          + '<span class="rq-title">' + esc(title) + '</span>'
-          + '<span class="rq-meta"><span class="rq-status s-' + esc(r.status) + '">' + esc(st) + '</span>'
-          + ' · ' + esc(String(r.doc_count || 0)) + '</span></a>';
+          + '<span class="rq-main"><span class="rq-title">' + esc(title) + '</span>'
+          + '<span class="rq-when">' + esc((S.updatedLabel || '') + ' ' + when) + '</span></span>'
+          + '<span class="rq-meta"><span class="rq-status s-' + esc(r.status) + '">' + esc(st) + '</span></span>'
+          + '</a>';
         list.appendChild(li);
       });
     }
@@ -263,6 +272,7 @@ const strings = {
   // ── ONE REQUEST (summary + edit) ──
   const summary = $('[data-summary]'), editblock = $('[data-editblock]');
   const lockedEl = $('[data-locked]'), purgedEl = $('[data-purged]'), deletedEl = $('[data-deleted]');
+  const purgeBlock = $('[data-purge-block]'), discardBlock = $('[data-discard-block]'), discardedEl = $('[data-discarded]');
   let reqToken = '';
 
   function renderSummary(d) {
@@ -291,8 +301,13 @@ const strings = {
       const d = await res.json().catch(() => null);
       if (!res.ok || !d || !d.ok) { hideAll(); show(notfound); return; }
       hideAll(); renderSummary(d);
-      if (d.editable) show(editblock);
-      else if (d.purged) show(purgedEl);
+      if (d.editable) {
+        // draft(미접수)면 '신청 자체 삭제', 접수(received)면 '문서 파기'를 보인다.
+        const isDraft = d.status === 'draft';
+        if (purgeBlock) purgeBlock.hidden = isDraft;
+        if (discardBlock) discardBlock.hidden = !isDraft;
+        show(editblock);
+      } else if (d.purged) show(purgedEl);
       else show(lockedEl);
       // 로그인 세션이 없으면 '목록으로' 링크는 로그인으로 보낸다
       show(requestP);
@@ -361,6 +376,21 @@ const strings = {
       else delBtn.disabled = false;
     } catch { delBtn.disabled = false; }
   });
+  // draft(신청 자체) 삭제 — 성공하면 신청은 사라지므로 요약·편집을 감추고 안내만 남긴다.
+  const discardBtn = $('[data-discard]');
+  if (discardBtn) discardBtn.addEventListener('click', async () => {
+    if (!confirm(S.discardConfirm || 'Delete draft?')) return;
+    discardBtn.disabled = true;
+    try {
+      const res = await fetch(base + '/' + encodeURIComponent(reqToken) + '/discard', { method: 'POST' });
+      const d = await res.json().catch(() => null);
+      if (res.ok && d && d.ok) {
+        if (editblock) editblock.hidden = true;
+        if (summary) summary.hidden = true;
+        if (discardedEl) discardedEl.hidden = false;
+      } else discardBtn.disabled = false;
+    } catch { discardBtn.disabled = false; }
+  });
 
   boot();
 </script>
@@ -388,8 +418,10 @@ const strings = {
   /* 아래 목록들(reqlist·summary·filelist 내부)은 JS innerHTML로 그려져 Astro
      스코프 속성이 없다. 정적 앵커(data-* 컨테이너) 하위는 :global()로 풀어야 먹는다. */
   .reqlist { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 0.5rem; }
-  .reqlist :global(a) { display: flex; justify-content: space-between; align-items: baseline; gap: 1rem; padding: 0.9rem 1.1rem; border: 1px solid var(--hairline); border-radius: var(--radius); background: var(--color-mist); text-decoration: none; color: var(--color-ink); transition: border-color .15s ease; }
+  .reqlist :global(a) { display: flex; justify-content: space-between; align-items: center; gap: 1rem; padding: 0.9rem 1.1rem; border: 1px solid var(--hairline); border-radius: var(--radius); background: var(--color-mist); text-decoration: none; color: var(--color-ink); transition: border-color .15s ease; }
   .reqlist :global(a:hover) { border-color: var(--color-recovered); }
+  .reqlist :global(.rq-main) { display: flex; flex-direction: column; gap: 0.15rem; min-width: 0; }
+  .reqlist :global(.rq-when) { font-family: var(--font-mono); font-size: var(--step--1); color: var(--color-slate); }
   .reqlist :global(.rq-title) { font-weight: 600; }
   .reqlist :global(.rq-meta) { font-family: var(--font-mono); font-size: var(--step--1); color: var(--color-slate); white-space: nowrap; }
   .reqlist :global(.rq-status) { font-weight: 700; }
