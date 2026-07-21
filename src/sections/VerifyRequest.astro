@@ -492,7 +492,7 @@ const stepKeys = ['notice', 'who', 'docs', 'nda', 'done'] as const;
       refreshStep2();
     }
     function autoFillStep2() {
-      if (autoFilled) return;                          // 한 번만 — 이후 사용자의 수정을 덮지 않는다
+      if (resuming || autoFilled) return;              // 재개 중엔 draft 값 유지, 자동채움은 한 번만
       if (profileCompanies.length === 1) { autoFilled = true; fillFromCompany(profileCompanies[0]); }
     }
     if (fillClear) fillClear.addEventListener('click', clearFill);
