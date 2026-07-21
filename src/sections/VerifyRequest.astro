@@ -293,7 +293,12 @@ const stepKeys = ['notice', 'who', 'docs', 'nda', 'done'] as const;
     // 고객은 숫자만 입력해도 화면엔 사업자번호 형식(3-2-5)의 하이픈이 붙는다.
     // 서버는 _normalize_brn으로 숫자만 추출하므로 하이픈이 있어도 무방하다.
     const formatBrn = (v) => { const d = (v || '').replace(/\D/g, '').slice(0, 10); return [d.slice(0, 3), d.slice(3, 5), d.slice(5, 10)].filter(Boolean).join('-'); };
-    if (brnInput) brnInput.addEventListener('input', () => { brnInput.value = formatBrn(brnInput.value); });
+    if (brnInput) {
+      // 숫자만 입력 강제: 한 글자 타이핑에서 숫자가 아니면 원천 차단(깜빡임 방지).
+      // 붙여넣기는 막지 않고 input 단계에서 숫자만 걸러낸다(하이픈 포함 값도 허용).
+      brnInput.addEventListener('beforeinput', (e) => { if (e.inputType === 'insertText' && e.data && /\D/.test(e.data)) e.preventDefault(); });
+      brnInput.addEventListener('input', () => { brnInput.value = formatBrn(brnInput.value); });
+    }
     if (brnInput) brnInput.addEventListener('blur', () => { if (brnErr) brnErr.hidden = brnValid(brnInput.value) || !brnInput.value; });
 
     // 필수 신원정보·동의·Turnstile이 온전할 때만 '다음'을 활성화한다.
