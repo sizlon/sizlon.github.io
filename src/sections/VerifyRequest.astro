@@ -544,7 +544,8 @@ const stepKeys = ['notice', 'who', 'docs', 'nda', 'done'] as const;
         try {
           const ur = await fetch(manageBase + '/' + encodeURIComponent(token) + '/draft', { method: 'POST', body: ufd, headers: us ? { Authorization: 'Bearer ' + us } : {} });
           const ud = await ur.json().catch(() => null);
-          if (ur.ok && ud && ud.ok) showStep(3);
+          if (ur.ok && ud && ud.ok && ud.verified) showStep(3);
+          else if (ur.ok && ud && ud.ok && !ud.verified) { resuming = false; showCheckEmail(); }   // 이메일 바뀜(세션≠) → 재확인, 이 draft는 새 이메일 소유
           else if (ur.status === 422 && ud && ud.error === 'invalid_brn') { if (cerr) cerr.hidden = false; brnInput.focus(); }
           else if (e2) e2.hidden = false;
         } catch { if (e2) e2.hidden = false; }
