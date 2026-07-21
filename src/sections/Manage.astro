@@ -3,12 +3,13 @@ import Base from '../layouts/Base.astro';
 import { site } from '../config/site';
 import type { Lang } from '../i18n/content';
 import { t, localizePath } from '../i18n/utils';
-// Login-less "manage your requests" page. Three modes:
+// "Manage your requests" page. Modes:
 //   ?t=<token>     → one request (summary + add/replace/delete documents)
 //   ?login=<tok>   → verify a magic-link → session → list of all your requests
-//   (default)      → session? list ; else email login form (magic link)
-// The token/session is the only key — no accounts, no passwords. Documents can be
-// changed while a request is 'draft' or 'received' (before verification starts).
+//   (default)      → session? list ; else email+password login (magic link for first-time/forgot)
+// Auth: email+password (portal-compatible bcrypt on the backend), with the magic
+// link as the first-time/forgot path; once logged in you can set/change a password.
+// Documents can be changed while a request is 'draft' or 'received'.
 
 interface Props { lang: Lang }
 const { lang } = Astro.props;
@@ -17,6 +18,7 @@ const c = tr.verifyManage;
 const strings = {
   f: c.f, noDocs: c.noDocs, purgeAt: c.purgeAt, error: c.error, deleteConfirm: c.deleteConfirm,
   statusMap: c.statusMap, loginSent: c.loginSent, accountEmpty: c.accountEmpty, open: c.open,
+  setPw: c.setPw,
 };
 ---
 
@@ -27,6 +29,8 @@ const strings = {
     data-precheck-endpoint={site.precheckEndpoint}
     data-auth-request={site.authRequestEndpoint}
     data-auth-verify={site.authVerifyEndpoint}
+    data-auth-login={site.authLoginEndpoint}
+    data-auth-set-password={site.authSetPasswordEndpoint}
     data-account-requests={site.accountRequestsEndpoint}
     data-manage-path={localizePath('/manage', lang)}
     data-doc-badges={JSON.stringify(c.badges)}
@@ -36,16 +40,19 @@ const strings = {
     <h1 data-h1>{c.h1}</h1>
     <p class="loading" data-loading>{c.loading}</p>
 
-    <!-- LOGIN (magic link) -->
+    <!-- LOGIN (email + password; magic link for first-time/forgot) -->
     <div class="panel" hidden data-login>
       <p>{c.loginIntro}</p>
       <form class="loginform" data-login-form>
         <label><span>{c.loginEmail}</span>
           <input type="email" name="email" autocomplete="email" maxlength="180" required /></label>
-        <button class="btn btn-primary" type="submit">{c.loginSend} <span class="arrow">&rarr;</span></button>
+        <label><span>{c.loginPassword}</span>
+          <input type="password" name="password" autocomplete="current-password" maxlength="200" required /></label>
+        <button class="btn btn-primary" type="submit">{c.loginBtn} <span class="arrow">&rarr;</span></button>
+        <p class="verr" role="alert" hidden data-login-error>{c.loginError}</p>
       </form>
+      <p class="alt"><button type="button" class="linkbtn" data-magic-link>{c.loginMagic}</button></p>
       <p class="ok" role="status" hidden data-login-sent>{c.loginSent}</p>
-      <p class="verr" role="alert" hidden data-login-error>{c.error}</p>
     </div>
 
     <!-- ACCOUNT (list of requests) -->
@@ -56,6 +63,17 @@ const strings = {
       </div>
       <ul class="reqlist" data-reqlist></ul>
       <p class="statusnote" hidden data-account-empty>{c.accountEmpty}</p>
+      <div class="block setpw" data-setpw hidden>
+        <h2>{c.setPw.heading}</h2>
+        <p class="hint" data-setpw-intro>{c.setPw.intro}</p>
+        <form class="loginform" data-setpw-form>
+          <label><span>{c.setPw.new}</span>
+            <input type="password" name="password" autocomplete="new-password" minlength="8" maxlength="200" required /></label>
+          <button class="btn btn-primary" type="submit">{c.setPw.save}</button>
+        </form>
+        <p class="ok" role="status" hidden data-setpw-saved>{c.setPw.saved}</p>
+        <p class="verr" role="alert" hidden data-setpw-error>{c.setPw.weak}</p>
+      </div>
     </div>
 
     <!-- ONE REQUEST -->
@@ -99,6 +117,8 @@ const strings = {
   const precheckEndpoint = root && root.getAttribute('data-precheck-endpoint');
   const authRequest = root && root.getAttribute('data-auth-request');
   const authVerify = root && root.getAttribute('data-auth-verify');
+  const authLogin = root && root.getAttribute('data-auth-login');
+  const authSetPassword = root && root.getAttribute('data-auth-set-password');
   const accountEndpoint = root && root.getAttribute('data-account-requests');
   const managePath = root && root.getAttribute('data-manage-path') || '/manage';
   let S = {}, badges = {};
@@ -124,22 +144,43 @@ const strings = {
     hideAll(); show(loginP);
   }
 
-  // ── LOGIN (magic link) ──
+  // ── LOGIN (이메일+비밀번호) ──
   const loginForm = $('[data-login-form]');
   if (loginForm) loginForm.addEventListener('submit', async (e) => {
     e.preventDefault();
-    const sentEl = $('[data-login-sent]'), errEl = $('[data-login-error]');
+    const errEl = $('[data-login-error]');
     if (errEl) errEl.hidden = true;
     const email = loginForm.querySelector('[name="email"]').value.trim();
+    const password = loginForm.querySelector('[name="password"]').value;
     const btn = loginForm.querySelector('button'); btn.disabled = true;
+    try {
+      const fd = new FormData(); fd.append('email', email); fd.append('password', password);
+      const res = await fetch(authLogin, { method: 'POST', body: fd });
+      const d = await res.json().catch(() => null);
+      if (res.ok && d && d.ok && d.session) {
+        localStorage.setItem(SKEY, d.session);
+        renderAccount(d.email, d.requests || [], !!d.has_password);
+      } else if (errEl) errEl.hidden = false;
+    } catch { if (errEl) errEl.hidden = false; }
+    btn.disabled = false;
+  });
+
+  // ── 매직 링크(처음/분실) — 입력한 이메일로 로그인 링크 발송 ──
+  const magicBtn = $('[data-magic-link]');
+  if (magicBtn) magicBtn.addEventListener('click', async () => {
+    const sentEl = $('[data-login-sent]'), errEl = $('[data-login-error]');
+    if (errEl) errEl.hidden = true;
+    const email = (loginForm && loginForm.querySelector('[name="email"]').value.trim()) || '';
+    if (!email) { const inp = loginForm && loginForm.querySelector('[name="email"]'); if (inp) inp.focus(); return; }
+    magicBtn.disabled = true;
     try {
       const fd = new FormData(); fd.append('email', email);
       const res = await fetch(authRequest, { method: 'POST', body: fd });
       const d = await res.json().catch(() => null);
-      if (res.ok && d && d.ok) { if (sentEl) sentEl.hidden = false; loginForm.hidden = true; }
+      if (res.ok && d && d.ok) { if (sentEl) sentEl.hidden = false; if (loginForm) loginForm.hidden = true; magicBtn.hidden = true; }
       else if (errEl) errEl.hidden = false;
     } catch { if (errEl) errEl.hidden = false; }
-    btn.disabled = false;
+    magicBtn.disabled = false;
   });
 
   async function verifyLogin(token) {
@@ -151,7 +192,7 @@ const strings = {
       if (res.ok && d && d.ok && d.session) {
         localStorage.setItem(SKEY, d.session);
         history.replaceState(null, '', managePath);   // 링크에서 토큰 제거
-        renderAccount(d.email, d.requests || []);
+        renderAccount(d.email, d.requests || [], !!d.has_password);
       } else { hideAll(); show(loginP); }   // 만료/무효 → 다시 로그인
     } catch { hideAll(); show(loginP); }
   }
@@ -161,14 +202,18 @@ const strings = {
     try {
       const res = await fetch(accountEndpoint, { headers: { Authorization: 'Bearer ' + session } });
       const d = await res.json().catch(() => null);
-      if (res.ok && d && d.ok) renderAccount(d.email, d.requests || []);
+      if (res.ok && d && d.ok) renderAccount(d.email, d.requests || [], !!d.has_password);
       else { localStorage.removeItem(SKEY); hideAll(); show(loginP); }
     } catch { hideAll(); show(loginP); }
   }
 
-  function renderAccount(email, requests) {
+  function renderAccount(email, requests, hasPassword) {
     hideAll();
     const em = $('[data-acct-email]'); if (em) em.textContent = email;
+    // 비밀번호 설정/변경 블록: 미설정이면 안내를 강조.
+    const setpw = $('[data-setpw]'), setpwIntro = $('[data-setpw-intro]');
+    if (setpw) setpw.hidden = false;
+    if (setpwIntro && S.setPw) setpwIntro.textContent = hasPassword ? S.setPw.intro : S.setPw.introFirst;
     const list = $('[data-reqlist]'), empty = $('[data-account-empty]');
     if (list) {
       list.innerHTML = '';
@@ -189,6 +234,29 @@ const strings = {
 
   const logoutBtn = $('[data-logout]');
   if (logoutBtn) logoutBtn.addEventListener('click', () => { localStorage.removeItem(SKEY); location.href = managePath; });
+
+  // ── 비밀번호 설정/변경 (현재 세션으로) ──
+  const setpwForm = $('[data-setpw-form]');
+  if (setpwForm) setpwForm.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const savedEl = $('[data-setpw-saved]'), errEl = $('[data-setpw-error]');
+    if (savedEl) savedEl.hidden = true; if (errEl) errEl.hidden = true;
+    const session = localStorage.getItem(SKEY);
+    const password = setpwForm.querySelector('[name="password"]').value;
+    if (!session) { location.href = managePath; return; }
+    if (password.length < 8) { if (errEl) errEl.hidden = false; return; }
+    const btn = setpwForm.querySelector('button'); btn.disabled = true;
+    try {
+      const fd = new FormData(); fd.append('password', password);
+      const res = await fetch(authSetPassword, { method: 'POST', body: fd, headers: { Authorization: 'Bearer ' + session } });
+      const d = await res.json().catch(() => null);
+      if (res.ok && d && d.ok) {
+        if (savedEl) savedEl.hidden = false; setpwForm.reset();
+        const intro = $('[data-setpw-intro]'); if (intro && S.setPw) intro.textContent = S.setPw.intro;
+      } else if (errEl) errEl.hidden = false;
+    } catch { if (errEl) errEl.hidden = false; }
+    btn.disabled = false;
+  });
   const backAccount = $('[data-back-account]');
   if (backAccount) backAccount.addEventListener('click', (e) => { e.preventDefault(); location.href = managePath; });
 
