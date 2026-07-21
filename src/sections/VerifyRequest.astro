@@ -138,10 +138,6 @@ const stepKeys = ['notice', 'who', 'docs', 'nda', 'done'] as const;
           <ul class="filelist" data-filelist></ul>
           <p class="verr" role="alert" hidden data-docs-error>{c.docs.required}</p>
 
-          <dl class="notice-auto attach" hidden data-attach>
-            <div><dt>{tr.verifyRequest.docs.heading}</dt><dd data-attach-list></dd></div>
-          </dl>
-
           <label class="check">
             <input type="checkbox" name="express" value="1" />
             <span class="checktext"><span class="checklabel">{c.expressLabel}</span><small class="hint">{c.expressHint}</small></span>
@@ -231,7 +227,6 @@ const stepKeys = ['notice', 'who', 'docs', 'nda', 'done'] as const;
     const auto = $('[data-notice-auto]'), looking = $('[data-lookup-looking]'), notfound = $('[data-lookup-notfound]');
     const hName = $('[data-field-notice-name]'), hDeadline = $('[data-field-deadline]'), hInstitution = $('[data-field-institution]'), hStakes = $('[data-field-stakes]');
     const aName = $('[data-auto-name]'), aDeadline = $('[data-auto-deadline]'), aInstitution = $('[data-auto-institution]'), aStakes = $('[data-auto-stakes]');
-    const attach = $('[data-attach]'), attachList = $('[data-attach-list]');
     const setText = (el, v) => { if (el) el.textContent = v || '—'; };
     const next1 = $('[data-next="1"]');
     // 공고가 실제로 추출됐을 때만 '다음'이 활성화된다. 번호가 바뀌면 즉시 다시 비활성.
@@ -258,9 +253,6 @@ const stepKeys = ['notice', 'who', 'docs', 'nda', 'done'] as const;
           if (hStakes) hStakes.value = (d.stakes || '').slice(0, 200);
           if (auto) auto.hidden = false;
           if (d.no && noticeInput && d.no !== no) noticeInput.value = d.no;
-          if (attach && attachList && d.attachments && d.attachments.length) {
-            attachList.textContent = d.attachments.join(' · '); attach.hidden = false;
-          } else if (attach) { attach.hidden = true; }
           setNoticeOk(true);
         } else {
           if (auto) auto.hidden = true;
@@ -505,7 +497,6 @@ const stepKeys = ['notice', 'who', 'docs', 'nda', 'done'] as const;
   .notice-auto > div { display: grid; grid-template-columns: 6.5rem 1fr; gap: 0.5rem; align-items: baseline; }
   .notice-auto dt { font-family: var(--font-mono); font-size: var(--step--1); color: var(--color-slate); margin: 0; }
   .notice-auto dd { margin: 0; font-size: var(--step-0); color: var(--color-ink); }
-  .notice-auto.attach dd { font-size: var(--step--1); }
   @media (max-width: 440px) { .notice-auto > div { grid-template-columns: 1fr; gap: 0.1rem; } }
 
   .check { flex-direction: row; align-items: flex-start; gap: 0.6rem; }
