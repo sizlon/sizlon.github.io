@@ -22,6 +22,7 @@ export const site = {
   authRequestEndpoint: 'https://svc.sizlon.io/auth/request',
   authVerifyEndpoint: 'https://svc.sizlon.io/auth/verify',
   authLoginEndpoint: 'https://svc.sizlon.io/auth/login',
+  authLogoutEndpoint: 'https://svc.sizlon.io/auth/logout',
   authSetPasswordEndpoint: 'https://svc.sizlon.io/auth/set-password',
   accountRequestsEndpoint: 'https://svc.sizlon.io/account/requests',
   // Notice lookup (parse.sizlon.io, has the g2b key server-side). The verify form

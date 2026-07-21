@@ -30,6 +30,7 @@ const strings = {
     data-auth-request={site.authRequestEndpoint}
     data-auth-verify={site.authVerifyEndpoint}
     data-auth-login={site.authLoginEndpoint}
+    data-auth-logout={site.authLogoutEndpoint}
     data-auth-set-password={site.authSetPasswordEndpoint}
     data-account-requests={site.accountRequestsEndpoint}
     data-manage-path={localizePath('/manage', lang)}
@@ -124,6 +125,7 @@ const strings = {
   const authRequest = root && root.getAttribute('data-auth-request');
   const authVerify = root && root.getAttribute('data-auth-verify');
   const authLogin = root && root.getAttribute('data-auth-login');
+  const authLogout = root && root.getAttribute('data-auth-logout');
   const authSetPassword = root && root.getAttribute('data-auth-set-password');
   const accountEndpoint = root && root.getAttribute('data-account-requests');
   const managePath = root && root.getAttribute('data-manage-path') || '/manage';
@@ -161,7 +163,8 @@ const strings = {
     const btn = loginForm.querySelector('button'); btn.disabled = true;
     try {
       const fd = new FormData(); fd.append('email', email); fd.append('password', password);
-      const res = await fetch(authLogin, { method: 'POST', body: fd });
+      // credentials:'include' → svc.sizlon.io가 심는 .sizlon.io SSO 쿠키를 브라우저가 저장(포털 자동 로그인용).
+      const res = await fetch(authLogin, { method: 'POST', body: fd, credentials: 'include' });
       const d = await res.json().catch(() => null);
       if (res.ok && d && d.ok && d.session) {
         localStorage.setItem(SKEY, d.session);
@@ -193,7 +196,7 @@ const strings = {
     hideAll(); show(loading);
     try {
       const fd = new FormData(); fd.append('token', token);
-      const res = await fetch(authVerify, { method: 'POST', body: fd });
+      const res = await fetch(authVerify, { method: 'POST', body: fd, credentials: 'include' });
       const d = await res.json().catch(() => null);
       if (res.ok && d && d.ok && d.session) {
         localStorage.setItem(SKEY, d.session);
@@ -242,7 +245,13 @@ const strings = {
   }
 
   const logoutBtn = $('[data-logout]');
-  if (logoutBtn) logoutBtn.addEventListener('click', () => { localStorage.removeItem(SKEY); location.href = managePath; });
+  if (logoutBtn) logoutBtn.addEventListener('click', () => {
+    const sess = localStorage.getItem(SKEY);
+    localStorage.removeItem(SKEY);
+    // 세션 무효화 + .sizlon.io SSO 쿠키 제거(포털 자동 로그인도 함께 끊긴다).
+    if (authLogout) { try { fetch(authLogout, { method: 'POST', credentials: 'include', headers: sess ? { Authorization: 'Bearer ' + sess } : {}, keepalive: true }); } catch (e) {} }
+    location.href = managePath;
+  });
 
   // ── 비밀번호 설정/변경 (현재 세션으로) ──
   const setpwForm = $('[data-setpw-form]');
