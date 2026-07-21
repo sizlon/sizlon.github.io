@@ -46,28 +46,27 @@ const privacyHref = localizePath('/legal/privacy', lang);
         action={endpoint || undefined}
         data-verify-form
         data-sending={c.sending}
+        data-notice-endpoint={site.noticeLookupEndpoint}
         data-turnstile={turnstileKey ? 'on' : undefined}
       >
-        <p class="prefill-note" hidden data-prefill-note>{c.prefillNote}</p>
         <fieldset>
           <legend>{c.notice.heading}</legend>
           <label>
             <span>{c.notice.no}</span>
-            <input type="text" name="notice" maxlength="80" required data-field-notice />
+            <input type="text" name="notice" maxlength="80" required autocomplete="off" data-field-notice />
             <small class="hint">{c.notice.noHint}</small>
           </label>
-          <label>
-            <span>{c.notice.name}</span>
-            <input type="text" name="notice_name" maxlength="300" data-field-notice-name />
-          </label>
-          <label>
-            <span>{c.notice.deadline}</span>
-            <input type="text" name="deadline" maxlength="40" placeholder={c.notice.deadlinePlaceholder} data-field-deadline />
-          </label>
-          <p class="stakes" hidden data-stakes>
-            <span class="eyebrow">{c.stakesLabel}</span>
-            <span data-stakes-text></span>
-          </p>
+          <p class="lookup-status" hidden data-lookup-looking>{c.notice.looking}</p>
+          <p class="lookup-warn" role="status" hidden data-lookup-notfound>{c.notice.notFound}</p>
+          <dl class="notice-auto" hidden data-notice-auto>
+            <div><dt>{c.notice.nameLabel}</dt><dd data-auto-name></dd></div>
+            <div><dt>{c.notice.deadlineLabel}</dt><dd data-auto-deadline></dd></div>
+            <div><dt>{c.notice.institutionLabel}</dt><dd data-auto-institution></dd></div>
+            <div><dt>{c.stakesLabel}</dt><dd data-auto-stakes></dd></div>
+          </dl>
+          <input type="hidden" name="notice_name" data-field-notice-name />
+          <input type="hidden" name="deadline" data-field-deadline />
+          <input type="hidden" name="institution" data-field-institution />
         </fieldset>
 
         <fieldset>
@@ -84,7 +83,11 @@ const privacyHref = localizePath('/legal/privacy', lang);
           </label>
           <label>
             <span>{c.who.person}</span>
-            <input type="text" name="person" autocomplete="name" maxlength="80" />
+            <input type="text" name="person" autocomplete="name" maxlength="80" required />
+          </label>
+          <label>
+            <span>{c.who.phone}</span>
+            <input type="tel" name="phone" autocomplete="tel" inputmode="tel" maxlength="40" required />
           </label>
           <label>
             <span>{c.who.email}</span>
@@ -156,34 +159,73 @@ const privacyHref = localizePath('/legal/privacy', lang);
   const form = document.querySelector('[data-verify-form]');
   const sent = document.querySelector('[data-verify-sent]');
 
-  // 프리필 — 커넥터가 방금 조회한 공고 정보를 쿼리로 실어 보낸다. 신원은 안 실린다.
+  // 공고 자동채움 — 공고번호만 입력하면 parse.sizlon.io가 공고명·마감·기관·판돈을
+  // 돌려주고 읽기전용으로 표시한다(값은 hidden으로 함께 전송). 없으면 안내하되,
+  // D-4 데이터 공백을 감안해 신청 자체를 막지는 않는다.
   const q = new URLSearchParams(location.search);
-  let prefilled = false;
-  const prefill = (sel, key) => {
-    const el = form && form.querySelector(sel);
-    const v = q.get(key);
-    if (el && v) { el.value = v; prefilled = true; }
-  };
-  prefill('[data-field-notice]', 'notice');
-  prefill('[data-field-notice-name]', 'notice_name');
-  prefill('[data-field-deadline]', 'deadline');
-  // src은 내부 유입값이라 프리필 안내 대상이 아니다(사용자에게 안 보임).
   const srcEl = form && form.querySelector('[data-field-src]');
   const srcV = q.get('src');
   if (srcEl && srcV) srcEl.value = srcV;
-  // 판돈(공고 원본)은 200자로 잘라 표시·전송(백엔드 상한과 일치, 오염 링크 방어).
-  const stakes = (q.get('stakes') || '').slice(0, 200);
-  const stakesField = form && form.querySelector('[data-field-stakes]');
-  if (stakesField && stakes) { stakesField.value = stakes; prefilled = true; }
-  const stakesBox = form && form.querySelector('[data-stakes]');
-  const stakesText = form && form.querySelector('[data-stakes-text]');
-  if (stakes && stakesBox && stakesText) {
-    stakesText.textContent = stakes;
-    stakesBox.hidden = false;
+
+  const noticeInput = form && form.querySelector('[data-field-notice]');
+  const lookEndpoint = form && form.getAttribute('data-notice-endpoint');
+  const auto = form && form.querySelector('[data-notice-auto]');
+  const looking = form && form.querySelector('[data-lookup-looking]');
+  const notfound = form && form.querySelector('[data-lookup-notfound]');
+  const hName = form && form.querySelector('[data-field-notice-name]');
+  const hDeadline = form && form.querySelector('[data-field-deadline]');
+  const hInstitution = form && form.querySelector('[data-field-institution]');
+  const hStakes = form && form.querySelector('[data-field-stakes]');
+  const aName = form && form.querySelector('[data-auto-name]');
+  const aDeadline = form && form.querySelector('[data-auto-deadline]');
+  const aInstitution = form && form.querySelector('[data-auto-institution]');
+  const aStakes = form && form.querySelector('[data-auto-stakes]');
+  const setText = (el, v) => { if (el) el.textContent = v || '—'; };
+  const clearAuto = () => {
+    if (auto) auto.hidden = true;
+    [hName, hDeadline, hInstitution, hStakes].forEach((el) => { if (el) el.value = ''; });
+  };
+  let lookSeq = 0;
+  async function lookupNotice(no) {
+    no = (no || '').trim();
+    if (notfound) notfound.hidden = true;
+    if (!no || !lookEndpoint) { clearAuto(); return; }
+    const seq = ++lookSeq;
+    if (looking) looking.hidden = false;
+    try {
+      const res = await fetch(lookEndpoint + '?no=' + encodeURIComponent(no));
+      const data = await res.json().catch(() => null);
+      if (seq !== lookSeq) return;              // 더 최신 조회가 있으면 버린다
+      if (looking) looking.hidden = true;
+      if (data && data.found) {
+        setText(aName, data.name); setText(aDeadline, data.deadline);
+        setText(aInstitution, data.institution); setText(aStakes, data.stakes);
+        if (hName) hName.value = data.name || '';
+        if (hDeadline) hDeadline.value = data.deadline || '';
+        if (hInstitution) hInstitution.value = data.institution || '';
+        if (hStakes) hStakes.value = (data.stakes || '').slice(0, 200);
+        if (auto) auto.hidden = false;
+        if (data.no && noticeInput && data.no !== no) noticeInput.value = data.no;  // 정규 번호로
+      } else {
+        clearAuto();
+        if (notfound) notfound.hidden = false;
+      }
+    } catch {
+      if (seq === lookSeq && looking) looking.hidden = true;
+      // 조회 실패는 무해 — 자동채움만 생략하고 신청은 진행 가능
+    }
   }
-  // 커넥터가 채운 값이 있으면 사용자가 확인·수정하도록 알린다.
-  const prefillNote = form && form.querySelector('[data-prefill-note]');
-  if (prefilled && prefillNote) prefillNote.hidden = false;
+  let lookTimer;
+  if (noticeInput) {
+    noticeInput.addEventListener('input', () => {
+      clearTimeout(lookTimer);
+      lookTimer = setTimeout(() => lookupNotice(noticeInput.value), 450);
+    });
+    noticeInput.addEventListener('blur', () => lookupNotice(noticeInput.value));
+  }
+  // 커넥터 링크 등으로 공고번호가 실려 오면 즉시 조회.
+  const noticeQ = q.get('notice');
+  if (noticeInput && noticeQ) { noticeInput.value = noticeQ; lookupNotice(noticeQ); }
 
   // 국세청 사업자등록번호 체크섬 — 서버 _valid_brn과 동일 알고리즘(오타를 문 앞에서 잡는다).
   const brnValid = (raw) => {
@@ -317,10 +359,13 @@ const privacyHref = localizePath('/legal/privacy', lang);
   .hint { font-family: var(--font-body); font-size: var(--step--1); color: var(--color-slate); }
   small.verr { font-family: var(--font-body); }
 
-  .prefill-note { font-size: var(--step--1); color: var(--color-ink); background: var(--color-mist); border: 1px solid var(--color-recovered); border-radius: var(--radius); padding: 0.6rem 0.85rem; margin: 0; }
-  .stakes { display: flex; flex-direction: column; gap: 0.2rem; padding: 0.7rem 0.85rem; border: 1px dashed var(--hairline); border-radius: var(--radius); margin: 0; }
-  .stakes .eyebrow { color: var(--color-slate); }
-  .stakes [data-stakes-text] { font-size: var(--step-0); color: var(--color-ink); }
+  .lookup-status { font-size: var(--step--1); color: var(--color-slate); margin: 0; }
+  .lookup-warn { font-size: var(--step--1); color: #a2570f; margin: 0; }
+  .notice-auto { display: grid; gap: 0.4rem; margin: 0; padding: 0.75rem 0.85rem; border: 1px dashed var(--hairline); border-radius: var(--radius); background: var(--color-vellum); }
+  .notice-auto > div { display: grid; grid-template-columns: 6.5rem 1fr; gap: 0.5rem; align-items: baseline; }
+  .notice-auto dt { font-family: var(--font-mono); font-size: var(--step--1); color: var(--color-slate); margin: 0; }
+  .notice-auto dd { margin: 0; font-size: var(--step-0); color: var(--color-ink); }
+  @media (max-width: 440px) { .notice-auto > div { grid-template-columns: 1fr; gap: 0.1rem; } }
 
   .check { flex-direction: row; align-items: flex-start; gap: 0.6rem; }
   .check input { width: 1.1rem; height: 1.1rem; margin-top: 0.15rem; flex: none; padding: 0; accent-color: var(--color-recovered); }
