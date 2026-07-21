@@ -135,6 +135,8 @@ const strings = {
   const $ = (s) => root && root.querySelector(s);
   const esc = (s) => String(s == null ? '' : s).replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
   const SKEY = 'miriboa_session';
+  // 로그인 중이면 /r/ 호출에 세션을 실어 서버가 신원(소유 이메일)을 대조하게 한다.
+  const authHeaders = () => { const s = localStorage.getItem(SKEY); return s ? { Authorization: 'Bearer ' + s } : {}; };
   const q = new URLSearchParams(location.search);
 
   const loading = $('[data-loading]'), loginP = $('[data-login]'), accountP = $('[data-account]');
@@ -306,7 +308,7 @@ const strings = {
     hideAll(); show(loading);
     if (!token || !base) { hideAll(); show(notfound); return; }
     try {
-      const res = await fetch(base + '/' + encodeURIComponent(token));
+      const res = await fetch(base + '/' + encodeURIComponent(token), { headers: authHeaders() });
       const d = await res.json().catch(() => null);
       if (!res.ok || !d || !d.ok) { hideAll(); show(notfound); return; }
       hideAll(); renderSummary(d);
@@ -367,7 +369,7 @@ const strings = {
     const lbl = saveBtn.textContent; saveBtn.disabled = true;
     const fd = new FormData(); [...docInput.files].forEach((f) => fd.append('documents', f, f.name));
     try {
-      const res = await fetch(base + '/' + encodeURIComponent(reqToken) + '/documents', { method: 'POST', body: fd });
+      const res = await fetch(base + '/' + encodeURIComponent(reqToken) + '/documents', { method: 'POST', body: fd, headers: authHeaders() });
       const d = await res.json().catch(() => null);
       if (res.ok && d && d.ok) { if (savedEl) savedEl.hidden = false; loadRequest(reqToken); }
       else if (errEl) errEl.hidden = false;
@@ -379,7 +381,7 @@ const strings = {
     if (!confirm(S.deleteConfirm || 'Delete?')) return;
     delBtn.disabled = true;
     try {
-      const res = await fetch(base + '/' + encodeURIComponent(reqToken) + '/delete', { method: 'POST' });
+      const res = await fetch(base + '/' + encodeURIComponent(reqToken) + '/delete', { method: 'POST', headers: authHeaders() });
       const d = await res.json().catch(() => null);
       if (res.ok && d && d.ok) { if (editblock) editblock.hidden = true; if (deletedEl) deletedEl.hidden = false; loadRequest(reqToken); }
       else delBtn.disabled = false;
@@ -391,7 +393,7 @@ const strings = {
     if (!confirm(S.discardConfirm || 'Delete draft?')) return;
     discardBtn.disabled = true;
     try {
-      const res = await fetch(base + '/' + encodeURIComponent(reqToken) + '/discard', { method: 'POST' });
+      const res = await fetch(base + '/' + encodeURIComponent(reqToken) + '/discard', { method: 'POST', headers: authHeaders() });
       const d = await res.json().catch(() => null);
       if (res.ok && d && d.ok) {
         if (editblock) editblock.hidden = true;
