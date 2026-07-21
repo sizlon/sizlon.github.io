@@ -47,6 +47,8 @@ const privacyHref = localizePath('/legal/privacy', lang);
         data-verify-form
         data-sending={c.sending}
         data-notice-endpoint={site.noticeLookupEndpoint}
+        data-precheck-endpoint={site.precheckEndpoint}
+        data-doc-badges={JSON.stringify(c.docs.badges)}
         data-turnstile={turnstileKey ? 'on' : undefined}
       >
         <fieldset>
@@ -93,6 +95,18 @@ const privacyHref = localizePath('/legal/privacy', lang);
             <span>{c.who.email}</span>
             <input type="email" name="email" autocomplete="email" maxlength="180" required />
           </label>
+        </fieldset>
+
+        <fieldset>
+          <legend>{c.docs.heading}</legend>
+          <p class="hint">{c.docs.intro}</p>
+          <label class="drop" tabindex="0" data-drop>
+            <span class="drop-big">{c.docs.dropBig}</span>
+            <span class="hint">{c.docs.dropHint}</span>
+            <input type="file" name="documents" multiple accept=".hwp,.hwpx,.pdf,.docx,.xlsx,.xlsm,.txt,.md" data-docs-input />
+          </label>
+          <p class="lookup-status" hidden data-docs-checking>{c.docs.checking}</p>
+          <ul class="filelist" data-filelist></ul>
         </fieldset>
 
         <label>
@@ -226,6 +240,64 @@ const privacyHref = localizePath('/legal/privacy', lang);
   // 커넥터 링크 등으로 공고번호가 실려 오면 즉시 조회.
   const noticeQ = q.get('notice');
   if (noticeInput && noticeQ) { noticeInput.value = noticeQ; lookupNotice(noticeQ); }
+
+  // 문서 드롭존 — 드롭/선택 시 즉시 precheck(읽힘/스캔/실패)로 확인하고, 파일은
+  // 폼과 함께(name="documents") 그대로 제출된다. 업로드는 선택.
+  const docInput = form && form.querySelector('[data-docs-input]');
+  const drop = form && form.querySelector('[data-drop]');
+  const filelist = form && form.querySelector('[data-filelist]');
+  const docChecking = form && form.querySelector('[data-docs-checking]');
+  const precheckEndpoint = form && form.getAttribute('data-precheck-endpoint');
+  let docBadges = {};
+  try { docBadges = JSON.parse((form && form.getAttribute('data-doc-badges')) || '{}'); } catch { docBadges = {}; }
+  const MAX_FILES = 20, MAX_BYTES = 40 * 1024 * 1024;
+  const esc = (s) => String(s == null ? '' : s).replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+  function renderFiles(arr, statuses) {
+    if (!filelist) return;
+    filelist.innerHTML = '';
+    arr.forEach((f, i) => {
+      const st = statuses && statuses[i];
+      const badge = st ? '<span class="fbadge ' + st.status + '">' + esc(docBadges[st.status] || st.status) + '</span>' : '';
+      const li = document.createElement('li');
+      li.innerHTML = '<span class="fname">' + esc(f.name) + '</span>' + badge;
+      filelist.appendChild(li);
+    });
+  }
+  function setFiles(fileArr) {
+    const arr = fileArr.slice(0, MAX_FILES).filter((f) => f.size <= MAX_BYTES);
+    const dt = new DataTransfer();
+    arr.forEach((f) => dt.items.add(f));
+    if (docInput) docInput.files = dt.files;   // 폼 제출(name="documents")에 반영
+    renderFiles(arr, null);
+    if (arr.length) precheckFiles(arr);
+  }
+  let pcSeq = 0;
+  async function precheckFiles(arr) {
+    if (!precheckEndpoint) return;
+    const seq = ++pcSeq;
+    if (docChecking) docChecking.hidden = false;
+    const fd = new FormData();
+    arr.forEach((f) => fd.append('files', f, f.name));
+    try {
+      const res = await fetch(precheckEndpoint, { method: 'POST', body: fd });
+      const data = await res.json().catch(() => null);
+      if (seq !== pcSeq) return;
+      if (docChecking) docChecking.hidden = true;
+      if (data && data.files) {
+        const byName = {}; data.files.forEach((r) => { byName[r.name] = r; });
+        renderFiles(arr, arr.map((f) => byName[f.name] || null));
+      }
+    } catch {
+      if (seq === pcSeq && docChecking) docChecking.hidden = true;  // precheck 실패는 무해
+    }
+  }
+  if (docInput) docInput.addEventListener('change', () => setFiles([...docInput.files]));
+  if (drop && docInput) {
+    ['dragenter', 'dragover'].forEach((ev) => drop.addEventListener(ev, (e) => { e.preventDefault(); drop.classList.add('over'); }));
+    ['dragleave', 'drop'].forEach((ev) => drop.addEventListener(ev, (e) => { e.preventDefault(); drop.classList.remove('over'); }));
+    drop.addEventListener('drop', (e) => { if (e.dataTransfer) setFiles([...e.dataTransfer.files]); });
+    drop.addEventListener('keydown', (e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); docInput.click(); } });
+  }
 
   // 국세청 사업자등록번호 체크섬 — 서버 _valid_brn과 동일 알고리즘(오타를 문 앞에서 잡는다).
   const brnValid = (raw) => {
@@ -366,6 +438,21 @@ const privacyHref = localizePath('/legal/privacy', lang);
   .notice-auto dt { font-family: var(--font-mono); font-size: var(--step--1); color: var(--color-slate); margin: 0; }
   .notice-auto dd { margin: 0; font-size: var(--step-0); color: var(--color-ink); }
   @media (max-width: 440px) { .notice-auto > div { grid-template-columns: 1fr; gap: 0.1rem; } }
+
+  .drop { display: block; border: 2px dashed var(--hairline); border-radius: var(--radius); background: var(--color-vellum); padding: 1.4rem 1rem; text-align: center; cursor: pointer; transition: border-color .15s ease; }
+  .drop:hover, .drop.over { border-color: var(--color-recovered); }
+  .drop:focus-visible { outline: 2px solid var(--color-recovered); outline-offset: 2px; }
+  .drop .drop-big { display: block; font-weight: 600; font-size: var(--step-0); }
+  .drop .hint { display: block; margin-top: 0.4rem; }
+  .drop input { display: none; }
+  .filelist { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 0.4rem; }
+  .filelist:empty { display: none; }
+  .filelist li { display: flex; align-items: center; gap: 0.6rem; justify-content: space-between; background: var(--color-vellum); border: 1px solid var(--hairline); border-radius: var(--radius); padding: 0.45rem 0.7rem; }
+  .filelist .fname { font-size: var(--step--1); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .fbadge { font-family: var(--font-mono); font-size: var(--step--1); font-weight: 700; border-radius: 4px; padding: 0.1rem 0.45rem; white-space: nowrap; }
+  .fbadge.ok { background: color-mix(in srgb, var(--color-recovered) 14%, transparent); color: var(--color-recovered); }
+  .fbadge.suspect, .fbadge.failed { background: color-mix(in srgb, var(--color-fault) 14%, transparent); color: var(--color-fault); }
+  .fbadge.unsupported { background: color-mix(in srgb, var(--color-slate) 15%, transparent); color: var(--color-slate); }
 
   .check { flex-direction: row; align-items: flex-start; gap: 0.6rem; }
   .check input { width: 1.1rem; height: 1.1rem; margin-top: 0.15rem; flex: none; padding: 0; accent-color: var(--color-recovered); }

@@ -19,6 +19,9 @@ export const site = {
   // Notice lookup (parse.sizlon.io, has the g2b key server-side). The verify form
   // calls GET ?no=<공고번호> to auto-fill 공고명·마감일·기관명·판돈. CORS-allowed for sizlon.io.
   noticeLookupEndpoint: 'https://parse.sizlon.io/api/notice',
+  // Precheck (miriboa-precheck, check.sizlon.io): parses each dropped file transiently
+  // (deleted immediately, no AI reads it) to flag scans/corrupt files before submission.
+  precheckEndpoint: 'https://check.sizlon.io/api/precheck',
   // Cloudflare Turnstile site key (public). Set this AND the TURNSTILE_SECRET
   // script property in Apps Script to activate bot verification. While empty,
   // the widget is not rendered and the server skips the Turnstile check.
