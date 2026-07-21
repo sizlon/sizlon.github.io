@@ -55,6 +55,7 @@ const stepKeys = ['notice', 'who', 'docs', 'nda', 'done'] as const;
         data-manage-base={site.manageBase}
         data-precheck-endpoint={site.precheckEndpoint}
         data-doc-badges={JSON.stringify(c.docs.badges)}
+        data-doc-remove={c.docs.remove}
         data-manage-path={localizePath('/manage', lang)}
         data-turnstile={turnstileKey ? 'on' : undefined}
       >
@@ -201,6 +202,7 @@ const stepKeys = ['notice', 'who', 'docs', 'nda', 'done'] as const;
     const managePath = form.getAttribute('data-manage-path') || '/manage';
     let docBadges = {};
     try { docBadges = JSON.parse(form.getAttribute('data-doc-badges') || '{}'); } catch { docBadges = {}; }
+    const docRemove = form.getAttribute('data-doc-remove') || 'Remove';
     const esc = (s) => String(s == null ? '' : s).replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
     const $ = (s) => form.querySelector(s);
     let token = '';
@@ -364,39 +366,63 @@ const stepKeys = ['notice', 'who', 'docs', 'nda', 'done'] as const;
     // step4: NDA(기밀유지)에 동의해야 '신청 완료'를 활성화한다.
     function refreshStep4() { if (submitBtn) submitBtn.disabled = !(ndaCheck && ndaCheck.checked); }
     if (ndaCheck) ndaCheck.addEventListener('change', refreshStep4);
-    function renderFiles(arr, statuses) {
+    // 여러 번에 나눠 넣어도 쌓인다(FileList는 불변이라 배열로 관리). 같은 이름은 최신으로 교체.
+    let docFiles = [], statusByName = {};
+    const MAXF = 20, MAXB = 40 * 1024 * 1024;
+    function syncInput() {
+      const dt = new DataTransfer(); docFiles.forEach((f) => dt.items.add(f));
+      if (docInput) docInput.files = dt.files;
+    }
+    // 읽히면 배지를 달지 않는다(못 읽는 경우 — 스캔의심·파싱실패·미지원 — 만 표시).
+    function badgeFor(name) {
+      const st = statusByName[name];
+      if (!st || st.status === 'ok') return '';
+      return '<span class="fbadge ' + st.status + '">' + esc(docBadges[st.status] || st.status) + '</span>';
+    }
+    function renderFiles() {
       if (!filelist) return; filelist.innerHTML = '';
-      arr.forEach((f, i) => {
-        const st = statuses && statuses[i];
-        const badge = st ? '<span class="fbadge ' + st.status + '">' + esc(docBadges[st.status] || st.status) + '</span>' : '';
+      docFiles.forEach((f, i) => {
         const li = document.createElement('li');
-        li.innerHTML = '<span class="fname">' + esc(f.name) + '</span>' + badge;
+        li.innerHTML = '<span class="fname">' + esc(f.name) + '</span>' + badgeFor(f.name) +
+          '<button type="button" class="fdel" data-del="' + i + '" aria-label="' + esc(docRemove) + '" title="' + esc(docRemove) + '">&times;</button>';
         filelist.appendChild(li);
       });
     }
-    function setFiles(fileArr) {
-      const arr = fileArr.slice(0, 20).filter((f) => f.size <= 40 * 1024 * 1024);
-      const dt = new DataTransfer(); arr.forEach((f) => dt.items.add(f));
-      if (docInput) docInput.files = dt.files;
-      renderFiles(arr, null); refreshStep3(); if (arr.length) precheckFiles(arr);
+    function addFiles(list) {
+      for (const f of list) {
+        if (f.size > MAXB) continue;                                  // 개별 40MB 초과 제외
+        docFiles = docFiles.filter((g) => g.name !== f.name);          // 같은 이름은 교체
+        docFiles.push(f);
+      }
+      if (docFiles.length > MAXF) docFiles = docFiles.slice(0, MAXF);
+      syncInput(); renderFiles(); refreshStep3();
+      if (docFiles.length) precheckFiles();
+    }
+    function removeFile(i) {
+      docFiles.splice(i, 1);
+      syncInput(); renderFiles(); refreshStep3();
+      if (docFiles.length) precheckFiles(); else if (docChecking) docChecking.hidden = true;
     }
     let pcSeq = 0;
-    async function precheckFiles(arr) {
-      if (!precheckEndpoint) return; const seq = ++pcSeq;
+    async function precheckFiles() {
+      if (!precheckEndpoint || !docFiles.length) return; const seq = ++pcSeq;
       if (docChecking) docChecking.hidden = false;
-      const fd = new FormData(); arr.forEach((f) => fd.append('files', f, f.name));
+      const fd = new FormData(); docFiles.forEach((f) => fd.append('files', f, f.name));
       try {
         const res = await fetch(precheckEndpoint, { method: 'POST', body: fd });
         const d = await res.json().catch(() => null);
         if (seq !== pcSeq) return; if (docChecking) docChecking.hidden = true;
-        if (d && d.files) { const by = {}; d.files.forEach((r) => { by[r.name] = r; }); renderFiles(arr, arr.map((f) => by[f.name] || null)); }
+        if (d && d.files) { statusByName = {}; d.files.forEach((r) => { statusByName[r.name] = r; }); renderFiles(); }
       } catch { if (seq === pcSeq && docChecking) docChecking.hidden = true; }
     }
-    if (docInput) docInput.addEventListener('change', () => setFiles([...docInput.files]));
+    if (docInput) docInput.addEventListener('change', () => { addFiles([...docInput.files]); });
+    if (filelist) filelist.addEventListener('click', (e) => {
+      const b = e.target.closest('[data-del]'); if (b) removeFile(Number(b.getAttribute('data-del')));
+    });
     if (drop && docInput) {
       ['dragenter', 'dragover'].forEach((ev) => drop.addEventListener(ev, (e) => { e.preventDefault(); drop.classList.add('over'); }));
       ['dragleave', 'drop'].forEach((ev) => drop.addEventListener(ev, (e) => { e.preventDefault(); drop.classList.remove('over'); }));
-      drop.addEventListener('drop', (e) => { if (e.dataTransfer) setFiles([...e.dataTransfer.files]); });
+      drop.addEventListener('drop', (e) => { if (e.dataTransfer) addFiles([...e.dataTransfer.files]); });
       drop.addEventListener('keydown', (e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); docInput.click(); } });
     }
     $('[data-back="3"]').addEventListener('click', () => showStep(2));
@@ -499,8 +525,10 @@ const stepKeys = ['notice', 'who', 'docs', 'nda', 'done'] as const;
   .drop input { display: none; }
   .filelist { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 0.4rem; }
   .filelist:empty { display: none; }
-  .filelist li { display: flex; align-items: center; gap: 0.6rem; justify-content: space-between; background: var(--color-vellum); border: 1px solid var(--hairline); border-radius: var(--radius); padding: 0.45rem 0.7rem; }
-  .filelist .fname { font-size: var(--step--1); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .filelist li { display: flex; align-items: center; gap: 0.6rem; background: var(--color-vellum); border: 1px solid var(--hairline); border-radius: var(--radius); padding: 0.45rem 0.7rem; }
+  .filelist .fname { flex: 1; min-width: 0; font-size: var(--step--1); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .fdel { flex: none; border: none; background: none; cursor: pointer; font-size: 1.15rem; line-height: 1; color: var(--color-slate); padding: 0 0.25rem; border-radius: 4px; }
+  .fdel:hover { color: var(--color-fault); }
   .fbadge { font-family: var(--font-mono); font-size: var(--step--1); font-weight: 700; border-radius: 4px; padding: 0.1rem 0.45rem; white-space: nowrap; }
   .fbadge.ok { background: color-mix(in srgb, var(--color-recovered) 14%, transparent); color: var(--color-recovered); }
   .fbadge.suspect, .fbadge.failed { background: color-mix(in srgb, var(--color-fault) 14%, transparent); color: var(--color-fault); }
