@@ -42,6 +42,7 @@ const tr = t(lang);
     <div class="col">
       <span class="eyebrow">{tr.footer.getInTouch}</span>
       <a href={`${localizePath('/verify-request', lang)}?src=footer`}>{tr.common.verifyDocs}</a>
+      <a href={localizePath('/manage', lang)}>{tr.footer.manage}</a>
       <a href={`${localizePath('/contact', lang)}?topic=demo`}>{tr.common.requestDemo}</a>
       <a href={`mailto:${site.contactEmail}`}>{site.contactEmail}</a>
     </div>

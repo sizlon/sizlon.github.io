@@ -3,16 +3,21 @@ import Base from '../layouts/Base.astro';
 import { site } from '../config/site';
 import type { Lang } from '../i18n/content';
 import { t, localizePath } from '../i18n/utils';
-// Login-less "manage your request" page. Reads ?t=<token> and talks to the
-// site-backend: GET <manageBase>/<token> (summary), POST /documents (add/replace),
-// POST /delete (immediate purge). The token is the only key — no account. Documents
-// can only be changed while the request is still 'received' (before verification).
+// Login-less "manage your requests" page. Three modes:
+//   ?t=<token>     → one request (summary + add/replace/delete documents)
+//   ?login=<tok>   → verify a magic-link → session → list of all your requests
+//   (default)      → session? list ; else email login form (magic link)
+// The token/session is the only key — no accounts, no passwords. Documents can be
+// changed while a request is 'draft' or 'received' (before verification starts).
 
 interface Props { lang: Lang }
 const { lang } = Astro.props;
 const tr = t(lang);
 const c = tr.verifyManage;
-const strings = { f: c.f, noDocs: c.noDocs, purgeAt: c.purgeAt, error: c.error, deleteConfirm: c.deleteConfirm };
+const strings = {
+  f: c.f, noDocs: c.noDocs, purgeAt: c.purgeAt, error: c.error, deleteConfirm: c.deleteConfirm,
+  statusMap: c.statusMap, loginSent: c.loginSent, accountEmpty: c.accountEmpty, open: c.open,
+};
 ---
 
 <Base title={c.title} description={c.description} lang={lang}>
@@ -20,21 +25,45 @@ const strings = { f: c.f, noDocs: c.noDocs, purgeAt: c.purgeAt, error: c.error, 
     class="section wrap manage"
     data-manage-base={site.manageBase}
     data-precheck-endpoint={site.precheckEndpoint}
+    data-auth-request={site.authRequestEndpoint}
+    data-auth-verify={site.authVerifyEndpoint}
+    data-account-requests={site.accountRequestsEndpoint}
+    data-manage-path={localizePath('/manage', lang)}
     data-doc-badges={JSON.stringify(c.badges)}
     data-strings={JSON.stringify(strings)}
   >
     <span class="eyebrow">{c.eyebrow}</span>
-    <h1>{c.h1}</h1>
-
+    <h1 data-h1>{c.h1}</h1>
     <p class="loading" data-loading>{c.loading}</p>
+
+    <!-- LOGIN (magic link) -->
+    <div class="panel" hidden data-login>
+      <p>{c.loginIntro}</p>
+      <form class="loginform" data-login-form>
+        <label><span>{c.loginEmail}</span>
+          <input type="email" name="email" autocomplete="email" maxlength="180" required /></label>
+        <button class="btn btn-primary" type="submit">{c.loginSend} <span class="arrow">&rarr;</span></button>
+      </form>
+      <p class="ok" role="status" hidden data-login-sent>{c.loginSent}</p>
+      <p class="verr" role="alert" hidden data-login-error>{c.error}</p>
+    </div>
+
+    <!-- ACCOUNT (list of requests) -->
+    <div class="panel" hidden data-account>
+      <div class="acct-head">
+        <span class="acct-email" data-acct-email></span>
+        <button class="linkbtn" type="button" data-logout>{c.logout}</button>
+      </div>
+      <ul class="reqlist" data-reqlist></ul>
+      <p class="statusnote" hidden data-account-empty>{c.accountEmpty}</p>
+    </div>
+
+    <!-- ONE REQUEST -->
     <p class="verr" role="alert" hidden data-notfound>{c.notFound}</p>
-
-    <div class="panel" hidden data-panel>
+    <div class="panel" hidden data-request>
       <dl class="summary" data-summary></dl>
-
       <p class="statusnote" hidden data-locked>{c.lockedNote}</p>
       <p class="statusnote" hidden data-purged>{c.purgedNote}</p>
-
       <div class="editblock" hidden data-editblock>
         <div class="block">
           <h2>{c.addHeading}</h2>
@@ -56,8 +85,8 @@ const strings = { f: c.f, noDocs: c.noDocs, purgeAt: c.purgeAt, error: c.error, 
           <button class="btn btn-danger" type="button" data-delete>{c.deleteBtn}</button>
         </div>
       </div>
-
       <p class="ok" role="status" hidden data-deleted>{c.deleted}</p>
+      <p class="alt"><a data-back-account href="#">&larr; {c.accountHeading}</a></p>
     </div>
 
     <p class="alt">{c.altPrefix} <a href={localizePath('/contact', lang)}>{c.altQuestion}</a></p>
@@ -68,62 +97,144 @@ const strings = { f: c.f, noDocs: c.noDocs, purgeAt: c.purgeAt, error: c.error, 
   const root = document.querySelector('.manage');
   const base = root && root.getAttribute('data-manage-base');
   const precheckEndpoint = root && root.getAttribute('data-precheck-endpoint');
+  const authRequest = root && root.getAttribute('data-auth-request');
+  const authVerify = root && root.getAttribute('data-auth-verify');
+  const accountEndpoint = root && root.getAttribute('data-account-requests');
+  const managePath = root && root.getAttribute('data-manage-path') || '/manage';
   let S = {}, badges = {};
-  try { S = JSON.parse((root && root.getAttribute('data-strings')) || '{}'); } catch { S = {}; }
-  try { badges = JSON.parse((root && root.getAttribute('data-doc-badges')) || '{}'); } catch { badges = {}; }
-  const $ = (sel) => root && root.querySelector(sel);
+  try { S = JSON.parse(root.getAttribute('data-strings') || '{}'); } catch { S = {}; }
+  try { badges = JSON.parse(root.getAttribute('data-doc-badges') || '{}'); } catch { badges = {}; }
+  const $ = (s) => root && root.querySelector(s);
   const esc = (s) => String(s == null ? '' : s).replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
-  const token = new URLSearchParams(location.search).get('t') || '';
+  const SKEY = 'miriboa_session';
+  const q = new URLSearchParams(location.search);
 
-  const loading = $('[data-loading]'), notfound = $('[data-notfound]'), panel = $('[data-panel]');
+  const loading = $('[data-loading]'), loginP = $('[data-login]'), accountP = $('[data-account]');
+  const requestP = $('[data-request]'), notfound = $('[data-notfound]');
+  const show = (el) => { if (el) el.hidden = false; };
+  const hideAll = () => { [loading, loginP, accountP, requestP, notfound].forEach((e) => { if (e) e.hidden = true; }); };
+
+  // ── mode dispatch ──
+  async function boot() {
+    const t = q.get('t'), login = q.get('login');
+    if (t) return loadRequest(t);
+    if (login) return verifyLogin(login);
+    const sess = localStorage.getItem(SKEY);
+    if (sess) return loadAccount(sess);
+    hideAll(); show(loginP);
+  }
+
+  // ── LOGIN (magic link) ──
+  const loginForm = $('[data-login-form]');
+  if (loginForm) loginForm.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const sentEl = $('[data-login-sent]'), errEl = $('[data-login-error]');
+    if (errEl) errEl.hidden = true;
+    const email = loginForm.querySelector('[name="email"]').value.trim();
+    const btn = loginForm.querySelector('button'); btn.disabled = true;
+    try {
+      const fd = new FormData(); fd.append('email', email);
+      const res = await fetch(authRequest, { method: 'POST', body: fd });
+      const d = await res.json().catch(() => null);
+      if (res.ok && d && d.ok) { if (sentEl) sentEl.hidden = false; loginForm.hidden = true; }
+      else if (errEl) errEl.hidden = false;
+    } catch { if (errEl) errEl.hidden = false; }
+    btn.disabled = false;
+  });
+
+  async function verifyLogin(token) {
+    hideAll(); show(loading);
+    try {
+      const fd = new FormData(); fd.append('token', token);
+      const res = await fetch(authVerify, { method: 'POST', body: fd });
+      const d = await res.json().catch(() => null);
+      if (res.ok && d && d.ok && d.session) {
+        localStorage.setItem(SKEY, d.session);
+        history.replaceState(null, '', managePath);   // 링크에서 토큰 제거
+        renderAccount(d.email, d.requests || []);
+      } else { hideAll(); show(loginP); }   // 만료/무효 → 다시 로그인
+    } catch { hideAll(); show(loginP); }
+  }
+
+  async function loadAccount(session) {
+    hideAll(); show(loading);
+    try {
+      const res = await fetch(accountEndpoint, { headers: { Authorization: 'Bearer ' + session } });
+      const d = await res.json().catch(() => null);
+      if (res.ok && d && d.ok) renderAccount(d.email, d.requests || []);
+      else { localStorage.removeItem(SKEY); hideAll(); show(loginP); }
+    } catch { hideAll(); show(loginP); }
+  }
+
+  function renderAccount(email, requests) {
+    hideAll();
+    const em = $('[data-acct-email]'); if (em) em.textContent = email;
+    const list = $('[data-reqlist]'), empty = $('[data-account-empty]');
+    if (list) {
+      list.innerHTML = '';
+      requests.forEach((r) => {
+        const st = (S.statusMap && S.statusMap[r.status]) || r.status;
+        const title = ((r.notice_no || '') + ' ' + (r.notice_name || '')).trim() || '—';
+        const li = document.createElement('li');
+        li.innerHTML = '<a href="' + esc(managePath) + '?t=' + encodeURIComponent(r.token) + '">'
+          + '<span class="rq-title">' + esc(title) + '</span>'
+          + '<span class="rq-meta"><span class="rq-status s-' + esc(r.status) + '">' + esc(st) + '</span>'
+          + ' · ' + esc(String(r.doc_count || 0)) + '</span></a>';
+        list.appendChild(li);
+      });
+    }
+    if (empty) empty.hidden = requests.length > 0;
+    show(accountP);
+  }
+
+  const logoutBtn = $('[data-logout]');
+  if (logoutBtn) logoutBtn.addEventListener('click', () => { localStorage.removeItem(SKEY); location.href = managePath; });
+  const backAccount = $('[data-back-account]');
+  if (backAccount) backAccount.addEventListener('click', (e) => { e.preventDefault(); location.href = managePath; });
+
+  // ── ONE REQUEST (summary + edit) ──
   const summary = $('[data-summary]'), editblock = $('[data-editblock]');
   const lockedEl = $('[data-locked]'), purgedEl = $('[data-purged]'), deletedEl = $('[data-deleted]');
-
-  function fail() { if (loading) loading.hidden = true; if (notfound) notfound.hidden = false; }
+  let reqToken = '';
 
   function renderSummary(d) {
     if (!summary) return;
     const f = S.f || {};
+    const st = (S.statusMap && S.statusMap[d.status]) || d.status;
     const rows = [
       [f.notice, ((d.notice_no || '') + ' ' + (d.notice_name || '')).trim()],
-      [f.deadline, d.deadline],
-      [f.institution, d.institution],
-      [f.status, d.status],
+      [f.deadline, d.deadline], [f.institution, d.institution], [f.status, st],
     ];
     let html = rows.filter((r) => r[1]).map((r) => '<div><dt>' + esc(r[0]) + '</dt><dd>' + esc(r[1]) + '</dd></div>').join('');
     const docs = (d.doc_names && d.doc_names.length)
       ? d.doc_names.map((n) => '<li>' + esc(n) + '</li>').join('')
       : '<li class="muted">' + esc(S.noDocs) + '</li>';
     html += '<div><dt>' + esc(f.docs) + '</dt><dd><ul class="docnames">' + docs + '</ul>';
-    if (d.purge_at && d.doc_count) {
-      const dt = String(d.purge_at).slice(0, 10);
-      html += '<p class="purge">' + esc(S.purgeAt) + ' ' + esc(dt) + '</p>';
-    }
+    if (d.purge_at && d.doc_count) html += '<p class="purge">' + esc(S.purgeAt) + ' ' + esc(String(d.purge_at).slice(0, 10)) + '</p>';
     html += '</dd></div>';
     summary.innerHTML = html;
   }
-
-  async function load() {
-    if (!token || !base) return fail();
+  async function loadRequest(token) {
+    reqToken = token;
+    hideAll(); show(loading);
+    if (!token || !base) { hideAll(); show(notfound); return; }
     try {
       const res = await fetch(base + '/' + encodeURIComponent(token));
       const d = await res.json().catch(() => null);
-      if (!res.ok || !d || !d.ok) return fail();
-      if (loading) loading.hidden = true;
-      if (panel) panel.hidden = false;
-      renderSummary(d);
-      if (d.editable) { if (editblock) editblock.hidden = false; }
-      else if (d.purged) { if (purgedEl) purgedEl.hidden = false; }
-      else { if (lockedEl) lockedEl.hidden = false; }
-    } catch { fail(); }
+      if (!res.ok || !d || !d.ok) { hideAll(); show(notfound); return; }
+      hideAll(); renderSummary(d);
+      if (d.editable) show(editblock);
+      else if (d.purged) show(purgedEl);
+      else show(lockedEl);
+      // 로그인 세션이 없으면 '목록으로' 링크는 로그인으로 보낸다
+      show(requestP);
+    } catch { hideAll(); show(notfound); }
   }
 
-  // 드롭존(추가·교체) — verify 폼과 동일 패턴. 선택 파일을 input.files에 담아 저장 시 전송.
-  const docInput = $('[data-docs-input]'), drop = $('[data-drop]');
-  const filelist = $('[data-filelist]'), docChecking = $('[data-docs-checking]');
+  // dropzone (add/replace)
+  const docInput = $('[data-docs-input]'), drop = $('[data-drop]'), filelist = $('[data-filelist]'), docChecking = $('[data-docs-checking]');
   function renderFiles(arr, statuses) {
-    if (!filelist) return;
-    filelist.innerHTML = '';
+    if (!filelist) return; filelist.innerHTML = '';
     arr.forEach((f, i) => {
       const st = statuses && statuses[i];
       const badge = st ? '<span class="fbadge ' + st.status + '">' + esc(badges[st.status] || st.status) + '</span>' : '';
@@ -134,28 +245,20 @@ const strings = { f: c.f, noDocs: c.noDocs, purgeAt: c.purgeAt, error: c.error, 
   }
   function setFiles(arr2) {
     const arr = arr2.slice(0, 20).filter((f) => f.size <= 40 * 1024 * 1024);
-    const dt = new DataTransfer();
-    arr.forEach((f) => dt.items.add(f));
+    const dt = new DataTransfer(); arr.forEach((f) => dt.items.add(f));
     if (docInput) docInput.files = dt.files;
-    renderFiles(arr, null);
-    if (arr.length) precheckFiles(arr);
+    renderFiles(arr, null); if (arr.length) precheckFiles(arr);
   }
   let pcSeq = 0;
   async function precheckFiles(arr) {
-    if (!precheckEndpoint) return;
-    const seq = ++pcSeq;
+    if (!precheckEndpoint) return; const seq = ++pcSeq;
     if (docChecking) docChecking.hidden = false;
-    const fd = new FormData();
-    arr.forEach((f) => fd.append('files', f, f.name));
+    const fd = new FormData(); arr.forEach((f) => fd.append('files', f, f.name));
     try {
       const res = await fetch(precheckEndpoint, { method: 'POST', body: fd });
-      const data = await res.json().catch(() => null);
-      if (seq !== pcSeq) return;
-      if (docChecking) docChecking.hidden = true;
-      if (data && data.files) {
-        const byName = {}; data.files.forEach((r) => { byName[r.name] = r; });
-        renderFiles(arr, arr.map((f) => byName[f.name] || null));
-      }
+      const d = await res.json().catch(() => null);
+      if (seq !== pcSeq) return; if (docChecking) docChecking.hidden = true;
+      if (d && d.files) { const by = {}; d.files.forEach((r) => { by[r.name] = r; }); renderFiles(arr, arr.map((f) => by[f.name] || null)); }
     } catch { if (seq === pcSeq && docChecking) docChecking.hidden = true; }
   }
   if (docInput) docInput.addEventListener('change', () => setFiles([...docInput.files]));
@@ -165,39 +268,33 @@ const strings = { f: c.f, noDocs: c.noDocs, purgeAt: c.purgeAt, error: c.error, 
     drop.addEventListener('drop', (e) => { if (e.dataTransfer) setFiles([...e.dataTransfer.files]); });
     drop.addEventListener('keydown', (e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); docInput.click(); } });
   }
-
   const saveBtn = $('[data-save]'), savedEl = $('[data-saved]'), errEl = $('[data-error]');
   if (saveBtn) saveBtn.addEventListener('click', async () => {
     if (errEl) errEl.hidden = true; if (savedEl) savedEl.hidden = true;
     if (!docInput || !docInput.files.length) return;
-    const label = saveBtn.textContent; saveBtn.disabled = true;
-    const fd = new FormData();
-    [...docInput.files].forEach((f) => fd.append('documents', f, f.name));
+    const lbl = saveBtn.textContent; saveBtn.disabled = true;
+    const fd = new FormData(); [...docInput.files].forEach((f) => fd.append('documents', f, f.name));
     try {
-      const res = await fetch(base + '/' + encodeURIComponent(token) + '/documents', { method: 'POST', body: fd });
+      const res = await fetch(base + '/' + encodeURIComponent(reqToken) + '/documents', { method: 'POST', body: fd });
       const d = await res.json().catch(() => null);
-      if (res.ok && d && d.ok) { if (savedEl) savedEl.hidden = false; load(); }
+      if (res.ok && d && d.ok) { if (savedEl) savedEl.hidden = false; loadRequest(reqToken); }
       else if (errEl) errEl.hidden = false;
     } catch { if (errEl) errEl.hidden = false; }
-    saveBtn.disabled = false; saveBtn.textContent = label;
+    saveBtn.disabled = false; saveBtn.textContent = lbl;
   });
-
   const delBtn = $('[data-delete]');
   if (delBtn) delBtn.addEventListener('click', async () => {
     if (!confirm(S.deleteConfirm || 'Delete?')) return;
     delBtn.disabled = true;
     try {
-      const res = await fetch(base + '/' + encodeURIComponent(token) + '/delete', { method: 'POST' });
+      const res = await fetch(base + '/' + encodeURIComponent(reqToken) + '/delete', { method: 'POST' });
       const d = await res.json().catch(() => null);
-      if (res.ok && d && d.ok) {
-        if (editblock) editblock.hidden = true;
-        if (deletedEl) deletedEl.hidden = false;
-        load();
-      } else delBtn.disabled = false;
+      if (res.ok && d && d.ok) { if (editblock) editblock.hidden = true; if (deletedEl) deletedEl.hidden = false; loadRequest(reqToken); }
+      else delBtn.disabled = false;
     } catch { delBtn.disabled = false; }
   });
 
-  load();
+  boot();
 </script>
 
 <style>
@@ -207,7 +304,27 @@ const strings = { f: c.f, noDocs: c.noDocs, purgeAt: c.purgeAt, error: c.error, 
   .statusnote { padding: 0.9rem 1.1rem; border: 1px solid var(--hairline); border-radius: var(--radius); background: var(--color-mist); }
   .verr { color: #b3261e; }
   .ok { color: var(--color-recovered); font-weight: 600; }
-  .panel { display: flex; flex-direction: column; gap: 1.25rem; }
+  .panel { display: flex; flex-direction: column; gap: 1.1rem; }
+  .alt { color: var(--color-slate); margin: 0; }
+  .alt a { color: var(--color-ink); text-decoration: underline; text-decoration-color: var(--color-recovered); text-underline-offset: 3px; }
+
+  .loginform { display: flex; flex-direction: column; gap: 0.7rem; max-width: 22rem; }
+  .loginform label { display: flex; flex-direction: column; gap: 0.4rem; }
+  .loginform label span { font-family: var(--font-mono); font-size: var(--step--1); color: var(--color-slate); }
+  .loginform input { font-family: var(--font-body); font-size: var(--step-0); color: var(--color-ink); background: var(--color-vellum); border: 1px solid var(--hairline); border-radius: var(--radius); padding: 0.7rem 0.85rem; }
+  .loginform .btn { align-self: flex-start; }
+
+  .acct-head { display: flex; justify-content: space-between; align-items: baseline; gap: 1rem; }
+  .acct-email { font-family: var(--font-mono); font-size: var(--step--1); color: var(--color-slate); }
+  .linkbtn { background: none; border: 0; color: var(--color-slate); cursor: pointer; text-decoration: underline; font: inherit; font-size: var(--step--1); }
+  .reqlist { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 0.5rem; }
+  .reqlist a { display: flex; justify-content: space-between; align-items: baseline; gap: 1rem; padding: 0.9rem 1.1rem; border: 1px solid var(--hairline); border-radius: var(--radius); background: var(--color-mist); text-decoration: none; color: var(--color-ink); transition: border-color .15s ease; }
+  .reqlist a:hover { border-color: var(--color-recovered); }
+  .rq-title { font-weight: 600; }
+  .rq-meta { font-family: var(--font-mono); font-size: var(--step--1); color: var(--color-slate); white-space: nowrap; }
+  .rq-status { font-weight: 700; }
+  .rq-status.s-draft { color: #a2570f; }
+  .rq-status.s-received { color: var(--color-recovered); }
 
   .summary { margin: 0; display: grid; gap: 0.5rem; padding: 1.1rem 1.25rem; border: 1px solid var(--hairline); border-radius: var(--radius); background: var(--color-mist); }
   .summary > div { display: grid; grid-template-columns: 6rem 1fr; gap: 0.6rem; align-items: baseline; }
@@ -242,6 +359,4 @@ const strings = { f: c.f, noDocs: c.noDocs, purgeAt: c.purgeAt, error: c.error, 
   .btn-danger { align-self: flex-start; background: #b3261e; color: #fff; border-color: #b3261e; }
   .btn-danger:hover { background: #8f1e18; }
   .btn.btn-primary { align-self: flex-start; }
-  .alt { color: var(--color-slate); }
-  .alt a { color: var(--color-ink); text-decoration: underline; text-decoration-color: var(--color-recovered); text-underline-offset: 3px; }
 </style>
