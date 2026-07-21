@@ -3,20 +3,21 @@ import Base from '../layouts/Base.astro';
 import { site } from '../config/site';
 import type { Lang } from '../i18n/content';
 import { t, localizePath } from '../i18n/utils';
-// The single Miriboa verification intake. The connector links here with the
-// notice facts it knows (?notice=…&notice_name=…&deadline=…&stakes=…&src=connector);
-// identity (company / 사업자번호 / email) is always typed by a human, never by the
-// model (CONTEXT §94). Posts to site.verifyRequestEndpoint → svc.sizlon.io, which
-// re-checks the BRN checksum, Turnstile, honeypot and min-fill time server-side.
-// `company_url` is a honeypot. While the endpoint is empty the submit no-ops.
+// Multi-step Miriboa verification intake (CONTEXT §94 → wizard). Steps:
+//   1 Notice (공고번호 → auto-fill from parse.sizlon.io)
+//   2 Your details + PIPA consent + Turnstile  → creates a DRAFT (server row + token)
+//   3 Bid documents (required) — upload + inline precheck
+//   4 Done → finalize (draft → received)
+// A draft persists from step 2, resumable via the emailed manage link or magic-link
+// login (/manage). Documents can be replaced/deleted later from the manage page.
 
 interface Props { lang: Lang }
 const { lang } = Astro.props;
 const tr = t(lang);
 const c = tr.verifyRequest;
-const endpoint = site.verifyRequestEndpoint;
 const turnstileKey = site.turnstileSiteKey;
 const privacyHref = localizePath('/legal/privacy', lang);
+const stepKeys = ['notice', 'who', 'docs', 'done'] as const;
 ---
 
 <Base title={c.title} description={c.description} lang={lang}>
@@ -25,7 +26,6 @@ const privacyHref = localizePath('/legal/privacy', lang);
       <span class="eyebrow">{c.eyebrow}</span>
       <h1>{c.h1}</h1>
       <p class="lede">{c.lede}</p>
-
       <div class="price">
         <span class="ph eyebrow">{c.price.heading}</span>
         <ul>
@@ -35,28 +35,33 @@ const privacyHref = localizePath('/legal/privacy', lang);
         </ul>
         <p class="refund">{c.price.refund}</p>
       </div>
-
+      <p class="alt">{c.returning} <a href={localizePath('/manage', lang)}>{c.returningLink} &rarr;</a></p>
       <p class="alt">{c.altPrefix} <a href={localizePath('/contact', lang)}>{c.altQuestion}</a></p>
     </div>
 
     <div class="formcol">
+      <ol class="progress" aria-label="Steps">
+        {stepKeys.map((k, i) => (
+          <li class="pstep" data-pstep={i + 1}><span class="pnum">{i + 1}</span>{c.steps[k]}</li>
+        ))}
+      </ol>
+
       <form
-        class="form"
-        method="post"
-        action={endpoint || undefined}
-        data-verify-form
-        data-sending={c.sending}
+        class="form" data-verify-form
         data-notice-endpoint={site.noticeLookupEndpoint}
+        data-draft-endpoint={site.verifyDraftEndpoint}
+        data-manage-base={site.manageBase}
         data-precheck-endpoint={site.precheckEndpoint}
         data-doc-badges={JSON.stringify(c.docs.badges)}
         data-manage-path={localizePath('/manage', lang)}
         data-turnstile={turnstileKey ? 'on' : undefined}
       >
-        <fieldset>
+        <!-- STEP 1 · Notice -->
+        <fieldset class="step" data-step="1">
           <legend>{c.notice.heading}</legend>
           <label>
             <span>{c.notice.no}</span>
-            <input type="text" name="notice" maxlength="80" required autocomplete="off" data-field-notice />
+            <input type="text" name="notice" maxlength="80" autocomplete="off" data-field-notice />
             <small class="hint">{c.notice.noHint}</small>
           </label>
           <p class="lookup-status" hidden data-lookup-looking>{c.notice.looking}</p>
@@ -70,85 +75,82 @@ const privacyHref = localizePath('/legal/privacy', lang);
           <input type="hidden" name="notice_name" data-field-notice-name />
           <input type="hidden" name="deadline" data-field-deadline />
           <input type="hidden" name="institution" data-field-institution />
+          <input type="hidden" name="stakes" data-field-stakes />
+          <input type="hidden" name="src" value="site" data-field-src />
+          <p class="verr" role="alert" hidden data-step-error="1">{c.notice.notFound}</p>
+          <div class="wnav"><button type="button" class="btn btn-primary" data-next="1">{c.next} <span class="arrow">&rarr;</span></button></div>
         </fieldset>
 
-        <fieldset>
+        <!-- STEP 2 · Your details + consent -->
+        <fieldset class="step" data-step="2" hidden>
           <legend>{c.who.heading}</legend>
-          <label>
-            <span>{c.who.company}</span>
-            <input type="text" name="company" autocomplete="organization" maxlength="160" required />
-          </label>
-          <label>
-            <span>{c.who.brn}</span>
-            <input type="text" name="brn" inputmode="numeric" autocomplete="off" maxlength="14" required data-brn aria-describedby="brn-hint brn-err" />
+          <label><span>{c.who.company}</span>
+            <input type="text" name="company" autocomplete="organization" maxlength="160" /></label>
+          <label><span>{c.who.brn}</span>
+            <input type="text" name="brn" inputmode="numeric" autocomplete="off" maxlength="14" data-brn aria-describedby="brn-hint brn-err" />
             <small class="hint" id="brn-hint">{c.who.brnHint}</small>
-            <small class="verr" id="brn-err" role="alert" hidden data-brn-error>{c.brnInvalid}</small>
+            <small class="verr" id="brn-err" role="alert" hidden data-brn-error>{c.brnInvalid}</small></label>
+          <label><span>{c.who.person}</span>
+            <input type="text" name="person" autocomplete="name" maxlength="80" /></label>
+          <label><span>{c.who.phone}</span>
+            <input type="tel" name="phone" autocomplete="tel" inputmode="tel" maxlength="40" /></label>
+          <label><span>{c.who.email}</span>
+            <input type="email" name="email" autocomplete="email" maxlength="180" /></label>
+          <label><span>{c.noteLabel}</span>
+            <textarea name="note" rows="2" maxlength="2000" placeholder={c.notePlaceholder}></textarea></label>
+
+          <label class="check consent-check">
+            <input type="checkbox" name="consent" data-consent />
+            <span class="checktext">
+              <span class="checklabel">{c.consentAgree}</span>
+              <small class="hint consent-detail">{c.consent} <a href={privacyHref}>{c.consentLink}</a>{lang === 'ko' ? '' : ' '}{c.consentAfter}</small>
+            </span>
           </label>
-          <label>
-            <span>{c.who.person}</span>
-            <input type="text" name="person" autocomplete="name" maxlength="80" required />
-          </label>
-          <label>
-            <span>{c.who.phone}</span>
-            <input type="tel" name="phone" autocomplete="tel" inputmode="tel" maxlength="40" required />
-          </label>
-          <label>
-            <span>{c.who.email}</span>
-            <input type="email" name="email" autocomplete="email" maxlength="180" required />
-          </label>
+
+          <div class="hp" aria-hidden="true">
+            <label>Company URL<input type="text" name="company_url" tabindex="-1" autocomplete="off" /></label>
+          </div>
+          <input type="hidden" name="elapsed" value="" data-elapsed />
+
+          {turnstileKey && <div class="cf-turnstile" data-sitekey={turnstileKey}></div>}
+          {turnstileKey && <p class="verr" role="alert" hidden data-verify-error>{c.verifyNeeded}</p>}
+          <p class="verr" role="alert" hidden data-step-error="2">{c.sendError} <a href={`mailto:${site.contactEmail}`}>{site.contactEmail}</a></p>
+
+          <div class="wnav">
+            <button type="button" class="btn btn-ghost" data-back="2">&larr; {c.back}</button>
+            <button type="button" class="btn btn-primary" data-next="2">{c.next} <span class="arrow">&rarr;</span></button>
+          </div>
         </fieldset>
 
-        <fieldset>
+        <!-- STEP 3 · Documents -->
+        <fieldset class="step" data-step="3" hidden>
           <legend>{c.docs.heading}</legend>
           <p class="hint">{c.docs.intro}</p>
           <label class="drop" tabindex="0" data-drop>
             <span class="drop-big">{c.docs.dropBig}</span>
             <span class="hint">{c.docs.dropHint}</span>
-            <input type="file" name="documents" multiple accept=".hwp,.hwpx,.pdf,.docx,.xlsx,.xlsm,.txt,.md" data-docs-input />
+            <input type="file" multiple accept=".hwp,.hwpx,.pdf,.docx,.xlsx,.xlsm,.txt,.md" data-docs-input />
           </label>
           <p class="lookup-status" hidden data-docs-checking>{c.docs.checking}</p>
           <ul class="filelist" data-filelist></ul>
           <p class="verr" role="alert" hidden data-docs-error>{c.docs.required}</p>
+
+          <dl class="notice-auto attach" hidden data-attach>
+            <div><dt>{tr.verifyRequest.docs.heading}</dt><dd data-attach-list></dd></div>
+          </dl>
+
+          <label class="check">
+            <input type="checkbox" name="express" value="1" />
+            <span class="checktext"><span class="checklabel">{c.expressLabel}</span><small class="hint">{c.expressHint}</small></span>
+          </label>
+
+          <p class="verr" role="alert" hidden data-step-error="3">{c.sendError} <a href={`mailto:${site.contactEmail}`}>{site.contactEmail}</a></p>
+          <div class="wnav">
+            <button type="button" class="btn btn-ghost" data-back="3">&larr; {c.back}</button>
+            <button type="button" class="btn btn-primary" data-submit>{c.submitFinal} <span class="arrow">&rarr;</span></button>
+          </div>
         </fieldset>
 
-        <label>
-          <span>{c.noteLabel}</span>
-          <textarea name="note" rows="3" maxlength="2000" placeholder={c.notePlaceholder}></textarea>
-        </label>
-
-        <label class="check">
-          <input type="checkbox" name="express" value="1" />
-          <span class="checktext">
-            <span class="checklabel">{c.expressLabel}</span>
-            <small class="hint">{c.expressHint}</small>
-          </span>
-        </label>
-
-        <!-- Prefill-only fields the connector carries; hidden from the person. -->
-        <input type="hidden" name="stakes" value="" data-field-stakes />
-        <input type="hidden" name="src" value="site" data-field-src />
-
-        <div class="hp" aria-hidden="true">
-          <label>Company URL
-            <input type="text" name="company_url" tabindex="-1" autocomplete="off" />
-          </label>
-        </div>
-        <input type="hidden" name="elapsed" value="" data-elapsed />
-
-        <label class="check consent-check">
-          <input type="checkbox" name="consent" required data-consent />
-          <span class="checktext">
-            <span class="checklabel">{c.consentAgree}</span>
-            <small class="hint consent-detail">{c.consent} <a href={privacyHref}>{c.consentLink}</a>{lang === 'ko' ? '' : ' '}{c.consentAfter}</small>
-          </span>
-        </label>
-        <small class="verr" role="alert" hidden data-consent-error>{c.consentRequired}</small>
-
-        {turnstileKey && <div class="cf-turnstile" data-sitekey={turnstileKey}></div>}
-        {turnstileKey && <p class="verr" role="alert" hidden data-verify-error>{c.verifyNeeded}</p>}
-        <p class="verr" role="alert" hidden data-send-error>{c.sendError} <a href={`mailto:${site.contactEmail}`}>{site.contactEmail}</a></p>
-
-        <button class="btn btn-primary" type="submit">{c.submit} <span class="arrow">&rarr;</span></button>
         <p class="note eyebrow">{c.note}</p>
         <p class="legalnote">{c.legalNote}</p>
       </form>
@@ -169,265 +171,224 @@ const privacyHref = localizePath('/legal/privacy', lang);
 )}
 
 <script>
-  // fetch 제출 — Contact 폼과 동일한 방어(허니팟·최소 작성시간·Turnstile은 서버가
-  // 최종 강제, 여기서는 UX만)에 더해 ① 쿼리 프리필(커넥터가 아는 공고 정보만)과
-  // ② 사업자등록번호 클라이언트 체크섬을 추가한다.
   const loadedAt = Date.now();
   const form = document.querySelector('[data-verify-form]');
   const sent = document.querySelector('[data-verify-sent]');
-
-  // 공고 자동채움 — 공고번호만 입력하면 parse.sizlon.io가 공고명·마감·기관·판돈을
-  // 돌려주고 읽기전용으로 표시한다(값은 hidden으로 함께 전송). 없으면 안내하되,
-  // D-4 데이터 공백을 감안해 신청 자체를 막지는 않는다.
-  const q = new URLSearchParams(location.search);
-  const srcEl = form && form.querySelector('[data-field-src]');
-  const srcV = q.get('src');
-  if (srcEl && srcV) srcEl.value = srcV;
-
-  const noticeInput = form && form.querySelector('[data-field-notice]');
-  const lookEndpoint = form && form.getAttribute('data-notice-endpoint');
-  const auto = form && form.querySelector('[data-notice-auto]');
-  const looking = form && form.querySelector('[data-lookup-looking]');
-  const notfound = form && form.querySelector('[data-lookup-notfound]');
-  const hName = form && form.querySelector('[data-field-notice-name]');
-  const hDeadline = form && form.querySelector('[data-field-deadline]');
-  const hInstitution = form && form.querySelector('[data-field-institution]');
-  const hStakes = form && form.querySelector('[data-field-stakes]');
-  const aName = form && form.querySelector('[data-auto-name]');
-  const aDeadline = form && form.querySelector('[data-auto-deadline]');
-  const aInstitution = form && form.querySelector('[data-auto-institution]');
-  const aStakes = form && form.querySelector('[data-auto-stakes]');
-  const setText = (el, v) => { if (el) el.textContent = v || '—'; };
-  const clearAuto = () => {
-    if (auto) auto.hidden = true;
-    [hName, hDeadline, hInstitution, hStakes].forEach((el) => { if (el) el.value = ''; });
-  };
-  let lookSeq = 0;
-  async function lookupNotice(no) {
-    no = (no || '').trim();
-    if (notfound) notfound.hidden = true;
-    if (!no || !lookEndpoint) { clearAuto(); return; }
-    const seq = ++lookSeq;
-    if (looking) looking.hidden = false;
-    try {
-      const res = await fetch(lookEndpoint + '?no=' + encodeURIComponent(no));
-      const data = await res.json().catch(() => null);
-      if (seq !== lookSeq) return;              // 더 최신 조회가 있으면 버린다
-      if (looking) looking.hidden = true;
-      if (data && data.found) {
-        setText(aName, data.name); setText(aDeadline, data.deadline);
-        setText(aInstitution, data.institution); setText(aStakes, data.stakes);
-        if (hName) hName.value = data.name || '';
-        if (hDeadline) hDeadline.value = data.deadline || '';
-        if (hInstitution) hInstitution.value = data.institution || '';
-        if (hStakes) hStakes.value = (data.stakes || '').slice(0, 200);
-        if (auto) auto.hidden = false;
-        if (data.no && noticeInput && data.no !== no) noticeInput.value = data.no;  // 정규 번호로
-      } else {
-        clearAuto();
-        if (notfound) notfound.hidden = false;
-      }
-    } catch {
-      if (seq === lookSeq && looking) looking.hidden = true;
-      // 조회 실패는 무해 — 자동채움만 생략하고 신청은 진행 가능
-    }
-  }
-  let lookTimer;
-  if (noticeInput) {
-    noticeInput.addEventListener('input', () => {
-      clearTimeout(lookTimer);
-      lookTimer = setTimeout(() => lookupNotice(noticeInput.value), 450);
-    });
-    noticeInput.addEventListener('blur', () => lookupNotice(noticeInput.value));
-  }
-  // 커넥터 링크 등으로 공고번호가 실려 오면 즉시 조회.
-  const noticeQ = q.get('notice');
-  if (noticeInput && noticeQ) { noticeInput.value = noticeQ; lookupNotice(noticeQ); }
-
-  // 문서 드롭존 — 드롭/선택 시 즉시 precheck(읽힘/스캔/실패)로 확인하고, 파일은
-  // 폼과 함께(name="documents") 그대로 제출된다. 업로드는 선택.
-  const docInput = form && form.querySelector('[data-docs-input]');
-  const drop = form && form.querySelector('[data-drop]');
-  const filelist = form && form.querySelector('[data-filelist]');
-  const docChecking = form && form.querySelector('[data-docs-checking]');
-  const precheckEndpoint = form && form.getAttribute('data-precheck-endpoint');
-  let docBadges = {};
-  try { docBadges = JSON.parse((form && form.getAttribute('data-doc-badges')) || '{}'); } catch { docBadges = {}; }
-  const MAX_FILES = 20, MAX_BYTES = 40 * 1024 * 1024;
-  const esc = (s) => String(s == null ? '' : s).replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
-  function renderFiles(arr, statuses) {
-    if (!filelist) return;
-    filelist.innerHTML = '';
-    arr.forEach((f, i) => {
-      const st = statuses && statuses[i];
-      const badge = st ? '<span class="fbadge ' + st.status + '">' + esc(docBadges[st.status] || st.status) + '</span>' : '';
-      const li = document.createElement('li');
-      li.innerHTML = '<span class="fname">' + esc(f.name) + '</span>' + badge;
-      filelist.appendChild(li);
-    });
-  }
-  function setFiles(fileArr) {
-    const arr = fileArr.slice(0, MAX_FILES).filter((f) => f.size <= MAX_BYTES);
-    const dt = new DataTransfer();
-    arr.forEach((f) => dt.items.add(f));
-    if (docInput) docInput.files = dt.files;   // 폼 제출(name="documents")에 반영
-    renderFiles(arr, null);
-    if (arr.length) precheckFiles(arr);
-  }
-  let pcSeq = 0;
-  async function precheckFiles(arr) {
-    if (!precheckEndpoint) return;
-    const seq = ++pcSeq;
-    if (docChecking) docChecking.hidden = false;
-    const fd = new FormData();
-    arr.forEach((f) => fd.append('files', f, f.name));
-    try {
-      const res = await fetch(precheckEndpoint, { method: 'POST', body: fd });
-      const data = await res.json().catch(() => null);
-      if (seq !== pcSeq) return;
-      if (docChecking) docChecking.hidden = true;
-      if (data && data.files) {
-        const byName = {}; data.files.forEach((r) => { byName[r.name] = r; });
-        renderFiles(arr, arr.map((f) => byName[f.name] || null));
-      }
-    } catch {
-      if (seq === pcSeq && docChecking) docChecking.hidden = true;  // precheck 실패는 무해
-    }
-  }
-  if (docInput) docInput.addEventListener('change', () => setFiles([...docInput.files]));
-  if (drop && docInput) {
-    ['dragenter', 'dragover'].forEach((ev) => drop.addEventListener(ev, (e) => { e.preventDefault(); drop.classList.add('over'); }));
-    ['dragleave', 'drop'].forEach((ev) => drop.addEventListener(ev, (e) => { e.preventDefault(); drop.classList.remove('over'); }));
-    drop.addEventListener('drop', (e) => { if (e.dataTransfer) setFiles([...e.dataTransfer.files]); });
-    drop.addEventListener('keydown', (e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); docInput.click(); } });
-  }
-
-  // 국세청 사업자등록번호 체크섬 — 서버 _valid_brn과 동일 알고리즘(오타를 문 앞에서 잡는다).
-  const brnValid = (raw) => {
-    const d = (raw || '').replace(/\D/g, '');
-    if (d.length !== 10) return false;
-    const w = [1, 3, 7, 1, 3, 7, 1, 3, 5];
-    let sum = 0;
-    for (let i = 0; i < 9; i++) sum += Number(d[i]) * w[i];
-    sum += Math.floor((Number(d[8]) * 5) / 10);
-    return (10 - (sum % 10)) % 10 === Number(d[9]);
-  };
-  const brnInput = form && form.querySelector('[data-brn]');
-  const brnErr = form && form.querySelector('[data-brn-error]');
-  const checkBrn = () => {
-    if (!brnInput) return true;
-    const ok = brnValid(brnInput.value);
-    // 비어 있으면 required가 처리하므로 에러를 띄우지 않는다.
-    if (brnErr) brnErr.hidden = ok || !brnInput.value;
-    return ok;
-  };
-  if (brnInput) brnInput.addEventListener('blur', checkBrn);
-
   if (form && sent) {
-    form.addEventListener('submit', async (e) => {
-      e.preventDefault();
-      const hp = form.querySelector('[name="company_url"]');
-      if (hp && hp.value) {
-        // 허니팟이 채워짐 — 봇이거나 공격적 자동완성. 조용히 죽이지 말고 오류로
-        // 알려 사용자가 이메일로 우회하게 한다(서버가 최종 차단하므로 접수는 안 됨).
-        const serr0 = document.querySelector('[data-send-error]');
-        if (serr0) serr0.hidden = false;
-        return;
-      }
-      const endpoint = form.getAttribute('action');
-      if (!endpoint) return; // endpoint not set yet
-      const verr = document.querySelector('[data-verify-error]');
-      const serr = document.querySelector('[data-send-error]');
-      if (serr) serr.hidden = true;
-      // 개인정보 수집 동의(필수) — 체크 없이는 접수하지 않는다(PIPA §15/§22).
-      const consent = form.querySelector('[data-consent]');
-      const cerr = document.querySelector('[data-consent-error]');
-      if (consent && !consent.checked) {
-        if (cerr) cerr.hidden = false;
-        consent.focus();
-        return;
-      }
+    const q = new URLSearchParams(location.search);
+    const noticeEndpoint = form.getAttribute('data-notice-endpoint');
+    const draftEndpoint = form.getAttribute('data-draft-endpoint');
+    const manageBase = form.getAttribute('data-manage-base');
+    const precheckEndpoint = form.getAttribute('data-precheck-endpoint');
+    const managePath = form.getAttribute('data-manage-path') || '/manage';
+    let docBadges = {};
+    try { docBadges = JSON.parse(form.getAttribute('data-doc-badges') || '{}'); } catch { docBadges = {}; }
+    const esc = (s) => String(s == null ? '' : s).replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+    const $ = (s) => form.querySelector(s);
+    let token = '';
+
+    // ── step navigation ──
+    const steps = [...form.querySelectorAll('.step')];
+    const psteps = [...document.querySelectorAll('[data-pstep]')];
+    let cur = 1;
+    function showStep(n) {
+      cur = n;
+      steps.forEach((s) => { s.hidden = Number(s.getAttribute('data-step')) !== n; });
+      psteps.forEach((p) => {
+        const i = Number(p.getAttribute('data-pstep'));
+        p.classList.toggle('active', i === n);
+        p.classList.toggle('done', i < n);
+      });
+      const top = form.closest('.formcol');
+      if (top && top.scrollIntoView) top.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+    const stepErr = (n) => form.querySelector('[data-step-error="' + n + '"]');
+    showStep(1);
+
+    // ── STEP 1: 공고 자동채움 ──
+    const noticeInput = $('[data-field-notice]');
+    const auto = $('[data-notice-auto]'), looking = $('[data-lookup-looking]'), notfound = $('[data-lookup-notfound]');
+    const hName = $('[data-field-notice-name]'), hDeadline = $('[data-field-deadline]'), hInstitution = $('[data-field-institution]'), hStakes = $('[data-field-stakes]');
+    const aName = $('[data-auto-name]'), aDeadline = $('[data-auto-deadline]'), aInstitution = $('[data-auto-institution]'), aStakes = $('[data-auto-stakes]');
+    const attach = $('[data-attach]'), attachList = $('[data-attach-list]');
+    const setText = (el, v) => { if (el) el.textContent = v || '—'; };
+    let lookSeq = 0;
+    async function lookupNotice(no) {
+      no = (no || '').trim();
+      if (notfound) notfound.hidden = true;
+      if (!no || !noticeEndpoint) { if (auto) auto.hidden = true; return; }
+      const seq = ++lookSeq;
+      if (looking) looking.hidden = false;
+      try {
+        const res = await fetch(noticeEndpoint + '?no=' + encodeURIComponent(no));
+        const d = await res.json().catch(() => null);
+        if (seq !== lookSeq) return;
+        if (looking) looking.hidden = true;
+        if (d && d.found) {
+          setText(aName, d.name); setText(aDeadline, d.deadline);
+          setText(aInstitution, d.institution); setText(aStakes, d.stakes);
+          if (hName) hName.value = d.name || '';
+          if (hDeadline) hDeadline.value = d.deadline || '';
+          if (hInstitution) hInstitution.value = d.institution || '';
+          if (hStakes) hStakes.value = (d.stakes || '').slice(0, 200);
+          if (auto) auto.hidden = false;
+          if (d.no && noticeInput && d.no !== no) noticeInput.value = d.no;
+          if (attach && attachList && d.attachments && d.attachments.length) {
+            attachList.textContent = d.attachments.join(' · '); attach.hidden = false;
+          } else if (attach) { attach.hidden = true; }
+        } else {
+          if (auto) auto.hidden = true;
+          if (notfound) notfound.hidden = false;
+        }
+      } catch { if (seq === lookSeq && looking) looking.hidden = true; }
+    }
+    let lookTimer;
+    if (noticeInput) {
+      noticeInput.addEventListener('input', () => { clearTimeout(lookTimer); lookTimer = setTimeout(() => lookupNotice(noticeInput.value), 450); });
+      noticeInput.addEventListener('blur', () => lookupNotice(noticeInput.value));
+    }
+    const srcQ = q.get('src'); const srcEl = $('[data-field-src]'); if (srcEl && srcQ) srcEl.value = srcQ;
+    const noticeQ = q.get('notice'); if (noticeInput && noticeQ) { noticeInput.value = noticeQ; lookupNotice(noticeQ); }
+
+    $('[data-next="1"]').addEventListener('click', () => {
+      const e1 = stepErr(1);
+      if (!noticeInput.value.trim()) { if (e1) e1.hidden = false; noticeInput.focus(); return; }
+      if (e1) e1.hidden = true; showStep(2);
+    });
+
+    // ── STEP 2: 신원 + 동의 + Turnstile → draft 생성 ──
+    const brnValid = (raw) => {
+      const d = (raw || '').replace(/\D/g, '');
+      if (d.length !== 10) return false;
+      const w = [1, 3, 7, 1, 3, 7, 1, 3, 5]; let sum = 0;
+      for (let i = 0; i < 9; i++) sum += Number(d[i]) * w[i];
+      sum += Math.floor((Number(d[8]) * 5) / 10);
+      return (10 - (sum % 10)) % 10 === Number(d[9]);
+    };
+    const brnInput = $('[data-brn]'), brnErr = $('[data-brn-error]');
+    if (brnInput) brnInput.addEventListener('blur', () => { if (brnErr) brnErr.hidden = brnValid(brnInput.value) || !brnInput.value; });
+    $('[data-back="2"]').addEventListener('click', () => showStep(1));
+
+    $('[data-next="2"]').addEventListener('click', async () => {
+      const e2 = stepErr(2), verr = $('[data-verify-error]'), cerr = brnErr;
+      const consent = $('[data-consent]');
+      const req = ['company', 'person', 'phone', 'email'].map((n) => form.querySelector('[name="' + n + '"]'));
+      if (e2) e2.hidden = true;
+      for (const el of req) { if (!el.value.trim()) { el.focus(); return; } }
+      const email = form.querySelector('[name="email"]');
+      if (!/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(email.value)) { email.focus(); return; }
+      if (!brnValid(brnInput.value)) { if (cerr) cerr.hidden = false; brnInput.focus(); return; }
       if (cerr) cerr.hidden = true;
-      // 응찰 서류 필수 — 비교할 서류가 없으면 신청이 성립하지 않는다(서버도 재검증).
-      const derr = document.querySelector('[data-docs-error]');
-      if (docInput && docInput.files.length === 0) {
-        if (derr) derr.hidden = false;
-        if (drop && drop.focus) drop.focus();
-        return;
-      }
-      if (derr) derr.hidden = true;
-      // 사업자번호 클라이언트 게이트 — 서버가 재검증하지만 왕복을 한 번 아낀다.
-      if (!checkBrn()) {
-        if (brnErr) brnErr.hidden = false;
-        if (brnInput) brnInput.focus();
-        return;
-      }
-      // Turnstile: 토큰이 생기기 전엔 제출을 막는다.
+      if (!consent.checked) { consent.focus(); return; }
       if (form.dataset.turnstile) {
         const tok = form.querySelector('[name="cf-turnstile-response"]');
-        if (!tok || !tok.value) {
-          if (verr) verr.hidden = false;
-          return;
-        }
+        if (!tok || !tok.value) { if (verr) verr.hidden = false; return; }
         if (verr) verr.hidden = true;
       }
-      // 로드 후 경과 ms — 서버가 봇의 초고속 제출을 떨군다.
-      const elapsed = form.querySelector('[data-elapsed]');
-      if (elapsed) elapsed.value = String(Date.now() - loadedAt);
-      const btn = form.querySelector('button[type="submit"]');
-      const btnLabel = btn ? btn.innerHTML : '';
-      if (btn) { btn.disabled = true; btn.textContent = form.dataset.sending || 'Sending…'; }
+      const el = $('[data-elapsed]'); if (el) el.value = String(Date.now() - loadedAt);
+      const btn = form.querySelector('[data-next="2"]'); const lbl = btn.innerHTML;
+      btn.disabled = true; btn.textContent = '…';
+      // draft로 보낼 필드만 추린 FormData
+      const fd = new FormData();
+      ['notice', 'notice_name', 'deadline', 'institution', 'stakes', 'src',
+       'company', 'brn', 'person', 'phone', 'email', 'note', 'company_url', 'elapsed',
+       'cf-turnstile-response'].forEach((n) => {
+        const f = form.querySelector('[name="' + n + '"]'); if (f) fd.append(n, f.value);
+      });
       try {
-        const res = await fetch(endpoint, { method: 'POST', body: new FormData(form) });
-        const data = await res.json().catch(() => null);
-        if (res.ok && data && data.ok) {
-          // 응답의 first_time으로 무료/재신청 안내를 가른다.
-          const first = !!data.first_time;
-          const paid = Number(data.amount) > 0;  // 첫 건이라도 Express면 유료
-          const pf = sent.querySelector('[data-sent-first]');
-          const pfx = sent.querySelector('[data-sent-first-express]');
-          const pr = sent.querySelector('[data-sent-returning]');
+        const res = await fetch(draftEndpoint, { method: 'POST', body: fd });
+        const d = await res.json().catch(() => null);
+        if (res.ok && d && d.ok && d.token) { token = d.token; showStep(3); }
+        else if (res.status === 422 && d && d.error === 'invalid_brn') { if (cerr) cerr.hidden = false; brnInput.focus(); }
+        else if (res.status === 403 && verr) { verr.hidden = false; }
+        else if (e2) { e2.hidden = false; }
+      } catch { if (e2) e2.hidden = false; }
+      btn.disabled = false; btn.innerHTML = lbl;
+      const ts = window.turnstile; if (ts) ts.reset();
+    });
+
+    // ── STEP 3: 문서 드롭존 + precheck ──
+    const docInput = $('[data-docs-input]'), drop = $('[data-drop]'), filelist = $('[data-filelist]'), docChecking = $('[data-docs-checking]');
+    function renderFiles(arr, statuses) {
+      if (!filelist) return; filelist.innerHTML = '';
+      arr.forEach((f, i) => {
+        const st = statuses && statuses[i];
+        const badge = st ? '<span class="fbadge ' + st.status + '">' + esc(docBadges[st.status] || st.status) + '</span>' : '';
+        const li = document.createElement('li');
+        li.innerHTML = '<span class="fname">' + esc(f.name) + '</span>' + badge;
+        filelist.appendChild(li);
+      });
+    }
+    function setFiles(fileArr) {
+      const arr = fileArr.slice(0, 20).filter((f) => f.size <= 40 * 1024 * 1024);
+      const dt = new DataTransfer(); arr.forEach((f) => dt.items.add(f));
+      if (docInput) docInput.files = dt.files;
+      renderFiles(arr, null); if (arr.length) precheckFiles(arr);
+    }
+    let pcSeq = 0;
+    async function precheckFiles(arr) {
+      if (!precheckEndpoint) return; const seq = ++pcSeq;
+      if (docChecking) docChecking.hidden = false;
+      const fd = new FormData(); arr.forEach((f) => fd.append('files', f, f.name));
+      try {
+        const res = await fetch(precheckEndpoint, { method: 'POST', body: fd });
+        const d = await res.json().catch(() => null);
+        if (seq !== pcSeq) return; if (docChecking) docChecking.hidden = true;
+        if (d && d.files) { const by = {}; d.files.forEach((r) => { by[r.name] = r; }); renderFiles(arr, arr.map((f) => by[f.name] || null)); }
+      } catch { if (seq === pcSeq && docChecking) docChecking.hidden = true; }
+    }
+    if (docInput) docInput.addEventListener('change', () => setFiles([...docInput.files]));
+    if (drop && docInput) {
+      ['dragenter', 'dragover'].forEach((ev) => drop.addEventListener(ev, (e) => { e.preventDefault(); drop.classList.add('over'); }));
+      ['dragleave', 'drop'].forEach((ev) => drop.addEventListener(ev, (e) => { e.preventDefault(); drop.classList.remove('over'); }));
+      drop.addEventListener('drop', (e) => { if (e.dataTransfer) setFiles([...e.dataTransfer.files]); });
+      drop.addEventListener('keydown', (e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); docInput.click(); } });
+    }
+    $('[data-back="3"]').addEventListener('click', () => showStep(2));
+
+    // ── STEP 3 → 확정 ──
+    $('[data-submit]').addEventListener('click', async () => {
+      const derr = $('[data-docs-error]'), e3 = stepErr(3);
+      if (e3) e3.hidden = true;
+      if (!docInput || docInput.files.length === 0) { if (derr) derr.hidden = false; if (drop) drop.focus(); return; }
+      if (derr) derr.hidden = true;
+      if (!token) { if (e3) e3.hidden = false; return; }
+      const btn = $('[data-submit]'); const lbl = btn.innerHTML; btn.disabled = true; btn.textContent = '…';
+      try {
+        // 1) 문서 업로드
+        const fdDocs = new FormData();
+        [...docInput.files].forEach((f) => fdDocs.append('documents', f, f.name));
+        const up = await fetch(manageBase + '/' + encodeURIComponent(token) + '/documents', { method: 'POST', body: fdDocs });
+        const ud = await up.json().catch(() => null);
+        if (!up.ok || !ud || !ud.ok) throw new Error('upload');
+        // 2) 확정
+        const fdFin = new FormData();
+        const exp = form.querySelector('[name="express"]'); if (exp && exp.checked) fdFin.append('express', '1');
+        const fin = await fetch(manageBase + '/' + encodeURIComponent(token) + '/finalize', { method: 'POST', body: fdFin });
+        const fd = await fin.json().catch(() => null);
+        if (fin.ok && fd && fd.ok) {
+          const first = !!fd.first_time, paid = Number(fd.amount) > 0;
+          const pf = sent.querySelector('[data-sent-first]'), pfx = sent.querySelector('[data-sent-first-express]'), pr = sent.querySelector('[data-sent-returning]');
           if (pf) pf.hidden = !(first && !paid);
           if (pfx) pfx.hidden = !(first && paid);
           if (pr) pr.hidden = first;
-          // 관리 링크 — 이메일로도 가지만 완료 화면에 바로 노출(서류 추가·파기).
-          const sm = sent.querySelector('[data-sent-manage]');
-          const smLink = sent.querySelector('[data-sent-manage-link]');
-          if (sm && smLink && data.manage_token) {
-            smLink.setAttribute('href', (form.getAttribute('data-manage-path') || '/manage') + '?t=' + encodeURIComponent(data.manage_token));
-            sm.hidden = false;
-          }
-          form.hidden = true;
-          sent.hidden = false;
-          sent.focus();  // 스크린리더 포커스를 완료 영역으로 옮긴다(성공을 알린다)
+          const sm = sent.querySelector('[data-sent-manage]'), smLink = sent.querySelector('[data-sent-manage-link]');
+          if (sm && smLink) { smLink.setAttribute('href', managePath + '?t=' + encodeURIComponent(token)); sm.hidden = false; }
+          form.hidden = true; sent.hidden = false; sent.focus();
           sent.scrollIntoView({ behavior: 'smooth', block: 'center' });
+          psteps.forEach((p) => { p.classList.remove('active'); p.classList.add('done'); });
           return;
         }
-        if (res.status === 422 && data && data.error === 'invalid_brn') {
-          if (brnErr) brnErr.hidden = false;
-          if (brnInput) brnInput.focus();
-        } else if (res.status === 403 && verr) {
-          verr.hidden = false;
-        } else if (serr) {
-          serr.hidden = false;
-        }
-      } catch {
-        if (serr) serr.hidden = false;
-      }
-      // 실패 — 재시도 가능 상태로 복원 (Turnstile 토큰은 1회용이라 리셋).
-      if (btn) { btn.disabled = false; btn.innerHTML = btnLabel; }
-      const ts = window.turnstile;
-      if (ts) ts.reset();
+        throw new Error('finalize');
+      } catch { if (e3) e3.hidden = false; }
+      btn.disabled = false; btn.innerHTML = lbl;
     });
   }
 </script>
 
 <style>
   .grid { display: grid; grid-template-columns: 1fr 1fr; gap: clamp(2rem, 1rem + 4vw, 4rem); align-items: start; }
-  /* display 규칙이 UA [hidden] 규칙을 이기므로 복원한다: hidden 속성이 붙은
-     요소는 JS가 걷어낼 때까지 숨겨져 있어야 한다. */
   [hidden] { display: none !important; }
-
   .copy { display: flex; flex-direction: column; gap: 1.25rem; max-width: 46ch; }
   .price { border: 1px solid var(--hairline); border-radius: var(--radius); padding: 1.1rem 1.25rem; background: var(--color-mist); display: flex; flex-direction: column; gap: 0.6rem; }
   .price .ph { color: var(--color-slate); }
@@ -436,11 +397,18 @@ const privacyHref = localizePath('/legal/privacy', lang);
   .price li.free { display: flex; flex-direction: column; gap: 0.15rem; }
   .price li.free span { font-size: var(--step--1); color: var(--color-slate); }
   .price .refund { font-size: var(--step--1); color: var(--color-slate); margin: 0; }
-  .alt { color: var(--color-slate); }
+  .alt { color: var(--color-slate); margin: 0; }
   .alt a { color: var(--color-ink); text-decoration: underline; text-decoration-color: var(--color-recovered); text-underline-offset: 3px; }
 
+  .progress { list-style: none; margin: 0 0 1rem; padding: 0; display: flex; gap: 0.5rem; flex-wrap: wrap; }
+  .pstep { display: flex; align-items: center; gap: 0.4rem; font-family: var(--font-mono); font-size: var(--step--1); color: var(--color-slate); }
+  .pstep .pnum { display: grid; place-items: center; width: 1.5rem; height: 1.5rem; border-radius: 999px; border: 1px solid var(--hairline); font-size: var(--step--1); }
+  .pstep.active { color: var(--color-ink); }
+  .pstep.active .pnum { border-color: var(--color-recovered); color: var(--color-recovered); }
+  .pstep.done .pnum { background: var(--color-recovered); border-color: var(--color-recovered); color: #fff; }
+
   .form { display: flex; flex-direction: column; gap: 1.25rem; padding: 1.75rem; border: 1px solid var(--hairline); border-radius: var(--radius); background: var(--color-mist); }
-  fieldset { border: 0; padding: 0; margin: 0; display: flex; flex-direction: column; gap: 1rem; }
+  fieldset.step { border: 0; padding: 0; margin: 0; display: flex; flex-direction: column; gap: 1rem; }
   legend { font-family: var(--font-mono); font-size: var(--step--1); color: var(--color-slate); padding: 0; text-transform: uppercase; letter-spacing: 0.04em; }
   label { display: flex; flex-direction: column; gap: 0.4rem; }
   label > span { font-family: var(--font-mono); font-size: var(--step--1); color: var(--color-slate); }
@@ -448,14 +416,23 @@ const privacyHref = localizePath('/legal/privacy', lang);
   input:focus, textarea:focus { outline: 2px solid var(--color-recovered); outline-offset: 1px; border-color: transparent; }
   .hint { font-family: var(--font-body); font-size: var(--step--1); color: var(--color-slate); }
   small.verr { font-family: var(--font-body); }
-
   .lookup-status { font-size: var(--step--1); color: var(--color-slate); margin: 0; }
   .lookup-warn { font-size: var(--step--1); color: #a2570f; margin: 0; }
   .notice-auto { display: grid; gap: 0.4rem; margin: 0; padding: 0.75rem 0.85rem; border: 1px dashed var(--hairline); border-radius: var(--radius); background: var(--color-vellum); }
   .notice-auto > div { display: grid; grid-template-columns: 6.5rem 1fr; gap: 0.5rem; align-items: baseline; }
   .notice-auto dt { font-family: var(--font-mono); font-size: var(--step--1); color: var(--color-slate); margin: 0; }
   .notice-auto dd { margin: 0; font-size: var(--step-0); color: var(--color-ink); }
+  .notice-auto.attach dd { font-size: var(--step--1); }
   @media (max-width: 440px) { .notice-auto > div { grid-template-columns: 1fr; gap: 0.1rem; } }
+
+  .check { flex-direction: row; align-items: flex-start; gap: 0.6rem; }
+  .check input { width: 1.1rem; height: 1.1rem; margin-top: 0.15rem; flex: none; padding: 0; accent-color: var(--color-recovered); }
+  .checktext { display: flex; flex-direction: column; gap: 0.15rem; }
+  .checklabel { font-family: var(--font-body); font-size: var(--step-0); color: var(--color-ink); }
+  .consent-check { align-items: flex-start; }
+  .consent-detail { line-height: 1.55; }
+  .consent-detail a { color: var(--color-ink); text-decoration: underline; text-decoration-color: var(--color-recovered); text-underline-offset: 3px; }
+  .legalnote { font-size: var(--step--1); color: var(--color-slate); margin: 0; line-height: 1.55; }
 
   .drop { display: block; border: 2px dashed var(--hairline); border-radius: var(--radius); background: var(--color-vellum); padding: 1.4rem 1rem; text-align: center; cursor: pointer; transition: border-color .15s ease; }
   .drop:hover, .drop.over { border-color: var(--color-recovered); }
@@ -472,23 +449,13 @@ const privacyHref = localizePath('/legal/privacy', lang);
   .fbadge.suspect, .fbadge.failed { background: color-mix(in srgb, var(--color-fault) 14%, transparent); color: var(--color-fault); }
   .fbadge.unsupported { background: color-mix(in srgb, var(--color-slate) 15%, transparent); color: var(--color-slate); }
 
-  .check { flex-direction: row; align-items: flex-start; gap: 0.6rem; }
-  .check input { width: 1.1rem; height: 1.1rem; margin-top: 0.15rem; flex: none; padding: 0; accent-color: var(--color-recovered); }
-  .checktext { display: flex; flex-direction: column; gap: 0.15rem; }
-  .checklabel { font-family: var(--font-body); font-size: var(--step-0); color: var(--color-ink); }
-
-  .consent-check { align-items: flex-start; }
-  .consent-detail { line-height: 1.55; }
-  .consent-detail a { color: var(--color-ink); text-decoration: underline; text-decoration-color: var(--color-recovered); text-underline-offset: 3px; }
-  .legalnote { font-size: var(--step--1); color: var(--color-slate); margin: 0; line-height: 1.55; }
-
-  .form .btn { align-self: flex-start; }
-  .note { margin-top: 0.25rem; }
+  .wnav { display: flex; gap: 0.75rem; justify-content: space-between; margin-top: 0.25rem; }
+  .wnav .btn-primary { margin-left: auto; }
+  .note { margin: 0; }
   .verr { color: #b3261e; font-size: var(--step--1); }
   .hp { position: absolute; left: -9999px; width: 1px; height: 1px; overflow: hidden; }
   .sent { padding: 1.75rem; border: 1px solid var(--color-recovered); border-radius: var(--radius); background: var(--color-mist); display: flex; flex-direction: column; gap: 0.6rem; }
   .sent h2 { font-size: var(--step-1); }
   .sent-manage a { color: var(--color-ink); font-weight: 600; text-decoration: underline; text-decoration-color: var(--color-recovered); text-underline-offset: 3px; }
-
   @media (max-width: 760px) { .grid { grid-template-columns: 1fr; } }
 </style>
