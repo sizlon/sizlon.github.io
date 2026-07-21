@@ -248,6 +248,7 @@ const stepKeys = ['notice', 'who', 'docs', 'nda', 'done'] as const;
     const esc = (s) => String(s == null ? '' : s).replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
     const $ = (s) => form.querySelector(s);
     let token = '';
+    let resuming = false, resumeHasDocs = false, pendingResume = null;   // draft 재개 상태
 
     // ── step navigation ──
     const steps = [...form.querySelectorAll('.step')];
@@ -280,18 +281,52 @@ const stepKeys = ['notice', 'who', 'docs', 'nda', 'done'] as const;
       form.hidden = true;
       if (pwgate) { pwgate.hidden = false; pwgate.scrollIntoView({ behavior: 'smooth', block: 'center' }); }
     }
+    // draft 데이터를 불러와 1·2단계를 채운다(재개 시 앞/뒤 단계 이동·편집 가능).
+    async function fetchDraft(resume) {
+      const s = localStorage.getItem('miriboa_session');
+      const res = await fetch(manageBase + '/' + encodeURIComponent(resume) + '/draft', { headers: s ? { Authorization: 'Bearer ' + s } : {} });
+      const d = await res.json().catch(() => null);
+      return (res.ok && d && d.ok) ? d : null;
+    }
+    function rehydrateDraft(d) {
+      // step 1: 공고
+      if (noticeInput) noticeInput.value = d.notice_no || '';
+      setText(aName, d.notice_name); setText(aDeadline, d.deadline);
+      setText(aInstitution, d.institution); setText(aStakes, d.stakes);
+      if (hName) hName.value = d.notice_name || '';
+      if (hDeadline) hDeadline.value = d.deadline || '';
+      if (hInstitution) hInstitution.value = d.institution || '';
+      if (hStakes) hStakes.value = (d.stakes || '').slice(0, 200);
+      if (auto) auto.hidden = false;
+      setNoticeOk(!!(d.notice_no));
+      // step 2: 고객 정보
+      setVal('company', d.company);
+      if (brnInput) brnInput.value = formatBrn(d.brn);
+      setVal('person', d.person);
+      if (phoneInput) phoneInput.value = String(d.phone || '').replace(/\D/g, '');
+      setVal('email', d.email);
+      setVal('note', d.note);
+      refreshStep2();
+    }
+    function enterResumeAtDocs(resume, d) {
+      rehydrateDraft(d);
+      resuming = true; resumeHasDocs = Number(d.doc_count) > 0; token = resume;
+      const tw = form.querySelector('.cf-turnstile'); if (tw) tw.hidden = true;   // 재개엔 Turnstile 불필요
+      form.hidden = false; showStep(3);
+    }
     async function resumeFlow(login, resume) {
-      form.hidden = true;                                    // 검증 전 step1 깜빡임 방지
+      form.hidden = true;                                    // 검증 전 깜빡임 방지
       try {
         const fd = new FormData(); fd.append('token', login);
         const res = await fetch(authVerify, { method: 'POST', body: fd, credentials: 'include' });
         const d = await res.json().catch(() => null);
-        if (!(res.ok && d && d.ok && d.session)) { form.hidden = false; showStep(1); return; }   // 만료/무효 → 일반 폼
+        if (!(res.ok && d && d.ok && d.session)) { form.hidden = false; showStep(1); return; }
         localStorage.setItem('miriboa_session', d.session);
         history.replaceState(null, '', location.pathname);   // 링크에서 토큰 제거
-        token = resume;                                      // 이 draft를 이어간다
-        if (d.has_password) { form.hidden = false; showStep(3); }   // 이미 비번 있으면 바로 서류
-        else showPwgate();                                   // 없으면 비번 생성(더블입력)
+        const dd = await fetchDraft(resume);
+        if (!dd) { form.hidden = false; showStep(1); return; }   // draft 없음/무효
+        if (d.has_password) enterResumeAtDocs(resume, dd);       // 이미 비번 있으면 바로
+        else { pendingResume = { resume, dd }; showPwgate(); }   // 없으면 비번 생성 후
       } catch { form.hidden = false; showStep(1); }
     }
     const pwgateForm = pwgate && pwgate.querySelector('[data-pwgate-form]');
@@ -308,14 +343,32 @@ const stepKeys = ['notice', 'who', 'docs', 'nda', 'done'] as const;
         const fd = new FormData(); fd.append('password', p1);
         const res = await fetch(authSetPassword, { method: 'POST', body: fd, headers: { Authorization: 'Bearer ' + session } });
         const d = await res.json().catch(() => null);
-        if (res.ok && d && d.ok) { pwgate.hidden = true; form.hidden = false; showStep(3); }
-        else if (perr) perr.hidden = false;
+        if (res.ok && d && d.ok) {
+          pwgate.hidden = true;
+          if (pendingResume) enterResumeAtDocs(pendingResume.resume, pendingResume.dd);
+          else { form.hidden = false; showStep(3); }
+        } else if (perr) perr.hidden = false;
       } catch { if (perr) perr.hidden = false; }
       btn.disabled = false;
     });
 
+    // 이어받기(로그인 없이 token만): draft면 재개(1·2 채움→서류), 접수건이면 관리로.
+    async function capabilityResume(resume) {
+      form.hidden = true;
+      try {
+        const dd = await fetchDraft(resume);
+        if (dd) { enterResumeAtDocs(resume, dd); return; }
+        // draft 아님 — 접수건이면 관리로, 아니면 새 폼
+        const r2 = await fetch(manageBase + '/' + encodeURIComponent(resume));
+        const d2 = await r2.json().catch(() => null);
+        if (r2.ok && d2 && d2.ok && d2.status === 'received') { location.href = managePath + '?t=' + encodeURIComponent(resume); return; }
+      } catch {}
+      form.hidden = false; showStep(1);   // 못 찾음/무효 → 새 폼
+    }
+
     const loginQ = q.get('login'), resumeQ = q.get('resume');
     if (loginQ && resumeQ && authVerify) resumeFlow(loginQ, resumeQ);
+    else if (resumeQ) capabilityResume(resumeQ);
     else showStep(1);
 
     // ── STEP 1: 공고 자동채움 ──
@@ -406,7 +459,7 @@ const stepKeys = ['notice', 'who', 'docs', 'nda', 'done'] as const;
       if (!emailRe.test(fld('email').trim())) return false;
       if (!brnValid(fld('brn'))) return false;
       if (!consent || !consent.checked) return false;
-      if (form.dataset.turnstile) { const t = form.querySelector('[name="cf-turnstile-response"]'); if (!t || !t.value) return false; }
+      if (form.dataset.turnstile && !resuming) { const t = form.querySelector('[name="cf-turnstile-response"]'); if (!t || !t.value) return false; }
       return true;
     }
     function refreshStep2() { if (next2) next2.disabled = !validStep2(); }
@@ -479,6 +532,25 @@ const stepKeys = ['notice', 'who', 'docs', 'nda', 'done'] as const;
       if (e2) e2.hidden = true;
       if (!validStep2()) { refreshStep2(); return; }   // 버튼이 활성일 때만 도달하나 방어적으로 확인
       if (cerr) cerr.hidden = true; if (verr) verr.hidden = true;
+      // 재개 중이면 새로 만들지 않고 기존 draft를 갱신한 뒤 서류 단계로.
+      if (resuming && token) {
+        const rb = form.querySelector('[data-next="2"]'); const rlbl = rb.innerHTML;
+        rb.disabled = true; rb.textContent = '…';
+        const ufd = new FormData();
+        ['notice', 'notice_name', 'deadline', 'institution', 'stakes', 'company', 'brn', 'person', 'phone', 'email', 'note'].forEach((n) => {
+          const f = form.querySelector('[name="' + n + '"]'); if (f) ufd.append(n, f.value);
+        });
+        const us = localStorage.getItem('miriboa_session');
+        try {
+          const ur = await fetch(manageBase + '/' + encodeURIComponent(token) + '/draft', { method: 'POST', body: ufd, headers: us ? { Authorization: 'Bearer ' + us } : {} });
+          const ud = await ur.json().catch(() => null);
+          if (ur.ok && ud && ud.ok) showStep(3);
+          else if (ur.status === 422 && ud && ud.error === 'invalid_brn') { if (cerr) cerr.hidden = false; brnInput.focus(); }
+          else if (e2) e2.hidden = false;
+        } catch { if (e2) e2.hidden = false; }
+        rb.disabled = false; rb.innerHTML = rlbl; refreshStep2();
+        return;
+      }
       const el = $('[data-elapsed]'); if (el) el.value = String(Date.now() - loadedAt);
       const btn = form.querySelector('[data-next="2"]'); const lbl = btn.innerHTML;
       btn.disabled = true; btn.textContent = '…';
@@ -510,7 +582,7 @@ const stepKeys = ['notice', 'who', 'docs', 'nda', 'done'] as const;
     const docInput = $('[data-docs-input]'), drop = $('[data-drop]'), filelist = $('[data-filelist]'), docChecking = $('[data-docs-checking]');
     const next3 = $('[data-next="3"]'), submitBtn = $('[data-submit]'), ndaCheck = $('[data-nda]');
     // step3: 응찰서류가 하나라도 올라와야 '다음'을 활성화한다.
-    function refreshStep3() { if (next3) next3.disabled = !(docInput && docInput.files && docInput.files.length); }
+    function refreshStep3() { if (next3) next3.disabled = !((docInput && docInput.files && docInput.files.length) || resumeHasDocs); }
     // step4: NDA(기밀유지)에 동의해야 '신청 완료'를 활성화한다.
     function refreshStep4() { if (submitBtn) submitBtn.disabled = !(ndaCheck && ndaCheck.checked); }
     if (ndaCheck) ndaCheck.addEventListener('change', refreshStep4);
@@ -594,16 +666,19 @@ const stepKeys = ['notice', 'who', 'docs', 'nda', 'done'] as const;
       const derr = $('[data-docs-error]'), e4 = stepErr(4), nerr = $('[data-nda-error]');
       if (e4) e4.hidden = true; if (nerr) nerr.hidden = true;
       if (!ndaCheck || !ndaCheck.checked) { if (nerr) nerr.hidden = false; refreshStep4(); return; }
-      if (!docInput || docInput.files.length === 0) { showStep(3); refreshStep3(); if (derr) derr.hidden = false; return; }
+      const hasNew = !!(docInput && docInput.files.length);
+      if (!hasNew && !resumeHasDocs) { showStep(3); refreshStep3(); if (derr) derr.hidden = false; return; }
       if (!token) { if (e4) e4.hidden = false; return; }
       const btn = $('[data-submit]'); const lbl = btn.innerHTML; btn.disabled = true; btn.textContent = '…';
       try {
-        // 1) 문서 업로드
-        const fdDocs = new FormData();
-        [...docInput.files].forEach((f) => fdDocs.append('documents', f, f.name));
-        const up = await fetch(manageBase + '/' + encodeURIComponent(token) + '/documents', { method: 'POST', body: fdDocs });
-        const ud = await up.json().catch(() => null);
-        if (!up.ok || !ud || !ud.ok) throw new Error('upload');
+        // 1) 문서 업로드 — 새로 올린 게 있을 때만(재개 시 기존 서류가 있으면 생략)
+        if (hasNew) {
+          const fdDocs = new FormData();
+          [...docInput.files].forEach((f) => fdDocs.append('documents', f, f.name));
+          const up = await fetch(manageBase + '/' + encodeURIComponent(token) + '/documents', { method: 'POST', body: fdDocs });
+          const ud = await up.json().catch(() => null);
+          if (!up.ok || !ud || !ud.ok) throw new Error('upload');
+        }
         // 2) 확정
         const fdFin = new FormData();
         const exp = form.querySelector('[name="express"]'); if (exp && exp.checked) fdFin.append('express', '1');
