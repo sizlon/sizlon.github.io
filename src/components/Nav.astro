@@ -31,9 +31,9 @@ const homeHref = localizePath('/', lang);
     <div class="utility">
       <a class="portal" href={site.portalLoginUrl} rel="noopener">{tr.common.portalLogin} &rarr;</a>
       <span class="lang" aria-label="Language">
-        <a href={localizePath(logical, 'en')} aria-current={lang === 'en' ? 'true' : undefined}>EN</a>
+        <a href={localizePath(logical, 'en')} data-lang-choice="en" aria-current={lang === 'en' ? 'true' : undefined}>EN</a>
         <span class="sep">/</span>
-        <a href={localizePath(logical, 'ko')} aria-current={lang === 'ko' ? 'true' : undefined}>KO</a>
+        <a href={localizePath(logical, 'ko')} data-lang-choice="ko" aria-current={lang === 'ko' ? 'true' : undefined}>KO</a>
       </span>
     </div>
 
@@ -61,9 +61,9 @@ const homeHref = localizePath('/', lang);
 
         <a class="m-portal" href={site.portalLoginUrl} rel="noopener">{tr.common.portalLogin} &rarr;</a>
         <span class="m-lang" aria-label="Language">
-          <a href={localizePath(logical, 'en')} aria-current={lang === 'en' ? 'true' : undefined}>EN</a>
+          <a href={localizePath(logical, 'en')} data-lang-choice="en" aria-current={lang === 'en' ? 'true' : undefined}>EN</a>
           <span class="sep">/</span>
-          <a href={localizePath(logical, 'ko')} aria-current={lang === 'ko' ? 'true' : undefined}>KO</a>
+          <a href={localizePath(logical, 'ko')} data-lang-choice="ko" aria-current={lang === 'ko' ? 'true' : undefined}>KO</a>
         </span>
       </div>
     </details>
@@ -87,6 +87,14 @@ const homeHref = localizePath('/', lang);
       if (e.matches) close();
     });
   }
+
+  // Remember an explicit EN/KO choice so the first-visit auto-detect in Base.astro
+  // does not override it on later visits.
+  document.querySelectorAll<HTMLAnchorElement>('[data-lang-choice]').forEach((el) => {
+    el.addEventListener('click', () => {
+      try { localStorage.setItem('lang', el.getAttribute('data-lang-choice') || ''); } catch (e) {}
+    });
+  });
 </script>
 
 <style>

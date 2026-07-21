@@ -31,6 +31,34 @@ const tr = t(lang);
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <script is:inline>
+      /* First-visit language: redirect between the en (root) and ko (/ko) versions
+         to match the browser's preferred language. A manual EN/KO choice is
+         remembered in localStorage and disables this. Runs before paint so there
+         is no flash of the wrong language. */
+      (function () {
+        try {
+          if (localStorage.getItem('lang')) return; // user chose explicitly — respect it
+          var path = location.pathname;
+          var onKo = path === '/ko' || path.indexOf('/ko/') === 0;
+          var langs = navigator.languages && navigator.languages.length
+            ? navigator.languages : [navigator.language || 'en'];
+          var prefersKo = false;
+          for (var i = 0; i < langs.length; i++) {
+            var l = (langs[i] || '').toLowerCase();
+            if (l.indexOf('ko') === 0) { prefersKo = true; break; }
+            if (l.indexOf('en') === 0) { break; }
+          }
+          var cur = onKo ? 'ko' : 'en';
+          var pref = prefersKo ? 'ko' : 'en';
+          if (pref === cur) return;
+          var target = pref === 'ko'
+            ? (path === '/' ? '/ko/' : '/ko' + path)
+            : (path.replace(/^\/ko(?=\/|$)/, '') || '/');
+          if (target !== path) location.replace(target + location.search + location.hash);
+        } catch (e) {}
+      })();
+    </script>
     <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
     <title>{fullTitle}</title>
     <meta name="description" content={description} />
