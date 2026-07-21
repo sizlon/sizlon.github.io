@@ -78,7 +78,7 @@ const stepKeys = ['notice', 'who', 'docs', 'done'] as const;
           <input type="hidden" name="stakes" data-field-stakes />
           <input type="hidden" name="src" value="site" data-field-src />
           <p class="verr" role="alert" hidden data-step-error="1">{c.notice.notFound}</p>
-          <div class="wnav"><button type="button" class="btn btn-primary" data-next="1">{c.next} <span class="arrow">&rarr;</span></button></div>
+          <div class="wnav"><button type="button" class="btn btn-primary" data-next="1" hidden>{c.next} <span class="arrow">&rarr;</span></button></div>
         </fieldset>
 
         <!-- STEP 2 · Your details + consent -->
@@ -212,10 +212,14 @@ const stepKeys = ['notice', 'who', 'docs', 'done'] as const;
     const aName = $('[data-auto-name]'), aDeadline = $('[data-auto-deadline]'), aInstitution = $('[data-auto-institution]'), aStakes = $('[data-auto-stakes]');
     const attach = $('[data-attach]'), attachList = $('[data-attach-list]');
     const setText = (el, v) => { if (el) el.textContent = v || '—'; };
+    const next1 = $('[data-next="1"]');
+    // 공고가 실제로 추출됐을 때만 '다음'이 나타난다. 번호가 바뀌면 즉시 다시 감춘다.
+    const setNoticeOk = (ok) => { if (next1) next1.hidden = !ok; };
     let lookSeq = 0;
     async function lookupNotice(no) {
       no = (no || '').trim();
       if (notfound) notfound.hidden = true;
+      setNoticeOk(false);
       if (!no || !noticeEndpoint) { if (auto) auto.hidden = true; return; }
       const seq = ++lookSeq;
       if (looking) looking.hidden = false;
@@ -236,6 +240,7 @@ const stepKeys = ['notice', 'who', 'docs', 'done'] as const;
           if (attach && attachList && d.attachments && d.attachments.length) {
             attachList.textContent = d.attachments.join(' · '); attach.hidden = false;
           } else if (attach) { attach.hidden = true; }
+          setNoticeOk(true);
         } else {
           if (auto) auto.hidden = true;
           if (notfound) notfound.hidden = false;
@@ -244,7 +249,7 @@ const stepKeys = ['notice', 'who', 'docs', 'done'] as const;
     }
     let lookTimer;
     if (noticeInput) {
-      noticeInput.addEventListener('input', () => { clearTimeout(lookTimer); lookTimer = setTimeout(() => lookupNotice(noticeInput.value), 450); });
+      noticeInput.addEventListener('input', () => { setNoticeOk(false); clearTimeout(lookTimer); lookTimer = setTimeout(() => lookupNotice(noticeInput.value), 450); });
       noticeInput.addEventListener('blur', () => lookupNotice(noticeInput.value));
     }
     const srcQ = q.get('src'); const srcEl = $('[data-field-src]'); if (srcEl && srcQ) srcEl.value = srcQ;
