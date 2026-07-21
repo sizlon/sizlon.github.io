@@ -76,7 +76,7 @@ const verifyUrl = `${localizePath('/verify-request', lang)}?src=precheck`;
   .results :global(.row.ok) { border-left-color: var(--color-recovered); }
   .results :global(.row.suspect) { border-left-color: var(--color-fault); }
   .results :global(.row.failed) { border-left-color: var(--color-fault); }
-  .results :global(.badge) { font-size: 11.5px; font-weight: 700; border-radius: 4px; padding: 2px 8px; white-space: nowrap; }
+  .results :global(.badge) { font-size: var(--step--1); font-weight: 700; border-radius: 4px; padding: 2px 8px; white-space: nowrap; }
   .results :global(.badge.ok) { background: color-mix(in srgb, var(--color-recovered) 13%, transparent); color: var(--color-recovered); }
   .results :global(.badge.suspect), .results :global(.badge.failed) { background: color-mix(in srgb, var(--color-fault) 13%, transparent); color: var(--color-fault); }
   .results :global(.badge.unsupported) { background: color-mix(in srgb, var(--color-slate) 15%, transparent); color: var(--color-slate); }

@@ -21,13 +21,14 @@
   --font-body: 'Hanken Grotesk Variable', 'Pretendard', system-ui, sans-serif;
   --font-mono: 'JetBrains Mono Variable', 'Pretendard', ui-monospace, monospace;
 
-  /* Type scale (fluid) */
-  --step--1: clamp(0.83rem, 0.79rem + 0.2vw, 0.94rem);
-  --step-0: clamp(1rem, 0.95rem + 0.25vw, 1.13rem);
-  --step-1: clamp(1.2rem, 1.1rem + 0.5vw, 1.5rem);
-  --step-2: clamp(1.5rem, 1.3rem + 1vw, 2rem);
-  --step-3: clamp(2rem, 1.6rem + 2vw, 3rem);
-  --step-4: clamp(2.6rem, 1.9rem + 3.4vw, 4.5rem);
+  /* Type scale (fluid) — compressed so the largest (h1) is at most ~2.8× the
+     smallest (caption). 6 steps; per-step ratio ~1.2–1.25. */
+  --step--1: clamp(0.85rem, 0.82rem + 0.15vw, 0.92rem);
+  --step-0: clamp(1rem, 0.97rem + 0.15vw, 1.08rem);
+  --step-1: clamp(1.15rem, 1.08rem + 0.35vw, 1.35rem);
+  --step-2: clamp(1.4rem, 1.28rem + 0.55vw, 1.65rem);
+  --step-3: clamp(1.62rem, 1.45rem + 0.8vw, 2.05rem);
+  --step-4: clamp(1.9rem, 1.6rem + 1.5vw, 2.55rem);
 
   /* Space + structure */
   --measure: 68ch;
@@ -66,7 +67,7 @@ body {
   color: var(--color-ink);
   font-family: var(--font-body);
   font-size: var(--step-0);
-  line-height: 1.55;
+  line-height: 1.6;
   font-synthesis: none;
   -webkit-font-smoothing: antialiased;
   text-rendering: optimizeLegibility;
@@ -77,7 +78,7 @@ h2,
 h3 {
   font-family: var(--font-display);
   font-weight: 600;
-  line-height: 1.04;
+  line-height: 1.12;
   letter-spacing: -0.02em;
   margin: 0;
   text-wrap: balance;
