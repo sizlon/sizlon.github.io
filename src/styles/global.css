@@ -143,6 +143,18 @@ a { color: inherit; }
 .btn .arrow { transition: transform 0.15s ease; }
 .btn:hover .arrow { transform: translateX(3px); }
 
+/* 비활성: 필수값이 온전하기 전. 활성이 되면 원래의 강조색으로 살아난다. */
+.btn:disabled,
+.btn[disabled] {
+  opacity: 0.45;
+  filter: saturate(0.3);
+  cursor: not-allowed;
+  transform: none;
+  box-shadow: none;
+}
+.btn:disabled:hover { transform: none; }
+.btn:disabled:hover .arrow { transform: none; }
+
 /* Dark band (hero, security, footer) */
 .band-ink {
   background: var(--color-ink);

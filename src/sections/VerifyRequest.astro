@@ -78,7 +78,7 @@ const stepKeys = ['notice', 'who', 'docs', 'done'] as const;
           <input type="hidden" name="stakes" data-field-stakes />
           <input type="hidden" name="src" value="site" data-field-src />
           <p class="verr" role="alert" hidden data-step-error="1">{c.notice.notFound}</p>
-          <div class="wnav"><button type="button" class="btn btn-primary" data-next="1" hidden>{c.next} <span class="arrow">&rarr;</span></button></div>
+          <div class="wnav"><button type="button" class="btn btn-primary" data-next="1" disabled>{c.next} <span class="arrow">&rarr;</span></button></div>
         </fieldset>
 
         <!-- STEP 2 · Your details + consent -->
@@ -112,13 +112,13 @@ const stepKeys = ['notice', 'who', 'docs', 'done'] as const;
           </div>
           <input type="hidden" name="elapsed" value="" data-elapsed />
 
-          {turnstileKey && <div class="cf-turnstile" data-sitekey={turnstileKey}></div>}
+          {turnstileKey && <div class="cf-turnstile" data-sitekey={turnstileKey} data-callback="onTurnstile" data-expired-callback="offTurnstile" data-error-callback="offTurnstile"></div>}
           {turnstileKey && <p class="verr" role="alert" hidden data-verify-error>{c.verifyNeeded}</p>}
           <p class="verr" role="alert" hidden data-step-error="2">{c.sendError} <a href={`mailto:${site.contactEmail}`}>{site.contactEmail}</a></p>
 
           <div class="wnav">
             <button type="button" class="btn btn-ghost" data-back="2">&larr; {c.back}</button>
-            <button type="button" class="btn btn-primary" data-next="2">{c.next} <span class="arrow">&rarr;</span></button>
+            <button type="button" class="btn btn-primary" data-next="2" disabled>{c.next} <span class="arrow">&rarr;</span></button>
           </div>
         </fieldset>
 
@@ -147,7 +147,7 @@ const stepKeys = ['notice', 'who', 'docs', 'done'] as const;
           <p class="verr" role="alert" hidden data-step-error="3">{c.sendError} <a href={`mailto:${site.contactEmail}`}>{site.contactEmail}</a></p>
           <div class="wnav">
             <button type="button" class="btn btn-ghost" data-back="3">&larr; {c.back}</button>
-            <button type="button" class="btn btn-primary" data-submit>{c.submitFinal} <span class="arrow">&rarr;</span></button>
+            <button type="button" class="btn btn-primary" data-submit disabled>{c.submitFinal} <span class="arrow">&rarr;</span></button>
           </div>
         </fieldset>
 
@@ -201,6 +201,7 @@ const stepKeys = ['notice', 'who', 'docs', 'done'] as const;
       });
       const top = form.closest('.formcol');
       if (top && top.scrollIntoView) top.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      if (n === 2) refreshStep2(); else if (n === 3) refreshStep3();
     }
     const stepErr = (n) => form.querySelector('[data-step-error="' + n + '"]');
     showStep(1);
@@ -213,8 +214,8 @@ const stepKeys = ['notice', 'who', 'docs', 'done'] as const;
     const attach = $('[data-attach]'), attachList = $('[data-attach-list]');
     const setText = (el, v) => { if (el) el.textContent = v || '—'; };
     const next1 = $('[data-next="1"]');
-    // 공고가 실제로 추출됐을 때만 '다음'이 나타난다. 번호가 바뀌면 즉시 다시 감춘다.
-    const setNoticeOk = (ok) => { if (next1) next1.hidden = !ok; };
+    // 공고가 실제로 추출됐을 때만 '다음'이 활성화된다. 번호가 바뀌면 즉시 다시 비활성.
+    const setNoticeOk = (ok) => { if (next1) next1.disabled = !ok; };
     let lookSeq = 0;
     async function lookupNotice(no) {
       no = (no || '').trim();
@@ -272,24 +273,33 @@ const stepKeys = ['notice', 'who', 'docs', 'done'] as const;
     };
     const brnInput = $('[data-brn]'), brnErr = $('[data-brn-error]');
     if (brnInput) brnInput.addEventListener('blur', () => { if (brnErr) brnErr.hidden = brnValid(brnInput.value) || !brnInput.value; });
+
+    // 필수 신원정보·동의·Turnstile이 온전할 때만 '다음'을 활성화한다.
+    const emailRe = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
+    const consent = $('[data-consent]'), next2 = $('[data-next="2"]');
+    const fld = (n) => (form.querySelector('[name="' + n + '"]') || {}).value || '';
+    function validStep2() {
+      if (!fld('company').trim() || !fld('person').trim() || !fld('phone').trim()) return false;
+      if (!emailRe.test(fld('email').trim())) return false;
+      if (!brnValid(fld('brn'))) return false;
+      if (!consent || !consent.checked) return false;
+      if (form.dataset.turnstile) { const t = form.querySelector('[name="cf-turnstile-response"]'); if (!t || !t.value) return false; }
+      return true;
+    }
+    function refreshStep2() { if (next2) next2.disabled = !validStep2(); }
+    const step2fs = form.querySelector('[data-step="2"]');
+    if (step2fs) { step2fs.addEventListener('input', refreshStep2); step2fs.addEventListener('change', refreshStep2); }
+    // Turnstile은 input 이벤트를 쏘지 않으므로 콜백으로 재평가한다.
+    window.onTurnstile = refreshStep2;
+    window.offTurnstile = refreshStep2;
+
     $('[data-back="2"]').addEventListener('click', () => showStep(1));
 
     $('[data-next="2"]').addEventListener('click', async () => {
       const e2 = stepErr(2), verr = $('[data-verify-error]'), cerr = brnErr;
-      const consent = $('[data-consent]');
-      const req = ['company', 'person', 'phone', 'email'].map((n) => form.querySelector('[name="' + n + '"]'));
       if (e2) e2.hidden = true;
-      for (const el of req) { if (!el.value.trim()) { el.focus(); return; } }
-      const email = form.querySelector('[name="email"]');
-      if (!/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(email.value)) { email.focus(); return; }
-      if (!brnValid(brnInput.value)) { if (cerr) cerr.hidden = false; brnInput.focus(); return; }
-      if (cerr) cerr.hidden = true;
-      if (!consent.checked) { consent.focus(); return; }
-      if (form.dataset.turnstile) {
-        const tok = form.querySelector('[name="cf-turnstile-response"]');
-        if (!tok || !tok.value) { if (verr) verr.hidden = false; return; }
-        if (verr) verr.hidden = true;
-      }
+      if (!validStep2()) { refreshStep2(); return; }   // 버튼이 활성일 때만 도달하나 방어적으로 확인
+      if (cerr) cerr.hidden = true; if (verr) verr.hidden = true;
       const el = $('[data-elapsed]'); if (el) el.value = String(Date.now() - loadedAt);
       const btn = form.querySelector('[data-next="2"]'); const lbl = btn.innerHTML;
       btn.disabled = true; btn.textContent = '…';
@@ -308,12 +318,16 @@ const stepKeys = ['notice', 'who', 'docs', 'done'] as const;
         else if (res.status === 403 && verr) { verr.hidden = false; }
         else if (e2) { e2.hidden = false; }
       } catch { if (e2) e2.hidden = false; }
-      btn.disabled = false; btn.innerHTML = lbl;
-      const ts = window.turnstile; if (ts) ts.reset();
+      btn.innerHTML = lbl;
+      const ts = window.turnstile; if (ts) ts.reset();   // 토큰 소거 → refreshStep2가 다시 비활성화
+      refreshStep2();
     });
 
     // ── STEP 3: 문서 드롭존 + precheck ──
     const docInput = $('[data-docs-input]'), drop = $('[data-drop]'), filelist = $('[data-filelist]'), docChecking = $('[data-docs-checking]');
+    const submitBtn = $('[data-submit]');
+    // 응찰서류가 하나라도 올라와야 '검증 신청'을 활성화한다.
+    function refreshStep3() { if (submitBtn) submitBtn.disabled = !(docInput && docInput.files && docInput.files.length); }
     function renderFiles(arr, statuses) {
       if (!filelist) return; filelist.innerHTML = '';
       arr.forEach((f, i) => {
@@ -328,7 +342,7 @@ const stepKeys = ['notice', 'who', 'docs', 'done'] as const;
       const arr = fileArr.slice(0, 20).filter((f) => f.size <= 40 * 1024 * 1024);
       const dt = new DataTransfer(); arr.forEach((f) => dt.items.add(f));
       if (docInput) docInput.files = dt.files;
-      renderFiles(arr, null); if (arr.length) precheckFiles(arr);
+      renderFiles(arr, null); refreshStep3(); if (arr.length) precheckFiles(arr);
     }
     let pcSeq = 0;
     async function precheckFiles(arr) {
@@ -386,7 +400,7 @@ const stepKeys = ['notice', 'who', 'docs', 'done'] as const;
         }
         throw new Error('finalize');
       } catch { if (e3) e3.hidden = false; }
-      btn.disabled = false; btn.innerHTML = lbl;
+      btn.innerHTML = lbl; refreshStep3();
     });
   }
 </script>
