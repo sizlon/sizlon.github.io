@@ -95,7 +95,7 @@ const stepKeys = ['notice', 'who', 'docs', 'nda', 'done'] as const;
           <label><span>{c.who.person}</span>
             <input type="text" name="person" autocomplete="name" maxlength="80" /></label>
           <label><span>{c.who.phone}</span>
-            <input type="tel" name="phone" autocomplete="tel" inputmode="tel" maxlength="40" /></label>
+            <input type="tel" name="phone" autocomplete="tel" inputmode="numeric" maxlength="20" placeholder="01012345678" data-phone /></label>
           <label><span>{c.who.email}</span>
             <input type="email" name="email" autocomplete="email" maxlength="180" /></label>
           <label><span>{c.noteLabel}</span>
@@ -298,6 +298,12 @@ const stepKeys = ['notice', 'who', 'docs', 'nda', 'done'] as const;
       // 붙여넣기는 막지 않고 input 단계에서 숫자만 걸러낸다(하이픈 포함 값도 허용).
       brnInput.addEventListener('beforeinput', (e) => { if (e.inputType === 'insertText' && e.data && /\D/.test(e.data)) e.preventDefault(); });
       brnInput.addEventListener('input', () => { brnInput.value = formatBrn(brnInput.value); });
+    }
+    // 전화번호도 숫자만: 타이핑은 원천 차단, 붙여넣기는 숫자만 남긴다.
+    const phoneInput = form.querySelector('[data-phone]');
+    if (phoneInput) {
+      phoneInput.addEventListener('beforeinput', (e) => { if (e.inputType === 'insertText' && e.data && /\D/.test(e.data)) e.preventDefault(); });
+      phoneInput.addEventListener('input', () => { phoneInput.value = phoneInput.value.replace(/\D/g, ''); });
     }
     if (brnInput) brnInput.addEventListener('blur', () => { if (brnErr) brnErr.hidden = brnValid(brnInput.value) || !brnInput.value; });
 
