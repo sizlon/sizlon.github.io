@@ -108,6 +108,7 @@ const privacyHref = localizePath('/legal/privacy', lang);
           </label>
           <p class="lookup-status" hidden data-docs-checking>{c.docs.checking}</p>
           <ul class="filelist" data-filelist></ul>
+          <p class="verr" role="alert" hidden data-docs-error>{c.docs.required}</p>
         </fieldset>
 
         <label>
@@ -347,6 +348,14 @@ const privacyHref = localizePath('/legal/privacy', lang);
         return;
       }
       if (cerr) cerr.hidden = true;
+      // 응찰 서류 필수 — 비교할 서류가 없으면 신청이 성립하지 않는다(서버도 재검증).
+      const derr = document.querySelector('[data-docs-error]');
+      if (docInput && docInput.files.length === 0) {
+        if (derr) derr.hidden = false;
+        if (drop && drop.focus) drop.focus();
+        return;
+      }
+      if (derr) derr.hidden = true;
       // 사업자번호 클라이언트 게이트 — 서버가 재검증하지만 왕복을 한 번 아낀다.
       if (!checkBrn()) {
         if (brnErr) brnErr.hidden = false;
