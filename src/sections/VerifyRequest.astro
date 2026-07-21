@@ -57,6 +57,7 @@ const stepKeys = ['notice', 'who', 'docs', 'nda', 'done'] as const;
         data-doc-badges={JSON.stringify(c.docs.badges)}
         data-doc-remove={c.docs.remove}
         data-manage-path={localizePath('/manage', lang)}
+        data-profile-endpoint={site.accountProfileEndpoint}
         data-turnstile={turnstileKey ? 'on' : undefined}
       >
         <!-- STEP 1 · Notice -->
@@ -87,6 +88,11 @@ const stepKeys = ['notice', 'who', 'docs', 'nda', 'done'] as const;
         <!-- STEP 2 · Your details + consent -->
         <fieldset class="step" data-step="2" hidden>
           <legend>{c.who.heading}</legend>
+          <p class="fillme" hidden data-fill>
+            <select class="fillsel" hidden data-fill-select aria-label={c.fillMe}></select>
+            <button type="button" class="linklike" data-fill-btn>{c.fillMe}</button>
+            <span class="filled" hidden data-fill-note>{c.filled} · <button type="button" class="linklike" data-fill-clear>{c.clear}</button></span>
+          </p>
           <label><span>{c.who.company}</span>
             <input type="text" name="company" autocomplete="organization" maxlength="160" /></label>
           <label><span>{c.who.brn}</span>
@@ -236,7 +242,7 @@ const stepKeys = ['notice', 'who', 'docs', 'nda', 'done'] as const;
       });
       const top = form.closest('.formcol');
       if (top && top.scrollIntoView) top.scrollIntoView({ behavior: 'smooth', block: 'start' });
-      if (n === 2) refreshStep2(); else if (n === 3) refreshStep3(); else if (n === 4) refreshStep4();
+      if (n === 2) { autoFillStep2(); refreshStep2(); } else if (n === 3) refreshStep3(); else if (n === 4) refreshStep4();
     }
     const stepErr = (n) => form.querySelector('[data-step-error="' + n + '"]');
     showStep(1);
@@ -339,6 +345,62 @@ const stepKeys = ['notice', 'who', 'docs', 'nda', 'done'] as const;
     // Turnstile은 input 이벤트를 쏘지 않으므로 콜백으로 재평가한다.
     window.onTurnstile = refreshStep2;
     window.offTurnstile = refreshStep2;
+
+    // ── 로그인 고객: 내 정보로 채우기(회사 1개면 step2 진입 시 자동, 여러 개면 선택) ──
+    const profileEndpoint = form.getAttribute('data-profile-endpoint');
+    const fillWrap = $('[data-fill]'), fillSel = $('[data-fill-select]'), fillBtn = $('[data-fill-btn]'), fillNote = $('[data-fill-note]'), fillClear = $('[data-fill-clear]');
+    let profileCompanies = [], profileEmail = '', autoFilled = false;
+    const setVal = (n, v) => { const el = form.querySelector('[name="' + n + '"]'); if (el) el.value = v || ''; };
+    function fillFromCompany(co) {
+      if (!co) return;
+      setVal('company', co.name);
+      if (brnInput) brnInput.value = formatBrn(co.brn);
+      setVal('person', co.person);
+      if (phoneInput) phoneInput.value = String(co.tel || '').replace(/\D/g, '');
+      setVal('email', profileEmail);
+      if (brnErr) brnErr.hidden = true;
+      if (fillNote) fillNote.hidden = false;
+      refreshStep2();
+    }
+    function clearFill() {
+      ['company', 'person', 'phone', 'email'].forEach((n) => setVal(n, ''));
+      if (brnInput) brnInput.value = '';
+      if (fillNote) fillNote.hidden = true;
+      refreshStep2();
+    }
+    function autoFillStep2() {
+      if (autoFilled) return;                          // 한 번만 — 이후 사용자의 수정을 덮지 않는다
+      if (profileCompanies.length === 1) { autoFilled = true; fillFromCompany(profileCompanies[0]); }
+    }
+    if (fillClear) fillClear.addEventListener('click', clearFill);
+    if (fillBtn) fillBtn.addEventListener('click', () => {
+      const idx = (fillSel && !fillSel.hidden) ? Number(fillSel.value) : 0;
+      fillFromCompany(profileCompanies[idx] || profileCompanies[0]);
+    });
+    if (fillSel) fillSel.addEventListener('change', () => fillFromCompany(profileCompanies[Number(fillSel.value)] || profileCompanies[0]));
+    async function loadProfile() {
+      const sess = localStorage.getItem('miriboa_session');
+      if (!sess || !profileEndpoint) return;
+      try {
+        const res = await fetch(profileEndpoint, { headers: { Authorization: 'Bearer ' + sess } });
+        const d = await res.json().catch(() => null);
+        if (!d || !d.ok || !Array.isArray(d.companies) || !d.companies.length) return;
+        profileCompanies = d.companies; profileEmail = d.email || '';
+        if (fillWrap) fillWrap.hidden = false;
+        if (profileCompanies.length > 1 && fillSel) {
+          fillSel.innerHTML = '';
+          profileCompanies.forEach((co, i) => {
+            const opt = document.createElement('option');
+            opt.value = String(i);
+            opt.textContent = (co.name || '') + ' · ' + formatBrn(co.brn);
+            fillSel.appendChild(opt);
+          });
+          fillSel.hidden = false;
+        }
+        if (cur === 2) autoFillStep2();               // 이미 step2에 있으면 지금 채운다
+      } catch (e) {}
+    }
+    loadProfile();
 
     $('[data-back="2"]').addEventListener('click', () => showStep(1));
 
@@ -570,6 +632,9 @@ const stepKeys = ['notice', 'who', 'docs', 'nda', 'done'] as const;
 
   /* NDA 전문을 페이지 이동 없이 보는 모달(네이티브 dialog). 내용은 정적 마크업이라 스코프 CSS가 그대로 먹는다. */
   .linklike { font: inherit; color: var(--color-recovered); background: none; border: none; padding: 0; cursor: pointer; text-decoration: underline; text-underline-offset: 2px; }
+  .fillme { display: flex; align-items: baseline; gap: 0.8rem; flex-wrap: wrap; margin: 0 0 0.2rem; font-size: var(--step--1); }
+  .fillsel { font-family: var(--font-body); font-size: var(--step--1); padding: 0.35rem 0.5rem; border: 1px solid var(--hairline); border-radius: var(--radius); background: var(--color-vellum); color: var(--color-ink); }
+  .filled { color: var(--color-slate); }
   .linklike:hover { opacity: 0.8; }
   .nda-modal { border: none; border-radius: var(--radius); padding: 0; max-width: 40rem; width: calc(100% - 2rem); background: var(--color-mist); color: var(--color-ink); box-shadow: 0 12px 40px rgba(0, 0, 0, 0.25); }
   .nda-modal::backdrop { background: rgba(20, 20, 24, 0.5); }

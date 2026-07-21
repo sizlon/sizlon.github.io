@@ -282,6 +282,9 @@ export const content = {
       uploading: 'Uploading…',
       returning: 'Already applied?',
       returningLink: 'Find your request',
+      fillMe: 'Fill with my info',
+      filled: 'Filled from your account',
+      clear: 'Clear',
     },
     verifyManage: {
       title: 'Your Sizlon account',
@@ -833,6 +836,9 @@ export const content = {
       uploading: '업로드 중…',
       returning: '이미 신청하셨나요?',
       returningLink: '내 신청 조회',
+      fillMe: '내 정보로 채우기',
+      filled: '로그인 정보로 채움',
+      clear: '지우기',
     },
     verifyManage: {
       title: 'Sizlon 계정',
