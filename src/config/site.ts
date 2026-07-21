@@ -26,6 +26,7 @@ export const site = {
   authSetPasswordEndpoint: 'https://svc.sizlon.io/auth/set-password',
   accountRequestsEndpoint: 'https://svc.sizlon.io/account/requests',
   accountProductsEndpoint: 'https://svc.sizlon.io/account/products',
+  accountProfileEndpoint: 'https://svc.sizlon.io/account/profile',
   // Notice lookup (parse.sizlon.io, has the g2b key server-side). The verify form
   // calls GET ?no=<공고번호> to auto-fill 공고명·마감일·기관명·판돈. CORS-allowed for sizlon.io.
   noticeLookupEndpoint: 'https://parse.sizlon.io/api/notice',

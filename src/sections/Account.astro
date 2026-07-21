@@ -3,18 +3,21 @@ import Base from '../layouts/Base.astro';
 import { site } from '../config/site';
 import type { Lang } from '../i18n/content';
 import { t, localizePath } from '../i18n/utils';
-// Sizlon account hub. Spans products; each product shows a SUMMARY and links out to
-// its own management surface (Miriboa → /manage, Crawler Platform → portal). Account
-// settings (password) live here, at the account level, not inside a product card.
-// Modes: ?login=<tok> (magic verify) → hub ; session → hub ; else → login.
+// Sizlon account hub. Three stacked sections:
+//   1. Account   — company profile (view/edit contact) + security (password)
+//   2. Miriboa   — billing summary + recent requests; full management on /manage
+//   3. Crawler   — entitlement status; management in the portal
+// Login/magic/SSO handled here; per-product management is delegated out.
 interface Props { lang: Lang }
 const { lang } = Astro.props;
 const tr = t(lang);
 const c = tr.verifyManage;
 const strings = {
-  statusMap: c.statusMap, loginSent: c.loginSent, accountEmpty: c.accountEmpty,
-  setPw: c.setPw, updatedLabel: c.updatedLabel,
-  crawler: { have: c.crawlerHave, none: c.crawlerNone, noneIntro: c.crawlerNoneIntro, noneCta: c.crawlerNoneCta, portal: c.crawlerPortal },
+  statusMap: c.statusMap, updatedLabel: c.updatedLabel, accountEmpty: c.accountEmpty,
+  setPw: c.setPw,
+  crawler: { have: c.crawlerHave, none: c.crawlerNone, noneIntro: c.crawlerNoneIntro, noneCta: c.crawlerNoneCta },
+  profile: { company: c.profileCompany, brn: c.profileBrn, person: c.profilePerson, phone: c.profilePhone, email: c.profileEmail, save: c.profileSave, saved: c.profileSaved, error: c.profileError },
+  billing: { free: c.billingFree, used: c.billingUsed, amtFree: c.amtFree },
 };
 ---
 
@@ -28,6 +31,7 @@ const strings = {
     data-auth-set-password={site.authSetPasswordEndpoint}
     data-account-requests={site.accountRequestsEndpoint}
     data-account-products={site.accountProductsEndpoint}
+    data-account-profile={site.accountProfileEndpoint}
     data-account-path={localizePath('/account', lang)}
     data-manage-path={localizePath('/manage', lang)}
     data-strings={JSON.stringify(strings)}
@@ -51,39 +55,47 @@ const strings = {
       <p class="ok" role="status" hidden data-login-sent>{c.loginSent}</p>
     </div>
 
-    <!-- HUB — summary cards + account settings -->
-    <div class="panel" hidden data-account>
+    <!-- HUB -->
+    <div class="panel hub" hidden data-account>
       <div class="acct-head">
         <span class="acct-email" data-acct-email></span>
         <button class="linkbtn" type="button" data-logout>{c.logout}</button>
       </div>
-      <div class="prodgrid">
-        <section class="prodcard">
-          <h2>{c.miriboaHeading}</h2>
-          <ul class="reqlist" data-reqlist></ul>
-          <p class="statusnote" hidden data-account-empty>{c.accountEmpty}</p>
-          <div class="cardlinks">
-            <a class="btn btn-primary prodcta" href={localizePath('/verify-request', lang)}>{c.newVerify} <span class="arrow">&rarr;</span></a>
-            <a class="alt" href={localizePath('/manage', lang)}>{c.manageLink} <span class="arrow">&rarr;</span></a>
-          </div>
-        </section>
-        <section class="prodcard">
-          <div class="prodhead"><h2>{c.crawlerHeading}</h2><span class="prodstatus" hidden data-crawler-status></span></div>
-          <p class="hint" data-crawler-intro>{c.crawlerIntro}</p>
-          <a class="btn btn-ghost prodcta" data-crawler-cta data-portal-href={site.portalLoginUrl} data-contact-href={localizePath('/contact', lang)} href={site.portalLoginUrl} rel="noopener">{c.crawlerPortal} <span class="arrow">&rarr;</span></a>
-        </section>
-      </div>
-      <div class="block setpw" data-setpw hidden>
-        <h2>{c.setPw.heading}</h2>
-        <p class="hint" data-setpw-intro>{c.setPw.intro}</p>
-        <form class="loginform" data-setpw-form>
-          <label><span>{c.setPw.new}</span>
-            <input type="password" name="password" autocomplete="new-password" minlength="8" maxlength="200" required /></label>
-          <button class="btn btn-primary" type="submit">{c.setPw.save}</button>
-        </form>
-        <p class="ok" role="status" hidden data-setpw-saved>{c.setPw.saved}</p>
-        <p class="verr" role="alert" hidden data-setpw-error>{c.setPw.weak}</p>
-      </div>
+
+      <!-- 1. Account: company profile + security -->
+      <section class="card">
+        <h2>{c.sectionAccount}</h2>
+        <h3 class="sub">{c.profileHeading}</h3>
+        <div class="profile" data-profile></div>
+        <div class="sec">
+          <h3 class="sub">{c.securityHeading}</h3>
+          <p class="hint" data-setpw-intro>{c.setPw.intro}</p>
+          <form class="inlineform" data-setpw-form>
+            <input type="password" name="password" autocomplete="new-password" minlength="8" maxlength="200" placeholder={c.setPw.new} required />
+            <button class="btn btn-primary" type="submit">{c.setPw.save}</button>
+          </form>
+          <p class="ok" role="status" hidden data-setpw-saved>{c.setPw.saved}</p>
+          <p class="verr" role="alert" hidden data-setpw-error>{c.setPw.weak}</p>
+        </div>
+      </section>
+
+      <!-- 2. Miriboa: billing + recent requests -->
+      <section class="card">
+        <div class="cardhead"><h2>{c.miriboaHeading}</h2><span class="chip" hidden data-billing></span></div>
+        <ul class="reqlist" data-reqlist></ul>
+        <p class="statusnote" hidden data-account-empty>{c.accountEmpty}</p>
+        <div class="cardlinks">
+          <a class="btn btn-primary" href={localizePath('/verify-request', lang)}>{c.newVerify} <span class="arrow">&rarr;</span></a>
+          <a class="alt" href={localizePath('/manage', lang)}>{c.manageLink} <span class="arrow">&rarr;</span></a>
+        </div>
+      </section>
+
+      <!-- 3. Crawler Platform: entitlement status -->
+      <section class="card">
+        <div class="cardhead"><h2>{c.crawlerHeading}</h2><span class="chip" hidden data-crawler-status></span></div>
+        <p class="hint" data-crawler-intro>{c.crawlerIntro}</p>
+        <a class="btn btn-ghost cta" data-crawler-cta data-portal-href={site.portalLoginUrl} data-contact-href={localizePath('/contact', lang)} href={site.portalLoginUrl} rel="noopener">{c.crawlerPortal} <span class="arrow">&rarr;</span></a>
+      </section>
     </div>
 
     <p class="alt">{c.altPrefix} <a href={localizePath('/contact', lang)}>{c.altQuestion}</a></p>
@@ -99,6 +111,7 @@ const strings = {
   const authSetPassword = root && root.getAttribute('data-auth-set-password');
   const accountEndpoint = root && root.getAttribute('data-account-requests');
   const productsEndpoint = root && root.getAttribute('data-account-products');
+  const profileEndpoint = root && root.getAttribute('data-account-profile');
   const accountPath = root && root.getAttribute('data-account-path') || '/account';
   const managePath = root && root.getAttribute('data-manage-path') || '/manage';
   let S = {};
@@ -107,7 +120,11 @@ const strings = {
   const esc = (s) => String(s == null ? '' : s).replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
   const SKEY = 'miriboa_session';
   const q = new URLSearchParams(location.search);
-  const RECENT = 3;   // 허브 요약에 보이는 최근 신청 수 — 전체는 관리 페이지에서
+  const RECENT = 3;
+  const bearer = () => ({ Authorization: 'Bearer ' + (localStorage.getItem(SKEY) || '') });
+  const fmtWhen = (iso) => { if (!iso) return ''; return String(iso).slice(0, 16).replace('T', ' '); };
+  const fmtBrn = (d) => { d = String(d || '').replace(/\D/g, ''); return d.length === 10 ? d.slice(0, 3) + '-' + d.slice(3, 5) + '-' + d.slice(5) : (d || ''); };
+  const fmtAmt = (krw) => '₩' + Number(krw || 0).toLocaleString('en-US');
 
   const loading = $('[data-loading]'), loginP = $('[data-login]'), accountP = $('[data-account]');
   const show = (el) => { if (el) el.hidden = false; };
@@ -124,14 +141,12 @@ const strings = {
   const loginForm = $('[data-login-form]');
   if (loginForm) loginForm.addEventListener('submit', async (e) => {
     e.preventDefault();
-    const errEl = $('[data-login-error]');
-    if (errEl) errEl.hidden = true;
+    const errEl = $('[data-login-error]'); if (errEl) errEl.hidden = true;
     const email = loginForm.querySelector('[name="email"]').value.trim();
     const password = loginForm.querySelector('[name="password"]').value;
     const btn = loginForm.querySelector('button'); btn.disabled = true;
     try {
       const fd = new FormData(); fd.append('email', email); fd.append('password', password);
-      // credentials:'include' → svc.sizlon.io가 심는 .sizlon.io SSO 쿠키를 저장(포털 자동 로그인).
       const res = await fetch(authLogin, { method: 'POST', body: fd, credentials: 'include' });
       const d = await res.json().catch(() => null);
       if (res.ok && d && d.ok && d.session) {
@@ -186,38 +201,109 @@ const strings = {
   function renderHub(email, requests, hasPassword) {
     hideAll();
     const em = $('[data-acct-email]'); if (em) em.textContent = email;
-    const setpw = $('[data-setpw]'), setpwIntro = $('[data-setpw-intro]');
-    if (setpw) setpw.hidden = false;
+    const setpwIntro = $('[data-setpw-intro]');
     if (setpwIntro && S.setPw) setpwIntro.textContent = hasPassword ? S.setPw.intro : S.setPw.introFirst;
-    // 미리보아 요약: 최근 몇 건만. 전체·건별 관리는 /manage 에서.
+    renderRequests(requests.slice(0, RECENT));
+    show(accountP);
+    loadProfile(email);
+    updateCrawler();
+  }
+
+  // ── 미리보아 최근 신청 (금액 포함) ──
+  function renderRequests(requests) {
     const list = $('[data-reqlist]'), empty = $('[data-account-empty]');
     if (list) {
       list.innerHTML = '';
-      const fmtWhen = (iso) => { if (!iso) return ''; return String(iso).slice(0, 16).replace('T', ' '); };
-      requests.slice(0, RECENT).forEach((r) => {
+      requests.forEach((r) => {
         const st = (S.statusMap && S.statusMap[r.status]) || r.status;
         const title = ((r.notice_no || '') + ' ' + (r.notice_name || '')).trim() || '—';
         const when = fmtWhen(r.updated_at || r.created_at);
+        let amt = '';
+        if (r.status !== 'draft') {
+          amt = Number(r.amount_krw) > 0 ? fmtAmt(r.amount_krw) : (S.billing && S.billing.amtFree) || '';
+          amt = amt ? '<span class="rq-amt' + (Number(r.amount_krw) > 0 ? '' : ' free') + '">' + esc(amt) + '</span>' : '';
+        }
         const li = document.createElement('li');
         li.innerHTML = '<a href="' + esc(managePath) + '?t=' + encodeURIComponent(r.token) + '">'
           + '<span class="rq-main"><span class="rq-title">' + esc(title) + '</span>'
           + '<span class="rq-when">' + esc((S.updatedLabel || '') + ' ' + when) + '</span></span>'
-          + '<span class="rq-meta"><span class="rq-status s-' + esc(r.status) + '">' + esc(st) + '</span></span>'
+          + '<span class="rq-meta"><span class="rq-status s-' + esc(r.status) + '">' + esc(st) + '</span>' + amt + '</span>'
           + '</a>';
         list.appendChild(li);
       });
     }
     if (empty) empty.hidden = requests.length > 0;
-    show(accountP);
-    updateCrawlerProduct();
   }
 
-  async function updateCrawlerProduct() {
-    const sess = localStorage.getItem(SKEY);
-    if (!sess || !productsEndpoint) return;
+  // ── 회사 정보 (조회/수정) + 청구 요약 ──
+  async function loadProfile(email) {
+    if (!profileEndpoint) return;
     let d = null;
     try {
-      const res = await fetch(productsEndpoint, { headers: { Authorization: 'Bearer ' + sess } });
+      const res = await fetch(profileEndpoint, { headers: bearer() });
+      d = await res.json().catch(() => null);
+    } catch { return; }
+    if (!d || !d.ok) return;
+    renderProfile(d.companies || [], email);
+    const chip = $('[data-billing]');
+    if (chip && S.billing) {
+      const anyFree = (d.companies || []).some((co) => !co.first_free_used);
+      chip.textContent = anyFree ? S.billing.free : S.billing.used;
+      chip.classList.add(anyFree ? 'free' : 'used');
+      chip.hidden = false;
+    }
+  }
+
+  function renderProfile(companies, email) {
+    const wrap = $('[data-profile]'); if (!wrap) return;
+    const p = S.profile || {};
+    wrap.innerHTML = '';
+    if (!companies.length) { wrap.hidden = true; return; }
+    companies.forEach((co) => {
+      const div = document.createElement('div');
+      div.className = 'company';
+      div.innerHTML =
+        '<dl>'
+        + '<div><dt>' + esc(p.company) + '</dt><dd>' + esc(co.name || '—') + '</dd></div>'
+        + '<div><dt>' + esc(p.brn) + '</dt><dd>' + esc(fmtBrn(co.brn)) + '</dd></div>'
+        + '<div><dt>' + esc(p.person) + '</dt><dd><input class="pf" data-person value="' + esc(co.person || '') + '" maxlength="80" /></dd></div>'
+        + '<div><dt>' + esc(p.phone) + '</dt><dd><input class="pf" data-phone inputmode="numeric" value="' + esc(co.tel || '') + '" maxlength="20" /></dd></div>'
+        + '<div><dt>' + esc(p.email) + '</dt><dd>' + esc(email) + '</dd></div>'
+        + '</dl>'
+        + '<div class="pfrow"><button type="button" class="btn btn-primary" data-save-profile data-brn="' + esc(co.brn) + '">' + esc(p.save) + '</button>'
+        + '<span class="ok" hidden data-pf-ok>' + esc(p.saved) + '</span>'
+        + '<span class="verr" hidden data-pf-err>' + esc(p.error) + '</span></div>';
+      wrap.appendChild(div);
+    });
+    wrap.hidden = false;
+  }
+
+  const profileWrap = $('[data-profile]');
+  if (profileWrap) profileWrap.addEventListener('click', async (e) => {
+    const btn = e.target.closest('[data-save-profile]'); if (!btn) return;
+    const box = btn.closest('.company'); if (!box) return;
+    const okEl = box.querySelector('[data-pf-ok]'), errEl = box.querySelector('[data-pf-err]');
+    if (okEl) okEl.hidden = true; if (errEl) errEl.hidden = true;
+    const person = (box.querySelector('[data-person]') || {}).value || '';
+    const tel = ((box.querySelector('[data-phone]') || {}).value || '').replace(/\D/g, '');
+    if (!person.trim()) { if (errEl) errEl.hidden = false; return; }
+    btn.disabled = true;
+    try {
+      const fd = new FormData(); fd.append('brn', btn.getAttribute('data-brn') || ''); fd.append('person', person.trim()); fd.append('tel', tel);
+      const res = await fetch(profileEndpoint, { method: 'POST', body: fd, headers: bearer() });
+      const d = await res.json().catch(() => null);
+      if (res.ok && d && d.ok) { if (okEl) okEl.hidden = false; }
+      else if (errEl) errEl.hidden = false;
+    } catch { if (errEl) errEl.hidden = false; }
+    btn.disabled = false;
+  });
+
+  // ── Crawler 상태 ──
+  async function updateCrawler() {
+    if (!productsEndpoint) return;
+    let d = null;
+    try {
+      const res = await fetch(productsEndpoint, { headers: bearer() });
       d = await res.json().catch(() => null);
     } catch { return; }
     if (!d || !d.ok || !d.crawler_known) return;
@@ -259,10 +345,8 @@ const strings = {
       const fd = new FormData(); fd.append('password', password);
       const res = await fetch(authSetPassword, { method: 'POST', body: fd, headers: { Authorization: 'Bearer ' + session } });
       const d = await res.json().catch(() => null);
-      if (res.ok && d && d.ok) {
-        if (savedEl) savedEl.hidden = false; setpwForm.reset();
-        const intro = $('[data-setpw-intro]'); if (intro && S.setPw) intro.textContent = S.setPw.intro;
-      } else if (errEl) errEl.hidden = false;
+      if (res.ok && d && d.ok) { if (savedEl) savedEl.hidden = false; setpwForm.reset(); }
+      else if (errEl) errEl.hidden = false;
     } catch { if (errEl) errEl.hidden = false; }
     btn.disabled = false;
   });
@@ -272,39 +356,50 @@ const strings = {
 
 <style>
   [hidden] { display: none !important; }
-  .account { max-width: 720px; display: flex; flex-direction: column; gap: 1rem; }
+  .account { max-width: 680px; display: flex; flex-direction: column; gap: 1rem; }
   .loading, .statusnote { color: var(--color-slate); }
   .statusnote { padding: 0.9rem 1.1rem; border: 1px solid var(--hairline); border-radius: var(--radius); background: var(--color-mist); }
-  .verr { color: #b3261e; }
-  .ok { color: var(--color-recovered); font-weight: 600; }
+  .verr { color: #b3261e; font-size: var(--step--1); }
+  .ok { color: var(--color-recovered); font-weight: 600; font-size: var(--step--1); }
   .panel { display: flex; flex-direction: column; gap: 1.1rem; }
-  .alt { color: var(--color-slate); margin: 0; }
+  .hub { gap: 1.25rem; }
+  .alt { color: var(--color-slate); margin: 0; font-size: var(--step--1); }
   .alt a, a.alt { color: var(--color-ink); text-decoration: underline; text-decoration-color: var(--color-recovered); text-underline-offset: 3px; }
 
   .loginform { display: flex; flex-direction: column; gap: 0.7rem; max-width: 22rem; }
   .loginform label { display: flex; flex-direction: column; gap: 0.4rem; }
   .loginform label span { font-family: var(--font-mono); font-size: var(--step--1); color: var(--color-slate); }
-  .loginform input { font-family: var(--font-body); font-size: var(--step-0); color: var(--color-ink); background: var(--color-vellum); border: 1px solid var(--hairline); border-radius: var(--radius); padding: 0.7rem 0.85rem; }
+  .loginform input, .inlineform input, .profile :global(input.pf) { font-family: var(--font-body); font-size: var(--step-0); color: var(--color-ink); background: var(--color-vellum); border: 1px solid var(--hairline); border-radius: var(--radius); padding: 0.6rem 0.75rem; }
   .loginform .btn { align-self: flex-start; }
 
   .acct-head { display: flex; justify-content: space-between; align-items: baseline; gap: 1rem; }
   .acct-email { font-family: var(--font-mono); font-size: var(--step--1); color: var(--color-slate); }
   .linkbtn { background: none; border: 0; color: var(--color-slate); cursor: pointer; text-decoration: underline; font: inherit; font-size: var(--step--1); }
 
-  .prodgrid { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
-  @media (max-width: 640px) { .prodgrid { grid-template-columns: 1fr; } }
-  .prodcard { display: flex; flex-direction: column; gap: 0.7rem; padding: 1.25rem; border: 1px solid var(--hairline); border-radius: var(--radius); background: var(--color-mist); }
-  .prodcard h2 { font-size: var(--step-1); margin: 0; }
-  .prodhead { display: flex; align-items: baseline; justify-content: space-between; gap: 0.6rem; }
-  .prodstatus { font-family: var(--font-mono); font-size: var(--step--1); font-weight: 700; border-radius: 4px; padding: 0.1rem 0.45rem; white-space: nowrap; }
-  .prodstatus.have { background: color-mix(in srgb, var(--color-recovered) 14%, transparent); color: var(--color-recovered); }
-  .prodstatus.none { background: color-mix(in srgb, var(--color-slate) 15%, transparent); color: var(--color-slate); }
-  .cardlinks { display: flex; align-items: baseline; gap: 1rem; flex-wrap: wrap; margin-top: auto; }
-  .prodcta { align-self: flex-start; }
-  .hint { font-size: var(--step--1); color: var(--color-slate); }
+  .card { display: flex; flex-direction: column; gap: 0.85rem; padding: 1.35rem; border: 1px solid var(--hairline); border-radius: var(--radius); background: var(--color-mist); }
+  .card h2 { font-size: var(--step-1); margin: 0; }
+  .card .sub { font-family: var(--font-mono); font-size: var(--step--1); font-weight: 700; color: var(--color-slate); margin: 0; text-transform: uppercase; letter-spacing: 0.03em; }
+  .cardhead { display: flex; align-items: baseline; justify-content: space-between; gap: 0.6rem; flex-wrap: wrap; }
+  .sec { display: flex; flex-direction: column; gap: 0.5rem; padding-top: 0.9rem; border-top: 1px solid var(--hairline); }
+  .hint { font-size: var(--step--1); color: var(--color-slate); margin: 0; }
+  .cardlinks { display: flex; align-items: baseline; gap: 1.1rem; flex-wrap: wrap; }
+  .cardlinks .btn, .cta { align-self: flex-start; }
+  .inlineform { display: flex; gap: 0.6rem; flex-wrap: wrap; }
+  .inlineform input { flex: 1; min-width: 12rem; }
 
-  .block { display: flex; flex-direction: column; gap: 0.7rem; padding: 1.25rem; border: 1px solid var(--hairline); border-radius: var(--radius); }
-  .block h2 { font-size: var(--step-1); margin: 0; }
+  .chip { font-family: var(--font-mono); font-size: var(--step--1); font-weight: 700; border-radius: 4px; padding: 0.12rem 0.5rem; white-space: nowrap; }
+  .chip.have, .chip.free { background: color-mix(in srgb, var(--color-recovered) 14%, transparent); color: var(--color-recovered); }
+  .chip.none, .chip.used { background: color-mix(in srgb, var(--color-slate) 15%, transparent); color: var(--color-slate); }
+
+  /* 회사 정보(동적 렌더) — 정적 앵커 .profile 하위는 :global 로 */
+  .profile { display: flex; flex-direction: column; gap: 1rem; }
+  .profile :global(.company) { display: flex; flex-direction: column; gap: 0.6rem; }
+  .profile :global(dl) { margin: 0; display: grid; gap: 0.5rem; }
+  .profile :global(dl > div) { display: grid; grid-template-columns: 8rem 1fr; gap: 0.6rem; align-items: center; }
+  .profile :global(dt) { font-family: var(--font-mono); font-size: var(--step--1); color: var(--color-slate); margin: 0; }
+  .profile :global(dd) { margin: 0; font-size: var(--step-0); }
+  .profile :global(.pfrow) { display: flex; align-items: baseline; gap: 0.8rem; }
+  @media (max-width: 480px) { .profile :global(dl > div) { grid-template-columns: 1fr; gap: 0.2rem; } }
 
   .reqlist { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 0.5rem; }
   .reqlist:empty { display: none; }
@@ -313,8 +408,10 @@ const strings = {
   .reqlist :global(.rq-main) { display: flex; flex-direction: column; gap: 0.15rem; min-width: 0; }
   .reqlist :global(.rq-when) { font-family: var(--font-mono); font-size: var(--step--1); color: var(--color-slate); }
   .reqlist :global(.rq-title) { font-weight: 600; }
-  .reqlist :global(.rq-meta) { font-family: var(--font-mono); font-size: var(--step--1); color: var(--color-slate); white-space: nowrap; }
-  .reqlist :global(.rq-status) { font-weight: 700; }
+  .reqlist :global(.rq-meta) { display: flex; flex-direction: column; align-items: flex-end; gap: 0.15rem; font-family: var(--font-mono); font-size: var(--step--1); white-space: nowrap; }
+  .reqlist :global(.rq-status) { font-weight: 700; color: var(--color-slate); }
   .reqlist :global(.rq-status.s-draft) { color: #a2570f; }
   .reqlist :global(.rq-status.s-received) { color: var(--color-recovered); }
+  .reqlist :global(.rq-amt) { color: var(--color-ink); }
+  .reqlist :global(.rq-amt.free) { color: var(--color-recovered); }
 </style>
