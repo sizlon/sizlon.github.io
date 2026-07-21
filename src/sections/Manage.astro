@@ -3,95 +3,52 @@ import Base from '../layouts/Base.astro';
 import { site } from '../config/site';
 import type { Lang } from '../i18n/content';
 import { t, localizePath } from '../i18n/utils';
-// "Manage your requests" page. Modes:
-//   ?t=<token>     → one request (summary + add/replace/delete documents)
-//   ?login=<tok>   → verify a magic-link → session → list of all your requests
-//   (default)      → session? list ; else email+password login (magic link for first-time/forgot)
-// Auth: email+password (portal-compatible bcrypt on the backend), with the magic
-// link as the first-time/forgot path; once logged in you can set/change a password.
-// Documents can be changed while a request is 'draft' or 'received'.
-
+// Miriboa verification management. Reached from the account hub (/account) or an
+// emailed link. Modes:
+//   ?t=<token>  → one request detail (view + add/replace/delete documents). Works
+//                 with or without login (capability link); a logged-in session is
+//                 bound to the owner email server-side.
+//   session     → full list of your requests.
+//   (neither)   → redirect to /account to log in.
+// Login, account settings and the cross-product hub live on /account, not here.
 interface Props { lang: Lang }
 const { lang } = Astro.props;
 const tr = t(lang);
 const c = tr.verifyManage;
 const strings = {
   f: c.f, noDocs: c.noDocs, purgeAt: c.purgeAt, error: c.error, deleteConfirm: c.deleteConfirm,
-  statusMap: c.statusMap, loginSent: c.loginSent, accountEmpty: c.accountEmpty, open: c.open,
-  setPw: c.setPw, updatedLabel: c.updatedLabel, discardConfirm: c.discardConfirm,
-  crawler: { have: c.crawlerHave, none: c.crawlerNone, noneIntro: c.crawlerNoneIntro, noneCta: c.crawlerNoneCta, portal: c.crawlerPortal },
+  statusMap: c.statusMap, updatedLabel: c.updatedLabel, discardConfirm: c.discardConfirm,
 };
 ---
 
-<Base title={c.title} description={c.description} lang={lang}>
+<Base title={c.manageTitle} description={c.description} lang={lang}>
   <section
     class="section wrap manage"
     data-manage-base={site.manageBase}
     data-precheck-endpoint={site.precheckEndpoint}
-    data-auth-request={site.authRequestEndpoint}
-    data-auth-verify={site.authVerifyEndpoint}
-    data-auth-login={site.authLoginEndpoint}
     data-auth-logout={site.authLogoutEndpoint}
-    data-auth-set-password={site.authSetPasswordEndpoint}
     data-account-requests={site.accountRequestsEndpoint}
-    data-account-products={site.accountProductsEndpoint}
+    data-account-path={localizePath('/account', lang)}
     data-manage-path={localizePath('/manage', lang)}
     data-doc-badges={JSON.stringify(c.badges)}
     data-strings={JSON.stringify(strings)}
   >
-    <span class="eyebrow">{c.eyebrow}</span>
-    <h1 data-h1>{c.h1}</h1>
+    <div class="pagehead">
+      <a class="alt" href={localizePath('/account', lang)}>&larr; {c.backToAccount}</a>
+      <button class="linkbtn" type="button" hidden data-logout>{c.logout}</button>
+    </div>
+    <span class="eyebrow">{c.manageEyebrow}</span>
+    <h1>{c.manageH1}</h1>
     <p class="loading" data-loading>{c.loading}</p>
 
-    <!-- LOGIN (email + password; magic link for first-time/forgot) -->
-    <div class="panel" hidden data-login>
-      <p>{c.loginIntro}</p>
-      <form class="loginform" data-login-form>
-        <label><span>{c.loginEmail}</span>
-          <input type="email" name="email" autocomplete="email" maxlength="180" required /></label>
-        <label><span>{c.loginPassword}</span>
-          <input type="password" name="password" autocomplete="current-password" maxlength="200" required /></label>
-        <button class="btn btn-primary" type="submit">{c.loginBtn} <span class="arrow">&rarr;</span></button>
-        <p class="verr" role="alert" hidden data-login-error>{c.loginError}</p>
-      </form>
-      <p class="alt"><button type="button" class="linkbtn" data-magic-link>{c.loginMagic}</button></p>
-      <p class="ok" role="status" hidden data-login-sent>{c.loginSent}</p>
+    <!-- LIST — all your verification requests -->
+    <div class="panel" hidden data-list>
+      <a class="btn btn-primary newcta" href={localizePath('/verify-request', lang)}>{c.newVerify} <span class="arrow">&rarr;</span></a>
+      <ul class="reqlist" data-reqlist></ul>
+      <p class="statusnote" hidden data-account-empty>{c.accountEmpty}</p>
     </div>
 
-    <!-- ACCOUNT hub — one Sizlon account across Miriboa + Crawler Platform -->
-    <div class="panel" hidden data-account>
-      <div class="acct-head">
-        <span class="acct-email" data-acct-email></span>
-        <button class="linkbtn" type="button" data-logout>{c.logout}</button>
-      </div>
-      <div class="prodgrid">
-        <section class="prodcard">
-          <h2>{c.miriboaHeading}</h2>
-          <p class="hint">{c.miriboaIntro}</p>
-          <ul class="reqlist" data-reqlist></ul>
-          <p class="statusnote" hidden data-account-empty>{c.accountEmpty}</p>
-          <a class="btn btn-primary prodcta" href={localizePath('/verify-request', lang)}>{c.newVerify} <span class="arrow">&rarr;</span></a>
-        </section>
-        <section class="prodcard">
-          <div class="prodhead"><h2>{c.crawlerHeading}</h2><span class="prodstatus" hidden data-crawler-status></span></div>
-          <p class="hint" data-crawler-intro>{c.crawlerIntro}</p>
-          <a class="btn btn-ghost prodcta" data-crawler-cta data-portal-href={site.portalLoginUrl} data-contact-href={localizePath('/contact', lang)} href={site.portalLoginUrl} rel="noopener">{c.crawlerPortal} <span class="arrow">&rarr;</span></a>
-        </section>
-      </div>
-      <div class="block setpw" data-setpw hidden>
-        <h2>{c.setPw.heading}</h2>
-        <p class="hint" data-setpw-intro>{c.setPw.intro}</p>
-        <form class="loginform" data-setpw-form>
-          <label><span>{c.setPw.new}</span>
-            <input type="password" name="password" autocomplete="new-password" minlength="8" maxlength="200" required /></label>
-          <button class="btn btn-primary" type="submit">{c.setPw.save}</button>
-        </form>
-        <p class="ok" role="status" hidden data-setpw-saved>{c.setPw.saved}</p>
-        <p class="verr" role="alert" hidden data-setpw-error>{c.setPw.weak}</p>
-      </div>
-    </div>
-
-    <!-- ONE REQUEST -->
+    <!-- ONE REQUEST detail -->
     <p class="verr" role="alert" hidden data-notfound>{c.notFound}</p>
     <div class="panel" hidden data-request>
       <dl class="summary" data-summary></dl>
@@ -125,7 +82,7 @@ const strings = {
       </div>
       <p class="ok" role="status" hidden data-deleted>{c.deleted}</p>
       <p class="ok" role="status" hidden data-discarded>{c.discarded}</p>
-      <p class="alt"><a data-back-account href="#">&larr; {c.accountHeading}</a></p>
+      <p class="alt"><a data-back-list href="#">&larr; {c.manageH1}</a></p>
     </div>
 
     <p class="alt">{c.altPrefix} <a href={localizePath('/contact', lang)}>{c.altQuestion}</a></p>
@@ -136,13 +93,9 @@ const strings = {
   const root = document.querySelector('.manage');
   const base = root && root.getAttribute('data-manage-base');
   const precheckEndpoint = root && root.getAttribute('data-precheck-endpoint');
-  const authRequest = root && root.getAttribute('data-auth-request');
-  const authVerify = root && root.getAttribute('data-auth-verify');
-  const authLogin = root && root.getAttribute('data-auth-login');
   const authLogout = root && root.getAttribute('data-auth-logout');
-  const authSetPassword = root && root.getAttribute('data-auth-set-password');
   const accountEndpoint = root && root.getAttribute('data-account-requests');
-  const productsEndpoint = root && root.getAttribute('data-account-products');
+  const accountPath = root && root.getAttribute('data-account-path') || '/account';
   const managePath = root && root.getAttribute('data-manage-path') || '/manage';
   let S = {}, badges = {};
   try { S = JSON.parse(root.getAttribute('data-strings') || '{}'); } catch { S = {}; }
@@ -154,92 +107,41 @@ const strings = {
   const authHeaders = () => { const s = localStorage.getItem(SKEY); return s ? { Authorization: 'Bearer ' + s } : {}; };
   const q = new URLSearchParams(location.search);
 
-  const loading = $('[data-loading]'), loginP = $('[data-login]'), accountP = $('[data-account]');
-  const requestP = $('[data-request]'), notfound = $('[data-notfound]');
+  const loading = $('[data-loading]'), listP = $('[data-list]'), requestP = $('[data-request]'), notfound = $('[data-notfound]');
   const show = (el) => { if (el) el.hidden = false; };
-  const hideAll = () => { [loading, loginP, accountP, requestP, notfound].forEach((e) => { if (e) e.hidden = true; }); };
+  const hideAll = () => { [loading, listP, requestP, notfound].forEach((e) => { if (e) e.hidden = true; }); };
 
-  // ── mode dispatch ──
-  async function boot() {
-    const t = q.get('t'), login = q.get('login');
-    if (t) return loadRequest(t);
-    if (login) return verifyLogin(login);
+  // 로그인 상태면 로그아웃 버튼을 노출(비로그인 이메일 링크 열람 땐 숨김).
+  const logoutBtn = $('[data-logout]');
+  if (logoutBtn && localStorage.getItem(SKEY)) logoutBtn.hidden = false;
+  if (logoutBtn) logoutBtn.addEventListener('click', () => {
     const sess = localStorage.getItem(SKEY);
-    if (sess) return loadAccount(sess);
-    hideAll(); show(loginP);
-  }
-
-  // ── LOGIN (이메일+비밀번호) ──
-  const loginForm = $('[data-login-form]');
-  if (loginForm) loginForm.addEventListener('submit', async (e) => {
-    e.preventDefault();
-    const errEl = $('[data-login-error]');
-    if (errEl) errEl.hidden = true;
-    const email = loginForm.querySelector('[name="email"]').value.trim();
-    const password = loginForm.querySelector('[name="password"]').value;
-    const btn = loginForm.querySelector('button'); btn.disabled = true;
-    try {
-      const fd = new FormData(); fd.append('email', email); fd.append('password', password);
-      // credentials:'include' → svc.sizlon.io가 심는 .sizlon.io SSO 쿠키를 브라우저가 저장(포털 자동 로그인용).
-      const res = await fetch(authLogin, { method: 'POST', body: fd, credentials: 'include' });
-      const d = await res.json().catch(() => null);
-      if (res.ok && d && d.ok && d.session) {
-        localStorage.setItem(SKEY, d.session);
-        renderAccount(d.email, d.requests || [], !!d.has_password);
-      } else if (errEl) errEl.hidden = false;
-    } catch { if (errEl) errEl.hidden = false; }
-    btn.disabled = false;
+    localStorage.removeItem(SKEY);
+    if (authLogout) { try { fetch(authLogout, { method: 'POST', credentials: 'include', headers: sess ? { Authorization: 'Bearer ' + sess } : {}, keepalive: true }); } catch (e) {} }
+    location.href = accountPath;
   });
 
-  // ── 매직 링크(처음/분실) — 입력한 이메일로 로그인 링크 발송 ──
-  const magicBtn = $('[data-magic-link]');
-  if (magicBtn) magicBtn.addEventListener('click', async () => {
-    const sentEl = $('[data-login-sent]'), errEl = $('[data-login-error]');
-    if (errEl) errEl.hidden = true;
-    const email = (loginForm && loginForm.querySelector('[name="email"]').value.trim()) || '';
-    if (!email) { const inp = loginForm && loginForm.querySelector('[name="email"]'); if (inp) inp.focus(); return; }
-    magicBtn.disabled = true;
-    try {
-      const fd = new FormData(); fd.append('email', email);
-      const res = await fetch(authRequest, { method: 'POST', body: fd });
-      const d = await res.json().catch(() => null);
-      if (res.ok && d && d.ok) { if (sentEl) sentEl.hidden = false; if (loginForm) loginForm.hidden = true; magicBtn.hidden = true; }
-      else if (errEl) errEl.hidden = false;
-    } catch { if (errEl) errEl.hidden = false; }
-    magicBtn.disabled = false;
-  });
-
-  async function verifyLogin(token) {
-    hideAll(); show(loading);
-    try {
-      const fd = new FormData(); fd.append('token', token);
-      const res = await fetch(authVerify, { method: 'POST', body: fd, credentials: 'include' });
-      const d = await res.json().catch(() => null);
-      if (res.ok && d && d.ok && d.session) {
-        localStorage.setItem(SKEY, d.session);
-        history.replaceState(null, '', managePath);   // 링크에서 토큰 제거
-        renderAccount(d.email, d.requests || [], !!d.has_password);
-      } else { hideAll(); show(loginP); }   // 만료/무효 → 다시 로그인
-    } catch { hideAll(); show(loginP); }
+  async function boot() {
+    const tok = q.get('t'), login = q.get('login');
+    if (tok) return loadRequest(tok);
+    if (login) { location.href = accountPath + '?login=' + encodeURIComponent(login); return; }   // 로그인은 허브에서
+    const sess = localStorage.getItem(SKEY);
+    if (sess) return loadList(sess);
+    location.href = accountPath;
   }
 
-  async function loadAccount(session) {
+  async function loadList(session) {
     hideAll(); show(loading);
     try {
       const res = await fetch(accountEndpoint, { headers: { Authorization: 'Bearer ' + session } });
       const d = await res.json().catch(() => null);
-      if (res.ok && d && d.ok) renderAccount(d.email, d.requests || [], !!d.has_password);
-      else { localStorage.removeItem(SKEY); hideAll(); show(loginP); }
-    } catch { hideAll(); show(loginP); }
+      if (res.ok && d && d.ok) renderList(d.requests || []);
+      else { localStorage.removeItem(SKEY); location.href = accountPath; }
+    } catch { hideAll(); show(notfound); }
   }
 
-  function renderAccount(email, requests, hasPassword) {
+  function renderList(requests) {
     hideAll();
-    const em = $('[data-acct-email]'); if (em) em.textContent = email;
-    // 비밀번호 설정/변경 블록: 미설정이면 안내를 강조.
-    const setpw = $('[data-setpw]'), setpwIntro = $('[data-setpw-intro]');
-    if (setpw) setpw.hidden = false;
-    if (setpwIntro && S.setPw) setpwIntro.textContent = hasPassword ? S.setPw.intro : S.setPw.introFirst;
     const list = $('[data-reqlist]'), empty = $('[data-account-empty]');
     if (list) {
       list.innerHTML = '';
@@ -258,70 +160,11 @@ const strings = {
       });
     }
     if (empty) empty.hidden = requests.length > 0;
-    show(accountP);
-    updateCrawlerProduct();
+    show(listP);
   }
 
-  // 계정 허브의 Crawler Platform 카드에 보유 상태를 반영(포털 측 내부 조회 경유).
-  // crawler_known=false(조회 불가)면 기본(포털 열기)을 그대로 둔다.
-  async function updateCrawlerProduct() {
-    const sess = localStorage.getItem(SKEY);
-    if (!sess || !productsEndpoint) return;
-    let d = null;
-    try {
-      const res = await fetch(productsEndpoint, { headers: { Authorization: 'Bearer ' + sess } });
-      d = await res.json().catch(() => null);
-    } catch { return; }
-    if (!d || !d.ok || !d.crawler_known) return;
-    const cw = S.crawler || {};
-    const badge = $('[data-crawler-status]'), intro = $('[data-crawler-intro]'), cta = $('[data-crawler-cta]');
-    if (d.crawler) {
-      if (badge) { badge.textContent = cw.have || ''; badge.classList.add('have'); badge.hidden = false; }
-    } else {
-      if (badge) { badge.textContent = cw.none || ''; badge.classList.add('none'); badge.hidden = false; }
-      if (intro && cw.noneIntro) intro.textContent = cw.noneIntro;
-      if (cta) {
-        const contact = cta.getAttribute('data-contact-href');
-        if (contact) cta.setAttribute('href', contact);
-        cta.removeAttribute('rel');
-        if (cw.noneCta && cta.firstChild) cta.firstChild.textContent = cw.noneCta + ' ';
-      }
-    }
-  }
-
-  const logoutBtn = $('[data-logout]');
-  if (logoutBtn) logoutBtn.addEventListener('click', () => {
-    const sess = localStorage.getItem(SKEY);
-    localStorage.removeItem(SKEY);
-    // 세션 무효화 + .sizlon.io SSO 쿠키 제거(포털 자동 로그인도 함께 끊긴다).
-    if (authLogout) { try { fetch(authLogout, { method: 'POST', credentials: 'include', headers: sess ? { Authorization: 'Bearer ' + sess } : {}, keepalive: true }); } catch (e) {} }
-    location.href = managePath;
-  });
-
-  // ── 비밀번호 설정/변경 (현재 세션으로) ──
-  const setpwForm = $('[data-setpw-form]');
-  if (setpwForm) setpwForm.addEventListener('submit', async (e) => {
-    e.preventDefault();
-    const savedEl = $('[data-setpw-saved]'), errEl = $('[data-setpw-error]');
-    if (savedEl) savedEl.hidden = true; if (errEl) errEl.hidden = true;
-    const session = localStorage.getItem(SKEY);
-    const password = setpwForm.querySelector('[name="password"]').value;
-    if (!session) { location.href = managePath; return; }
-    if (password.length < 8) { if (errEl) errEl.hidden = false; return; }
-    const btn = setpwForm.querySelector('button'); btn.disabled = true;
-    try {
-      const fd = new FormData(); fd.append('password', password);
-      const res = await fetch(authSetPassword, { method: 'POST', body: fd, headers: { Authorization: 'Bearer ' + session } });
-      const d = await res.json().catch(() => null);
-      if (res.ok && d && d.ok) {
-        if (savedEl) savedEl.hidden = false; setpwForm.reset();
-        const intro = $('[data-setpw-intro]'); if (intro && S.setPw) intro.textContent = S.setPw.intro;
-      } else if (errEl) errEl.hidden = false;
-    } catch { if (errEl) errEl.hidden = false; }
-    btn.disabled = false;
-  });
-  const backAccount = $('[data-back-account]');
-  if (backAccount) backAccount.addEventListener('click', (e) => { e.preventDefault(); location.href = managePath; });
+  const backList = $('[data-back-list]');
+  if (backList) backList.addEventListener('click', (e) => { e.preventDefault(); location.href = managePath; });
 
   // ── ONE REQUEST (summary + edit) ──
   const summary = $('[data-summary]'), editblock = $('[data-editblock]');
@@ -356,14 +199,12 @@ const strings = {
       if (!res.ok || !d || !d.ok) { hideAll(); show(notfound); return; }
       hideAll(); renderSummary(d);
       if (d.editable) {
-        // draft(미접수)면 '신청 자체 삭제', 접수(received)면 '문서 파기'를 보인다.
         const isDraft = d.status === 'draft';
         if (purgeBlock) purgeBlock.hidden = isDraft;
         if (discardBlock) discardBlock.hidden = !isDraft;
         show(editblock);
       } else if (d.purged) show(purgedEl);
       else show(lockedEl);
-      // 로그인 세션이 없으면 '목록으로' 링크는 로그인으로 보낸다
       show(requestP);
     } catch { hideAll(); show(notfound); }
   }
@@ -430,7 +271,6 @@ const strings = {
       else delBtn.disabled = false;
     } catch { delBtn.disabled = false; }
   });
-  // draft(신청 자체) 삭제 — 성공하면 신청은 사라지므로 요약·편집을 감추고 안내만 남긴다.
   const discardBtn = $('[data-discard]');
   if (discardBtn) discardBtn.addEventListener('click', async () => {
     if (!confirm(S.discardConfirm || 'Delete draft?')) return;
@@ -458,29 +298,13 @@ const strings = {
   .ok { color: var(--color-recovered); font-weight: 600; }
   .panel { display: flex; flex-direction: column; gap: 1.1rem; }
   .alt { color: var(--color-slate); margin: 0; }
-  .alt a { color: var(--color-ink); text-decoration: underline; text-decoration-color: var(--color-recovered); text-underline-offset: 3px; }
-
-  .loginform { display: flex; flex-direction: column; gap: 0.7rem; max-width: 22rem; }
-  .loginform label { display: flex; flex-direction: column; gap: 0.4rem; }
-  .loginform label span { font-family: var(--font-mono); font-size: var(--step--1); color: var(--color-slate); }
-  .loginform input { font-family: var(--font-body); font-size: var(--step-0); color: var(--color-ink); background: var(--color-vellum); border: 1px solid var(--hairline); border-radius: var(--radius); padding: 0.7rem 0.85rem; }
-  .loginform .btn { align-self: flex-start; }
-
-  .acct-head { display: flex; justify-content: space-between; align-items: baseline; gap: 1rem; }
-  .acct-email { font-family: var(--font-mono); font-size: var(--step--1); color: var(--color-slate); }
+  .alt a, a.alt { color: var(--color-ink); text-decoration: underline; text-decoration-color: var(--color-recovered); text-underline-offset: 3px; }
+  .pagehead { display: flex; justify-content: space-between; align-items: baseline; gap: 1rem; }
   .linkbtn { background: none; border: 0; color: var(--color-slate); cursor: pointer; text-decoration: underline; font: inherit; font-size: var(--step--1); }
-  /* Sizlon 계정 허브: 미리보아·Crawler Platform 두 제품 카드 */
-  .prodgrid { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
-  @media (max-width: 640px) { .prodgrid { grid-template-columns: 1fr; } }
-  .prodcard { display: flex; flex-direction: column; gap: 0.7rem; padding: 1.25rem; border: 1px solid var(--hairline); border-radius: var(--radius); background: var(--color-mist); }
-  .prodcard h2 { font-size: var(--step-1); margin: 0; }
-  .prodhead { display: flex; align-items: baseline; justify-content: space-between; gap: 0.6rem; }
-  .prodstatus { font-family: var(--font-mono); font-size: var(--step--1); font-weight: 700; border-radius: 4px; padding: 0.1rem 0.45rem; white-space: nowrap; }
-  .prodstatus.have { background: color-mix(in srgb, var(--color-recovered) 14%, transparent); color: var(--color-recovered); }
-  .prodstatus.none { background: color-mix(in srgb, var(--color-slate) 15%, transparent); color: var(--color-slate); }
-  .prodcta { align-self: flex-start; margin-top: auto; }
-  /* 아래 목록들(reqlist·summary·filelist 내부)은 JS innerHTML로 그려져 Astro
-     스코프 속성이 없다. 정적 앵커(data-* 컨테이너) 하위는 :global()로 풀어야 먹는다. */
+  .newcta { align-self: flex-start; }
+
+  /* 목록 항목(li·fname·fbadge 내부)은 JS innerHTML로 그려져 Astro 스코프 속성이
+     없다. 정적 앵커(data-* 컨테이너) 하위는 :global()로 풀어야 먹는다. */
   .reqlist { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 0.5rem; }
   .reqlist :global(a) { display: flex; justify-content: space-between; align-items: center; gap: 1rem; padding: 0.9rem 1.1rem; border: 1px solid var(--hairline); border-radius: var(--radius); background: var(--color-mist); text-decoration: none; color: var(--color-ink); transition: border-color .15s ease; }
   .reqlist :global(a:hover) { border-color: var(--color-recovered); }
