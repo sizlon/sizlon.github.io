@@ -49,6 +49,7 @@ const privacyHref = localizePath('/legal/privacy', lang);
         data-notice-endpoint={site.noticeLookupEndpoint}
         data-precheck-endpoint={site.precheckEndpoint}
         data-doc-badges={JSON.stringify(c.docs.badges)}
+        data-manage-path={localizePath('/manage', lang)}
         data-turnstile={turnstileKey ? 'on' : undefined}
       >
         <fieldset>
@@ -156,6 +157,7 @@ const privacyHref = localizePath('/legal/privacy', lang);
         <p hidden data-sent-first>{c.sentFirst}</p>
         <p hidden data-sent-first-express>{c.sentFirstExpress}</p>
         <p hidden data-sent-returning>{c.sentReturning}</p>
+        <p class="sent-manage" hidden data-sent-manage><a data-sent-manage-link href="">{c.sentManage} <span class="arrow">&rarr;</span></a></p>
       </div>
     </div>
   </section>
@@ -379,6 +381,13 @@ const privacyHref = localizePath('/legal/privacy', lang);
           if (pf) pf.hidden = !(first && !paid);
           if (pfx) pfx.hidden = !(first && paid);
           if (pr) pr.hidden = first;
+          // 관리 링크 — 이메일로도 가지만 완료 화면에 바로 노출(서류 추가·파기).
+          const sm = sent.querySelector('[data-sent-manage]');
+          const smLink = sent.querySelector('[data-sent-manage-link]');
+          if (sm && smLink && data.manage_token) {
+            smLink.setAttribute('href', (form.getAttribute('data-manage-path') || '/manage') + '?t=' + encodeURIComponent(data.manage_token));
+            sm.hidden = false;
+          }
           form.hidden = true;
           sent.hidden = false;
           sent.focus();  // 스크린리더 포커스를 완료 영역으로 옮긴다(성공을 알린다)
@@ -470,6 +479,7 @@ const privacyHref = localizePath('/legal/privacy', lang);
   .hp { position: absolute; left: -9999px; width: 1px; height: 1px; overflow: hidden; }
   .sent { padding: 1.75rem; border: 1px solid var(--color-recovered); border-radius: var(--radius); background: var(--color-mist); display: flex; flex-direction: column; gap: 0.6rem; }
   .sent h2 { font-size: var(--step-1); }
+  .sent-manage a { color: var(--color-ink); font-weight: 600; text-decoration: underline; text-decoration-color: var(--color-recovered); text-underline-offset: 3px; }
 
   @media (max-width: 760px) { .grid { grid-template-columns: 1fr; } }
 </style>

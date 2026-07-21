@@ -1,0 +1,247 @@
+---
+import Base from '../layouts/Base.astro';
+import { site } from '../config/site';
+import type { Lang } from '../i18n/content';
+import { t, localizePath } from '../i18n/utils';
+// Login-less "manage your request" page. Reads ?t=<token> and talks to the
+// site-backend: GET <manageBase>/<token> (summary), POST /documents (add/replace),
+// POST /delete (immediate purge). The token is the only key — no account. Documents
+// can only be changed while the request is still 'received' (before verification).
+
+interface Props { lang: Lang }
+const { lang } = Astro.props;
+const tr = t(lang);
+const c = tr.verifyManage;
+const strings = { f: c.f, noDocs: c.noDocs, purgeAt: c.purgeAt, error: c.error, deleteConfirm: c.deleteConfirm };
+---
+
+<Base title={c.title} description={c.description} lang={lang}>
+  <section
+    class="section wrap manage"
+    data-manage-base={site.manageBase}
+    data-precheck-endpoint={site.precheckEndpoint}
+    data-doc-badges={JSON.stringify(c.badges)}
+    data-strings={JSON.stringify(strings)}
+  >
+    <span class="eyebrow">{c.eyebrow}</span>
+    <h1>{c.h1}</h1>
+
+    <p class="loading" data-loading>{c.loading}</p>
+    <p class="verr" role="alert" hidden data-notfound>{c.notFound}</p>
+
+    <div class="panel" hidden data-panel>
+      <dl class="summary" data-summary></dl>
+
+      <p class="statusnote" hidden data-locked>{c.lockedNote}</p>
+      <p class="statusnote" hidden data-purged>{c.purgedNote}</p>
+
+      <div class="editblock" hidden data-editblock>
+        <div class="block">
+          <h2>{c.addHeading}</h2>
+          <p class="hint">{c.addIntro}</p>
+          <label class="drop" tabindex="0" data-drop>
+            <span class="drop-big">{c.dropBig}</span>
+            <span class="hint">{c.dropHint}</span>
+            <input type="file" multiple accept=".hwp,.hwpx,.pdf,.docx,.xlsx,.xlsm,.txt,.md" data-docs-input />
+          </label>
+          <p class="lookup-status" hidden data-docs-checking>{tr.verifyRequest.docs.checking}</p>
+          <ul class="filelist" data-filelist></ul>
+          <button class="btn btn-primary" type="button" data-save>{c.saveBtn}</button>
+          <p class="ok" role="status" hidden data-saved>{c.saved}</p>
+          <p class="verr" role="alert" hidden data-error>{c.error}</p>
+        </div>
+        <div class="block danger">
+          <h2>{c.deleteHeading}</h2>
+          <p class="hint">{c.deleteIntro}</p>
+          <button class="btn btn-danger" type="button" data-delete>{c.deleteBtn}</button>
+        </div>
+      </div>
+
+      <p class="ok" role="status" hidden data-deleted>{c.deleted}</p>
+    </div>
+
+    <p class="alt">{c.altPrefix} <a href={localizePath('/contact', lang)}>{c.altQuestion}</a></p>
+  </section>
+</Base>
+
+<script>
+  const root = document.querySelector('.manage');
+  const base = root && root.getAttribute('data-manage-base');
+  const precheckEndpoint = root && root.getAttribute('data-precheck-endpoint');
+  let S = {}, badges = {};
+  try { S = JSON.parse((root && root.getAttribute('data-strings')) || '{}'); } catch { S = {}; }
+  try { badges = JSON.parse((root && root.getAttribute('data-doc-badges')) || '{}'); } catch { badges = {}; }
+  const $ = (sel) => root && root.querySelector(sel);
+  const esc = (s) => String(s == null ? '' : s).replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+  const token = new URLSearchParams(location.search).get('t') || '';
+
+  const loading = $('[data-loading]'), notfound = $('[data-notfound]'), panel = $('[data-panel]');
+  const summary = $('[data-summary]'), editblock = $('[data-editblock]');
+  const lockedEl = $('[data-locked]'), purgedEl = $('[data-purged]'), deletedEl = $('[data-deleted]');
+
+  function fail() { if (loading) loading.hidden = true; if (notfound) notfound.hidden = false; }
+
+  function renderSummary(d) {
+    if (!summary) return;
+    const f = S.f || {};
+    const rows = [
+      [f.notice, ((d.notice_no || '') + ' ' + (d.notice_name || '')).trim()],
+      [f.deadline, d.deadline],
+      [f.institution, d.institution],
+      [f.status, d.status],
+    ];
+    let html = rows.filter((r) => r[1]).map((r) => '<div><dt>' + esc(r[0]) + '</dt><dd>' + esc(r[1]) + '</dd></div>').join('');
+    const docs = (d.doc_names && d.doc_names.length)
+      ? d.doc_names.map((n) => '<li>' + esc(n) + '</li>').join('')
+      : '<li class="muted">' + esc(S.noDocs) + '</li>';
+    html += '<div><dt>' + esc(f.docs) + '</dt><dd><ul class="docnames">' + docs + '</ul>';
+    if (d.purge_at && d.doc_count) {
+      const dt = String(d.purge_at).slice(0, 10);
+      html += '<p class="purge">' + esc(S.purgeAt) + ' ' + esc(dt) + '</p>';
+    }
+    html += '</dd></div>';
+    summary.innerHTML = html;
+  }
+
+  async function load() {
+    if (!token || !base) return fail();
+    try {
+      const res = await fetch(base + '/' + encodeURIComponent(token));
+      const d = await res.json().catch(() => null);
+      if (!res.ok || !d || !d.ok) return fail();
+      if (loading) loading.hidden = true;
+      if (panel) panel.hidden = false;
+      renderSummary(d);
+      if (d.editable) { if (editblock) editblock.hidden = false; }
+      else if (d.purged) { if (purgedEl) purgedEl.hidden = false; }
+      else { if (lockedEl) lockedEl.hidden = false; }
+    } catch { fail(); }
+  }
+
+  // 드롭존(추가·교체) — verify 폼과 동일 패턴. 선택 파일을 input.files에 담아 저장 시 전송.
+  const docInput = $('[data-docs-input]'), drop = $('[data-drop]');
+  const filelist = $('[data-filelist]'), docChecking = $('[data-docs-checking]');
+  function renderFiles(arr, statuses) {
+    if (!filelist) return;
+    filelist.innerHTML = '';
+    arr.forEach((f, i) => {
+      const st = statuses && statuses[i];
+      const badge = st ? '<span class="fbadge ' + st.status + '">' + esc(badges[st.status] || st.status) + '</span>' : '';
+      const li = document.createElement('li');
+      li.innerHTML = '<span class="fname">' + esc(f.name) + '</span>' + badge;
+      filelist.appendChild(li);
+    });
+  }
+  function setFiles(arr2) {
+    const arr = arr2.slice(0, 20).filter((f) => f.size <= 40 * 1024 * 1024);
+    const dt = new DataTransfer();
+    arr.forEach((f) => dt.items.add(f));
+    if (docInput) docInput.files = dt.files;
+    renderFiles(arr, null);
+    if (arr.length) precheckFiles(arr);
+  }
+  let pcSeq = 0;
+  async function precheckFiles(arr) {
+    if (!precheckEndpoint) return;
+    const seq = ++pcSeq;
+    if (docChecking) docChecking.hidden = false;
+    const fd = new FormData();
+    arr.forEach((f) => fd.append('files', f, f.name));
+    try {
+      const res = await fetch(precheckEndpoint, { method: 'POST', body: fd });
+      const data = await res.json().catch(() => null);
+      if (seq !== pcSeq) return;
+      if (docChecking) docChecking.hidden = true;
+      if (data && data.files) {
+        const byName = {}; data.files.forEach((r) => { byName[r.name] = r; });
+        renderFiles(arr, arr.map((f) => byName[f.name] || null));
+      }
+    } catch { if (seq === pcSeq && docChecking) docChecking.hidden = true; }
+  }
+  if (docInput) docInput.addEventListener('change', () => setFiles([...docInput.files]));
+  if (drop && docInput) {
+    ['dragenter', 'dragover'].forEach((ev) => drop.addEventListener(ev, (e) => { e.preventDefault(); drop.classList.add('over'); }));
+    ['dragleave', 'drop'].forEach((ev) => drop.addEventListener(ev, (e) => { e.preventDefault(); drop.classList.remove('over'); }));
+    drop.addEventListener('drop', (e) => { if (e.dataTransfer) setFiles([...e.dataTransfer.files]); });
+    drop.addEventListener('keydown', (e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); docInput.click(); } });
+  }
+
+  const saveBtn = $('[data-save]'), savedEl = $('[data-saved]'), errEl = $('[data-error]');
+  if (saveBtn) saveBtn.addEventListener('click', async () => {
+    if (errEl) errEl.hidden = true; if (savedEl) savedEl.hidden = true;
+    if (!docInput || !docInput.files.length) return;
+    const label = saveBtn.textContent; saveBtn.disabled = true;
+    const fd = new FormData();
+    [...docInput.files].forEach((f) => fd.append('documents', f, f.name));
+    try {
+      const res = await fetch(base + '/' + encodeURIComponent(token) + '/documents', { method: 'POST', body: fd });
+      const d = await res.json().catch(() => null);
+      if (res.ok && d && d.ok) { if (savedEl) savedEl.hidden = false; load(); }
+      else if (errEl) errEl.hidden = false;
+    } catch { if (errEl) errEl.hidden = false; }
+    saveBtn.disabled = false; saveBtn.textContent = label;
+  });
+
+  const delBtn = $('[data-delete]');
+  if (delBtn) delBtn.addEventListener('click', async () => {
+    if (!confirm(S.deleteConfirm || 'Delete?')) return;
+    delBtn.disabled = true;
+    try {
+      const res = await fetch(base + '/' + encodeURIComponent(token) + '/delete', { method: 'POST' });
+      const d = await res.json().catch(() => null);
+      if (res.ok && d && d.ok) {
+        if (editblock) editblock.hidden = true;
+        if (deletedEl) deletedEl.hidden = false;
+        load();
+      } else delBtn.disabled = false;
+    } catch { delBtn.disabled = false; }
+  });
+
+  load();
+</script>
+
+<style>
+  [hidden] { display: none !important; }
+  .manage { max-width: 640px; display: flex; flex-direction: column; gap: 1rem; }
+  .loading, .statusnote { color: var(--color-slate); }
+  .statusnote { padding: 0.9rem 1.1rem; border: 1px solid var(--hairline); border-radius: var(--radius); background: var(--color-mist); }
+  .verr { color: #b3261e; }
+  .ok { color: var(--color-recovered); font-weight: 600; }
+  .panel { display: flex; flex-direction: column; gap: 1.25rem; }
+
+  .summary { margin: 0; display: grid; gap: 0.5rem; padding: 1.1rem 1.25rem; border: 1px solid var(--hairline); border-radius: var(--radius); background: var(--color-mist); }
+  .summary > div { display: grid; grid-template-columns: 6rem 1fr; gap: 0.6rem; align-items: baseline; }
+  .summary dt { font-family: var(--font-mono); font-size: var(--step--1); color: var(--color-slate); margin: 0; }
+  .summary dd { margin: 0; }
+  .docnames { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 0.15rem; }
+  .docnames .muted { color: var(--color-slate); }
+  .summary .purge { font-size: var(--step--1); color: var(--color-slate); margin: 0.35rem 0 0; }
+
+  .editblock { display: flex; flex-direction: column; gap: 1.5rem; }
+  .block { display: flex; flex-direction: column; gap: 0.7rem; padding: 1.25rem; border: 1px solid var(--hairline); border-radius: var(--radius); }
+  .block.danger { border-color: color-mix(in srgb, #b3261e 40%, var(--hairline)); }
+  .block h2 { font-size: var(--step-1); margin: 0; }
+  .hint { font-size: var(--step--1); color: var(--color-slate); }
+  .lookup-status { font-size: var(--step--1); color: var(--color-slate); margin: 0; }
+
+  .drop { display: block; border: 2px dashed var(--hairline); border-radius: var(--radius); background: var(--color-vellum); padding: 1.4rem 1rem; text-align: center; cursor: pointer; transition: border-color .15s ease; }
+  .drop:hover, .drop.over { border-color: var(--color-recovered); }
+  .drop:focus-visible { outline: 2px solid var(--color-recovered); outline-offset: 2px; }
+  .drop .drop-big { display: block; font-weight: 600; }
+  .drop .hint { display: block; margin-top: 0.4rem; }
+  .drop input { display: none; }
+  .filelist { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 0.4rem; }
+  .filelist:empty { display: none; }
+  .filelist li { display: flex; align-items: center; gap: 0.6rem; justify-content: space-between; background: var(--color-vellum); border: 1px solid var(--hairline); border-radius: var(--radius); padding: 0.45rem 0.7rem; }
+  .filelist .fname { font-size: var(--step--1); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .fbadge { font-family: var(--font-mono); font-size: var(--step--1); font-weight: 700; border-radius: 4px; padding: 0.1rem 0.45rem; white-space: nowrap; }
+  .fbadge.ok { background: color-mix(in srgb, var(--color-recovered) 14%, transparent); color: var(--color-recovered); }
+  .fbadge.suspect, .fbadge.failed { background: color-mix(in srgb, var(--color-fault) 14%, transparent); color: var(--color-fault); }
+  .fbadge.unsupported { background: color-mix(in srgb, var(--color-slate) 15%, transparent); color: var(--color-slate); }
+
+  .btn-danger { align-self: flex-start; background: #b3261e; color: #fff; border-color: #b3261e; }
+  .btn-danger:hover { background: #8f1e18; }
+  .btn.btn-primary { align-self: flex-start; }
+  .alt { color: var(--color-slate); }
+  .alt a { color: var(--color-ink); text-decoration: underline; text-decoration-color: var(--color-recovered); text-underline-offset: 3px; }
+</style>

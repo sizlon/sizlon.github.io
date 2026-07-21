@@ -22,6 +22,9 @@ export const site = {
   // Precheck (miriboa-precheck, check.sizlon.io): parses each dropped file transiently
   // (deleted immediately, no AI reads it) to flag scans/corrupt files before submission.
   precheckEndpoint: 'https://check.sizlon.io/api/precheck',
+  // Manage-request base (site-backend). The /manage page reads ?t=<token> and calls
+  // GET <base>/<token>, POST <base>/<token>/documents, POST <base>/<token>/delete.
+  manageBase: 'https://svc.sizlon.io/r',
   // Cloudflare Turnstile site key (public). Set this AND the TURNSTILE_SECRET
   // script property in Apps Script to activate bot verification. While empty,
   // the widget is not rendered and the server skips the Turnstile check.
