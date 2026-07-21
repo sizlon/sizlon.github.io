@@ -29,7 +29,7 @@ const homeHref = localizePath('/', lang);
     </nav>
 
     <div class="utility">
-      <a class="portal" href={site.portalLoginUrl} rel="noopener">{tr.common.portalLogin} &rarr;</a>
+      <a class="portal" href={localizePath('/manage', lang)}><span data-acct-text data-login={tr.common.login} data-account={tr.common.account}>{tr.common.login}</span> &rarr;</a>
       <span class="lang" aria-label="Language">
         <a href={localizePath(logical, 'en')} data-lang-choice="en" aria-current={lang === 'en' ? 'true' : undefined}>EN</a>
         <span class="sep">/</span>
@@ -59,7 +59,7 @@ const homeHref = localizePath('/', lang);
 
         <div class="m-divider"></div>
 
-        <a class="m-portal" href={site.portalLoginUrl} rel="noopener">{tr.common.portalLogin} &rarr;</a>
+        <a class="m-portal" href={localizePath('/manage', lang)}><span data-acct-text data-login={tr.common.login} data-account={tr.common.account}>{tr.common.login}</span> &rarr;</a>
         <span class="m-lang" aria-label="Language">
           <a href={localizePath(logical, 'en')} data-lang-choice="en" aria-current={lang === 'en' ? 'true' : undefined}>EN</a>
           <span class="sep">/</span>
@@ -95,6 +95,15 @@ const homeHref = localizePath('/', lang);
       try { localStorage.setItem('lang', el.getAttribute('data-lang-choice') || ''); } catch (e) {}
     });
   });
+
+  // Sizlon 계정(미리보아 세션) 로그인 상태를 nav에 반영: 로그인 중이면 '내 계정'.
+  try {
+    if (localStorage.getItem('miriboa_session')) {
+      document.querySelectorAll<HTMLElement>('[data-acct-text]').forEach((el) => {
+        if (el.dataset.account) el.textContent = el.dataset.account;
+      });
+    }
+  } catch (e) {}
 </script>
 
 <style>

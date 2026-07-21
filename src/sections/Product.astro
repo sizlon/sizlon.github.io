@@ -2,7 +2,7 @@
 import Base from '../layouts/Base.astro';
 import JumpNav from '../components/JumpNav.astro';
 import StrategyLadder from '../components/StrategyLadder.astro';
-import { crawlerPages } from '../config/site';
+import { crawlerPages, site } from '../config/site';
 import type { Lang } from '../i18n/content';
 import { t, localizePath } from '../i18n/utils';
 
@@ -20,6 +20,7 @@ const c = tr.product;
     <div class="cta-row">
       <a class="btn btn-primary" href={`${localizePath('/contact', lang)}?topic=demo`}>{tr.common.requestDemo} <span class="arrow">&rarr;</span></a>
       <a class="btn btn-ghost" href={localizePath('/how-it-works', lang)}>{c.ctaHeal}</a>
+      <a class="btn btn-ghost" href={site.portalLoginUrl} rel="noopener">{tr.common.customerPortal} <span class="arrow">&rarr;</span></a>
     </div>
     <JumpNav items={c.jump} label={c.jumpLabel} />
   </section>
