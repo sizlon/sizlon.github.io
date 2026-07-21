@@ -153,7 +153,7 @@ const stepKeys = ['notice', 'who', 'docs', 'nda', 'done'] as const;
         <!-- STEP 4 · NDA / confidentiality agreement -->
         <fieldset class="step" data-step="4" hidden>
           <legend>{c.nda.heading}</legend>
-          <p class="hint nda-intro">{c.nda.intro} <a href={termsHref}>{c.nda.link}</a>.</p>
+          <p class="hint nda-intro">{c.nda.intro} <button type="button" class="linklike" data-nda-open>{c.nda.link}</button>.</p>
           <label class="check consent-check">
             <input type="checkbox" name="nda" data-nda />
             <span class="checktext"><span class="checklabel">{c.nda.agree}</span></span>
@@ -179,6 +179,22 @@ const stepKeys = ['notice', 'who', 'docs', 'nda', 'done'] as const;
       </div>
     </div>
   </section>
+
+  <dialog class="nda-modal" data-nda-modal>
+    <article>
+      <header>
+        <h2>{c.nda.docTitle}</h2>
+        <button type="button" class="nda-close" data-nda-close aria-label={c.nda.close}>&times;</button>
+      </header>
+      <div class="nda-body">
+        {c.nda.doc.map((p) => (<p>{p}</p>))}
+      </div>
+      <footer>
+        <a href={termsHref} target="_blank" rel="noopener">{c.nda.fullTerms} &rarr;</a>
+        <button type="button" class="btn btn-primary" data-nda-agree>{c.nda.agreeBtn}</button>
+      </footer>
+    </article>
+  </dialog>
 </Base>
 
 {turnstileKey && (
@@ -358,6 +374,18 @@ const stepKeys = ['notice', 'who', 'docs', 'nda', 'done'] as const;
     // step4: NDA(기밀유지)에 동의해야 '신청 완료'를 활성화한다.
     function refreshStep4() { if (submitBtn) submitBtn.disabled = !(ndaCheck && ndaCheck.checked); }
     if (ndaCheck) ndaCheck.addEventListener('change', refreshStep4);
+    // NDA 전문은 페이지 이동 없이 모달로 확인한다.
+    const ndaModal = document.querySelector('[data-nda-modal]');
+    const openNda = () => { if (ndaModal && ndaModal.showModal) ndaModal.showModal(); };
+    const closeNda = () => { if (ndaModal && ndaModal.close) ndaModal.close(); };
+    const ndaOpenBtn = $('[data-nda-open]');
+    if (ndaOpenBtn) ndaOpenBtn.addEventListener('click', openNda);
+    if (ndaModal) {
+      const cb = ndaModal.querySelector('[data-nda-close]'); if (cb) cb.addEventListener('click', closeNda);
+      const ab = ndaModal.querySelector('[data-nda-agree]');
+      if (ab) ab.addEventListener('click', () => { if (ndaCheck) { ndaCheck.checked = true; refreshStep4(); } closeNda(); });
+      ndaModal.addEventListener('click', (e) => { if (e.target === ndaModal) closeNda(); });   // 백드롭 클릭 닫기
+    }
     // 여러 번에 나눠 넣어도 쌓인다(FileList는 불변이라 배열로 관리). 같은 이름은 최신으로 교체.
     let docFiles = [], statusByName = {};
     const MAXF = 20, MAXB = 40 * 1024 * 1024;
@@ -535,4 +563,19 @@ const stepKeys = ['notice', 'who', 'docs', 'nda', 'done'] as const;
   .sent h2 { font-size: var(--step-1); }
   .sent-manage a { color: var(--color-ink); font-weight: 600; text-decoration: underline; text-decoration-color: var(--color-recovered); text-underline-offset: 3px; }
   @media (max-width: 760px) { .grid { grid-template-columns: 1fr; } }
+
+  /* NDA 전문을 페이지 이동 없이 보는 모달(네이티브 dialog). 내용은 정적 마크업이라 스코프 CSS가 그대로 먹는다. */
+  .linklike { font: inherit; color: var(--color-recovered); background: none; border: none; padding: 0; cursor: pointer; text-decoration: underline; text-underline-offset: 2px; }
+  .linklike:hover { opacity: 0.8; }
+  .nda-modal { border: none; border-radius: var(--radius); padding: 0; max-width: 40rem; width: calc(100% - 2rem); background: var(--color-mist); color: var(--color-ink); box-shadow: 0 12px 40px rgba(0, 0, 0, 0.25); }
+  .nda-modal::backdrop { background: rgba(20, 20, 24, 0.5); }
+  .nda-modal article { display: flex; flex-direction: column; max-height: 85vh; }
+  .nda-modal header { display: flex; align-items: baseline; justify-content: space-between; gap: 1rem; padding: 1.25rem 1.4rem 0.6rem; }
+  .nda-modal header h2 { margin: 0; font-size: var(--step-1); }
+  .nda-close { border: none; background: none; cursor: pointer; font-size: 1.5rem; line-height: 1; color: var(--color-slate); padding: 0 0.2rem; }
+  .nda-close:hover { color: var(--color-ink); }
+  .nda-body { overflow-y: auto; padding: 0.4rem 1.4rem 1rem; display: flex; flex-direction: column; gap: 0.7rem; }
+  .nda-body p { margin: 0; font-size: var(--step--1); line-height: 1.65; }
+  .nda-modal footer { display: flex; align-items: center; justify-content: space-between; gap: 1rem; padding: 0.9rem 1.4rem 1.25rem; border-top: 1px solid var(--hairline); flex-wrap: wrap; }
+  .nda-modal footer a { font-size: var(--step--1); color: var(--color-slate); text-underline-offset: 2px; }
 </style>
