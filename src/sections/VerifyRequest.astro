@@ -58,6 +58,8 @@ const stepKeys = ['notice', 'who', 'docs', 'nda', 'done'] as const;
         data-doc-remove={c.docs.remove}
         data-manage-path={localizePath('/manage', lang)}
         data-profile-endpoint={site.accountProfileEndpoint}
+        data-auth-verify={site.authVerifyEndpoint}
+        data-auth-set-password={site.authSetPasswordEndpoint}
         data-turnstile={turnstileKey ? 'on' : undefined}
       >
         <!-- STEP 1 · Notice -->
@@ -104,10 +106,8 @@ const stepKeys = ['notice', 'who', 'docs', 'nda', 'done'] as const;
           <label><span>{c.who.phone}</span>
             <input type="tel" name="phone" autocomplete="tel" inputmode="numeric" maxlength="20" placeholder="01012345678" data-phone /></label>
           <label><span>{c.who.email}</span>
-            <input type="email" name="email" autocomplete="email" maxlength="180" /></label>
-          <label><span>{c.who.password}</span>
-            <input type="password" name="password" autocomplete="new-password" minlength="8" maxlength="200" placeholder="" data-password />
-            <small class="hint">{c.who.passwordHint}</small></label>
+            <input type="email" name="email" autocomplete="email" maxlength="180" />
+            <small class="hint">{c.emailVerifyNote}</small></label>
           <label><span>{c.noteLabel}</span>
             <textarea name="note" rows="2" maxlength="2000" placeholder={c.notePlaceholder}></textarea></label>
 
@@ -186,6 +186,27 @@ const stepKeys = ['notice', 'who', 'docs', 'nda', 'done'] as const;
         <p hidden data-sent-returning>{c.sentReturning}</p>
         <p class="sent-manage" hidden data-sent-manage><a data-sent-manage-link href="">{c.sentManage} <span class="arrow">&rarr;</span></a></p>
       </div>
+
+      <!-- 신규/미인증 이메일: 확인 메일 안내(진행 차단) -->
+      <div class="sent" tabindex="-1" hidden data-check-email>
+        <h2>{c.checkEmailTitle}</h2>
+        <p>{c.checkEmailBody}</p>
+      </div>
+
+      <!-- 이메일 링크 재진입: 비밀번호 생성(더블 입력) -->
+      <div class="sent pwgate" tabindex="-1" hidden data-pwgate>
+        <h2>{c.pwCreateTitle}</h2>
+        <p class="hint">{c.pwCreateIntro}</p>
+        <form class="pwform" data-pwgate-form>
+          <label><span>{c.pwNew}</span>
+            <input type="password" name="pw1" autocomplete="new-password" minlength="8" maxlength="200" required /></label>
+          <label><span>{c.pwConfirm}</span>
+            <input type="password" name="pw2" autocomplete="new-password" minlength="8" maxlength="200" required /></label>
+          <button type="submit" class="btn btn-primary">{c.pwCreateBtn} <span class="arrow">&rarr;</span></button>
+          <p class="verr" role="alert" hidden data-pw-mismatch>{c.pwMismatch}</p>
+          <p class="verr" role="alert" hidden data-pw-error>{c.pwError}</p>
+        </form>
+      </div>
     </div>
   </section>
 
@@ -245,7 +266,57 @@ const stepKeys = ['notice', 'who', 'docs', 'nda', 'done'] as const;
       if (n === 2) { autoFillStep2(); refreshStep2(); } else if (n === 3) refreshStep3(); else if (n === 4) refreshStep4();
     }
     const stepErr = (n) => form.querySelector('[data-step-error="' + n + '"]');
-    showStep(1);
+
+    // ── 신원 확정: 미인증 이메일 안내 / 이메일 링크 재진입(비번 생성) ──
+    const authVerify = form.getAttribute('data-auth-verify');
+    const authSetPassword = form.getAttribute('data-auth-set-password');
+    const checkEmail = document.querySelector('[data-check-email]');
+    const pwgate = document.querySelector('[data-pwgate]');
+    function showCheckEmail() {
+      form.hidden = true;
+      if (checkEmail) { checkEmail.hidden = false; checkEmail.scrollIntoView({ behavior: 'smooth', block: 'center' }); }
+    }
+    function showPwgate() {
+      form.hidden = true;
+      if (pwgate) { pwgate.hidden = false; pwgate.scrollIntoView({ behavior: 'smooth', block: 'center' }); }
+    }
+    async function resumeFlow(login, resume) {
+      form.hidden = true;                                    // 검증 전 step1 깜빡임 방지
+      try {
+        const fd = new FormData(); fd.append('token', login);
+        const res = await fetch(authVerify, { method: 'POST', body: fd, credentials: 'include' });
+        const d = await res.json().catch(() => null);
+        if (!(res.ok && d && d.ok && d.session)) { form.hidden = false; showStep(1); return; }   // 만료/무효 → 일반 폼
+        localStorage.setItem('miriboa_session', d.session);
+        history.replaceState(null, '', location.pathname);   // 링크에서 토큰 제거
+        token = resume;                                      // 이 draft를 이어간다
+        if (d.has_password) { form.hidden = false; showStep(3); }   // 이미 비번 있으면 바로 서류
+        else showPwgate();                                   // 없으면 비번 생성(더블입력)
+      } catch { form.hidden = false; showStep(1); }
+    }
+    const pwgateForm = pwgate && pwgate.querySelector('[data-pwgate-form]');
+    if (pwgateForm) pwgateForm.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const mis = pwgate.querySelector('[data-pw-mismatch]'), perr = pwgate.querySelector('[data-pw-error]');
+      if (mis) mis.hidden = true; if (perr) perr.hidden = true;
+      const p1 = pwgateForm.querySelector('[name="pw1"]').value, p2 = pwgateForm.querySelector('[name="pw2"]').value;
+      if (p1.length < 8 || p1 !== p2) { if (mis) mis.hidden = false; return; }
+      const session = localStorage.getItem('miriboa_session');
+      if (!session) { showStep(1); return; }
+      const btn = pwgateForm.querySelector('button'); btn.disabled = true;
+      try {
+        const fd = new FormData(); fd.append('password', p1);
+        const res = await fetch(authSetPassword, { method: 'POST', body: fd, headers: { Authorization: 'Bearer ' + session } });
+        const d = await res.json().catch(() => null);
+        if (res.ok && d && d.ok) { pwgate.hidden = true; form.hidden = false; showStep(3); }
+        else if (perr) perr.hidden = false;
+      } catch { if (perr) perr.hidden = false; }
+      btn.disabled = false;
+    });
+
+    const loginQ = q.get('login'), resumeQ = q.get('resume');
+    if (loginQ && resumeQ && authVerify) resumeFlow(loginQ, resumeQ);
+    else showStep(1);
 
     // ── STEP 1: 공고 자동채움 ──
     const noticeInput = $('[data-field-notice]');
@@ -334,7 +405,6 @@ const stepKeys = ['notice', 'who', 'docs', 'nda', 'done'] as const;
       if (!fld('company').trim() || !fld('person').trim() || !fld('phone').trim()) return false;
       if (!emailRe.test(fld('email').trim())) return false;
       if (!brnValid(fld('brn'))) return false;
-      const pw = fld('password'); if (pw && pw.length < 8) return false;   // 선택이나 넣으면 8자↑
       if (!consent || !consent.checked) return false;
       if (form.dataset.turnstile) { const t = form.querySelector('[name="cf-turnstile-response"]'); if (!t || !t.value) return false; }
       return true;
@@ -415,14 +485,18 @@ const stepKeys = ['notice', 'who', 'docs', 'nda', 'done'] as const;
       // draft로 보낼 필드만 추린 FormData
       const fd = new FormData();
       ['notice', 'notice_name', 'deadline', 'institution', 'stakes', 'src',
-       'company', 'brn', 'person', 'phone', 'email', 'password', 'note', 'company_url', 'elapsed',
+       'company', 'brn', 'person', 'phone', 'email', 'note', 'company_url', 'elapsed',
        'cf-turnstile-response'].forEach((n) => {
         const f = form.querySelector('[name="' + n + '"]'); if (f) fd.append(n, f.value);
       });
+      // 로그인 세션이 있으면 실어 보낸다 — 세션 이메일이 입력 이메일과 같으면 서버가
+      // 바로 진행(verified), 아니면 확인 메일을 보내고 token을 감춘다.
+      const sess = localStorage.getItem('miriboa_session');
       try {
-        const res = await fetch(draftEndpoint, { method: 'POST', body: fd });
+        const res = await fetch(draftEndpoint, { method: 'POST', body: fd, headers: sess ? { Authorization: 'Bearer ' + sess } : {} });
         const d = await res.json().catch(() => null);
-        if (res.ok && d && d.ok && d.token) { token = d.token; showStep(3); }
+        if (res.ok && d && d.ok && d.verified && d.token) { token = d.token; showStep(3); }
+        else if (res.ok && d && d.ok && !d.verified) { showCheckEmail(); }   // 미인증 → 이메일 확인
         else if (res.status === 422 && d && d.error === 'invalid_brn') { if (cerr) cerr.hidden = false; brnInput.focus(); }
         else if (res.status === 403 && verr) { verr.hidden = false; }
         else if (e2) { e2.hidden = false; }
@@ -628,6 +702,11 @@ const stepKeys = ['notice', 'who', 'docs', 'nda', 'done'] as const;
   .sent { padding: 1.75rem; border: 1px solid var(--color-recovered); border-radius: var(--radius); background: var(--color-mist); display: flex; flex-direction: column; gap: 0.6rem; }
   .sent h2 { font-size: var(--step-1); }
   .sent-manage a { color: var(--color-ink); font-weight: 600; text-decoration: underline; text-decoration-color: var(--color-recovered); text-underline-offset: 3px; }
+  .pwform { display: flex; flex-direction: column; gap: 0.7rem; max-width: 22rem; margin-top: 0.4rem; }
+  .pwform label { display: flex; flex-direction: column; gap: 0.4rem; }
+  .pwform label span { font-family: var(--font-mono); font-size: var(--step--1); color: var(--color-slate); }
+  .pwform input { font-family: var(--font-body); font-size: var(--step-0); color: var(--color-ink); background: var(--color-vellum); border: 1px solid var(--hairline); border-radius: var(--radius); padding: 0.7rem 0.85rem; }
+  .pwform .btn { align-self: flex-start; }
   @media (max-width: 760px) { .grid { grid-template-columns: 1fr; } }
 
   /* NDA 전문을 페이지 이동 없이 보는 모달(네이티브 dialog). 내용은 정적 마크업이라 스코프 CSS가 그대로 먹는다. */
