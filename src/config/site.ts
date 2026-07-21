@@ -22,14 +22,15 @@ export const site = {
   turnstileSiteKey: '0x4AAAAAADzkjelT6SU8nIio',
 };
 
-// Global nav. Products is the umbrella; Miriboa is surfaced directly because it is
-// the revenue-priority funnel (a bidder should reach it in one hop, not three — see
-// CONTEXT §94 IA audit). Crawler's sub-pages (How it works / Security / Editions)
-// stay scoped under that product (see crawlerPages), not in the company-level nav.
-// Hrefs/keys are language-neutral; labels come from content[lang].
+// Global nav. Both products get their own problem-first landing and a direct nav
+// entry (each buyer reaches their product in one hop — see CONTEXT §94 IA audit,
+// P4); Products stays as the umbrella overview. Crawler's sub-pages (How it works /
+// Security / Editions) stay scoped under that product (see crawlerPages), not in the
+// company-level nav. Hrefs/keys are language-neutral; labels come from content[lang].
 export const nav = [
   { href: '/products', key: 'Products' },
   { href: '/products/miriboa', key: 'Miriboa' },
+  { href: '/products/crawler-platform', key: 'Crawler Platform' },
   { href: '/contact', key: 'Contact' },
 ] as const;
 
