@@ -19,6 +19,7 @@ const strings = {
   f: c.f, noDocs: c.noDocs, purgeAt: c.purgeAt, error: c.error, deleteConfirm: c.deleteConfirm,
   statusMap: c.statusMap, loginSent: c.loginSent, accountEmpty: c.accountEmpty, open: c.open,
   setPw: c.setPw, updatedLabel: c.updatedLabel, discardConfirm: c.discardConfirm,
+  crawler: { have: c.crawlerHave, none: c.crawlerNone, noneIntro: c.crawlerNoneIntro, noneCta: c.crawlerNoneCta, portal: c.crawlerPortal },
 };
 ---
 
@@ -33,6 +34,7 @@ const strings = {
     data-auth-logout={site.authLogoutEndpoint}
     data-auth-set-password={site.authSetPasswordEndpoint}
     data-account-requests={site.accountRequestsEndpoint}
+    data-account-products={site.accountProductsEndpoint}
     data-manage-path={localizePath('/manage', lang)}
     data-doc-badges={JSON.stringify(c.badges)}
     data-strings={JSON.stringify(strings)}
@@ -71,9 +73,9 @@ const strings = {
           <a class="btn btn-primary prodcta" href={localizePath('/verify-request', lang)}>{c.newVerify} <span class="arrow">&rarr;</span></a>
         </section>
         <section class="prodcard">
-          <h2>{c.crawlerHeading}</h2>
-          <p class="hint">{c.crawlerIntro}</p>
-          <a class="btn btn-ghost prodcta" href={site.portalLoginUrl} rel="noopener">{c.crawlerPortal} <span class="arrow">&rarr;</span></a>
+          <div class="prodhead"><h2>{c.crawlerHeading}</h2><span class="prodstatus" hidden data-crawler-status></span></div>
+          <p class="hint" data-crawler-intro>{c.crawlerIntro}</p>
+          <a class="btn btn-ghost prodcta" data-crawler-cta data-portal-href={site.portalLoginUrl} data-contact-href={localizePath('/contact', lang)} href={site.portalLoginUrl} rel="noopener">{c.crawlerPortal} <span class="arrow">&rarr;</span></a>
         </section>
       </div>
       <div class="block setpw" data-setpw hidden>
@@ -140,6 +142,7 @@ const strings = {
   const authLogout = root && root.getAttribute('data-auth-logout');
   const authSetPassword = root && root.getAttribute('data-auth-set-password');
   const accountEndpoint = root && root.getAttribute('data-account-requests');
+  const productsEndpoint = root && root.getAttribute('data-account-products');
   const managePath = root && root.getAttribute('data-manage-path') || '/manage';
   let S = {}, badges = {};
   try { S = JSON.parse(root.getAttribute('data-strings') || '{}'); } catch { S = {}; }
@@ -256,6 +259,34 @@ const strings = {
     }
     if (empty) empty.hidden = requests.length > 0;
     show(accountP);
+    updateCrawlerProduct();
+  }
+
+  // 계정 허브의 Crawler Platform 카드에 보유 상태를 반영(포털 측 내부 조회 경유).
+  // crawler_known=false(조회 불가)면 기본(포털 열기)을 그대로 둔다.
+  async function updateCrawlerProduct() {
+    const sess = localStorage.getItem(SKEY);
+    if (!sess || !productsEndpoint) return;
+    let d = null;
+    try {
+      const res = await fetch(productsEndpoint, { headers: { Authorization: 'Bearer ' + sess } });
+      d = await res.json().catch(() => null);
+    } catch { return; }
+    if (!d || !d.ok || !d.crawler_known) return;
+    const cw = S.crawler || {};
+    const badge = $('[data-crawler-status]'), intro = $('[data-crawler-intro]'), cta = $('[data-crawler-cta]');
+    if (d.crawler) {
+      if (badge) { badge.textContent = cw.have || ''; badge.classList.add('have'); badge.hidden = false; }
+    } else {
+      if (badge) { badge.textContent = cw.none || ''; badge.classList.add('none'); badge.hidden = false; }
+      if (intro && cw.noneIntro) intro.textContent = cw.noneIntro;
+      if (cta) {
+        const contact = cta.getAttribute('data-contact-href');
+        if (contact) cta.setAttribute('href', contact);
+        cta.removeAttribute('rel');
+        if (cw.noneCta && cta.firstChild) cta.firstChild.textContent = cw.noneCta + ' ';
+      }
+    }
   }
 
   const logoutBtn = $('[data-logout]');
@@ -443,6 +474,10 @@ const strings = {
   @media (max-width: 640px) { .prodgrid { grid-template-columns: 1fr; } }
   .prodcard { display: flex; flex-direction: column; gap: 0.7rem; padding: 1.25rem; border: 1px solid var(--hairline); border-radius: var(--radius); background: var(--color-mist); }
   .prodcard h2 { font-size: var(--step-1); margin: 0; }
+  .prodhead { display: flex; align-items: baseline; justify-content: space-between; gap: 0.6rem; }
+  .prodstatus { font-family: var(--font-mono); font-size: var(--step--1); font-weight: 700; border-radius: 4px; padding: 0.1rem 0.45rem; white-space: nowrap; }
+  .prodstatus.have { background: color-mix(in srgb, var(--color-recovered) 14%, transparent); color: var(--color-recovered); }
+  .prodstatus.none { background: color-mix(in srgb, var(--color-slate) 15%, transparent); color: var(--color-slate); }
   .prodcta { align-self: flex-start; margin-top: auto; }
   /* 아래 목록들(reqlist·summary·filelist 내부)은 JS innerHTML로 그려져 Astro
      스코프 속성이 없다. 정적 앵커(data-* 컨테이너) 하위는 :global()로 풀어야 먹는다. */
