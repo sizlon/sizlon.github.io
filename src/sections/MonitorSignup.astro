@@ -60,7 +60,7 @@ const screeningPath = localizePath('/monitor/screening', lang);
     <div class="tiers">
       <div class="tier">
         <div class="tier-head">
-          <h3>{c.tiers.free.name}</h3>
+          <h3>{c.tiers.free.name} <span class="tier-sub">{c.tiers.free.sub}</span></h3>
           <div class="price"><span class="amount">{c.tiers.free.price}</span></div>
         </div>
         <p class="tier-tag">{c.tiers.free.tagline}</p>
@@ -70,7 +70,7 @@ const screeningPath = localizePath('/monitor/screening', lang);
       <div class="tier featured">
         <span class="badge">{c.tiers.paid.badge}</span>
         <div class="tier-head">
-          <h3>{c.tiers.paid.name}</h3>
+          <h3>{c.tiers.paid.name} <span class="tier-sub">{c.tiers.paid.sub}</span></h3>
           <div class="price"><span class="amount">{c.tiers.paid.price}</span><span class="per">{c.tiers.paid.priceSuffix}</span></div>
         </div>
         <p class="tier-tag">{c.tiers.paid.tagline}</p>
@@ -121,6 +121,7 @@ const screeningPath = localizePath('/monitor/screening', lang);
   .tier .badge { position: absolute; top: -0.7rem; right: 1.25rem; font-family: var(--font-mono); font-size: var(--step--2); letter-spacing: 0.12em; text-transform: uppercase; color: var(--color-vellum); background: var(--color-recovered); border-radius: 999px; padding: 0.2rem 0.6rem; }
   .tier-head { display: flex; align-items: baseline; justify-content: space-between; gap: 0.75rem; flex-wrap: wrap; }
   .tier-head h3 { font-size: var(--step-1); }
+  .tier-sub { font-family: var(--font-mono); font-size: var(--step--1); font-weight: 400; color: var(--color-slate); margin-left: 0.35rem; }
   .tier .price { display: flex; align-items: baseline; gap: 0.3rem; }
   .tier .price .amount { font-size: var(--step-2); font-weight: 700; color: var(--color-ink); }
   .tier .price .per { font-family: var(--font-mono); font-size: var(--step--1); color: var(--color-slate); }

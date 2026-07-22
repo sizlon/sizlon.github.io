@@ -239,7 +239,8 @@ export const content = {
       tiers: {
         heading: 'Two ways to use it',
         free: {
-          name: 'Free alerts',
+          name: 'Free',
+          sub: 'Tender alerts',
           price: '₩0',
           tagline: 'Never miss a notice in your field.',
           features: [
@@ -250,10 +251,11 @@ export const content = {
           cta: 'Subscribe free',
         },
         paid: {
-          name: 'Eligibility screening',
+          name: 'Pro',
+          sub: 'Eligibility screening',
           price: '₩49,000',
           priceSuffix: '/ month',
-          badge: 'Paid',
+          badge: 'Pro',
           tagline: 'Only see the notices you can actually win.',
           features: [
             'Everything in Free, plus:',
@@ -305,8 +307,8 @@ export const content = {
         sendError: 'Could not save. Please try again in a moment.',
       },
       subscribe: {
-        title: 'Eligibility screening subscription',
-        eyebrow: 'miriboa · paid tier',
+        title: 'Miriboa Pro subscription',
+        eyebrow: 'miriboa · Pro',
         h1: 'Only see the notices you can actually win.',
         lede: 'The paid tier adds per-notice eligibility pre-screening to your weekly alerts. Each matching notice is checked against your company profile — region, licenses, track record, grades — so you spend time only on notices you can bid. Auto-renews monthly; cancel anytime.',
         priceSuffix: '/ month',
@@ -474,7 +476,7 @@ export const content = {
       billingUsed: 'Free verification used · standard ₩290,000 per request after',
       amtFree: 'Free',
       monitoringFree: 'Free tender alerts · subscribed',
-      monitoringPaid: 'Eligibility screening · active ({amt}/month)',
+      monitoringPaid: 'Pro — eligibility screening · active ({amt}/month)',
       monitoringOff: 'Tender alerts · unsubscribed',
       monitoringManage: 'Manage subscription',
       crawlerHeading: 'Crawler Platform',
@@ -958,7 +960,8 @@ export const content = {
       tiers: {
         heading: '이용 방법 두 가지',
         free: {
-          name: '무료 알림',
+          name: 'Free',
+          sub: '공고 알림',
           price: '₩0',
           tagline: '내 분야 공고를 놓치지 않기.',
           features: [
@@ -969,10 +972,11 @@ export const content = {
           cta: '무료로 구독',
         },
         paid: {
-          name: '자격 사전판정',
+          name: 'Pro',
+          sub: '자격 사전판정',
           price: '₩49,000',
           priceSuffix: '/ 월',
-          badge: '유료',
+          badge: 'Pro',
           tagline: '낼 수 있는 공고만 보기.',
           features: [
             '무료 알림의 모든 것, 그리고:',
@@ -1024,8 +1028,8 @@ export const content = {
         sendError: '저장하지 못했습니다. 잠시 후 다시 시도해 주세요.',
       },
       subscribe: {
-        title: '자격 사전판정 구독',
-        eyebrow: '미리보아 · 유료',
+        title: '미리보아 Pro 구독',
+        eyebrow: '미리보아 · Pro',
         h1: '낼 수 있는 공고만 보세요.',
         lede: '유료 티어는 매주 알림에 공고별 자격 사전판정을 더합니다. 맞는 공고마다 귀사 프로필(본점소재지·면허·실적·등급)로 참가자격을 대조해, 실제로 낼 수 있는 공고에만 시간을 쓰시게 합니다. 매월 자동 갱신, 언제든 해지.',
         priceSuffix: '/ 월',
@@ -1193,7 +1197,7 @@ export const content = {
       billingUsed: '무료 검증 사용 완료 · 이후 표준 건당 ₩290,000',
       amtFree: '무료',
       monitoringFree: '무료 공고 알림 · 구독 중',
-      monitoringPaid: '자격 사전판정 · 구독 중 ({amt}/월)',
+      monitoringPaid: 'Pro — 자격 사전판정 · 구독 중 ({amt}/월)',
       monitoringOff: '공고 알림 · 수신거부됨',
       monitoringManage: '구독 관리',
       crawlerHeading: 'Crawler Platform',
