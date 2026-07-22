@@ -49,6 +49,7 @@ const failPath = localizePath('/monitor/billing/fail', lang);
         <div class="pay" hidden data-pay-view>
           <button class="btn btn-primary" type="button" data-subscribe-btn>{c.subscribe} <span class="arrow">&rarr;</span></button>
           <p class="note eyebrow">{c.priceNote}</p>
+          <p class="note eyebrow">{c.refundNote} · <a class="terms" href={localizePath('/legal/terms', lang)}>{c.termsLabel}</a></p>
         </div>
 
         <div class="status" hidden data-status-view>
@@ -194,6 +195,7 @@ const failPath = localizePath('/monitor/billing/fail', lang);
   .price .per { font-family: var(--font-mono); font-size: var(--step--1); color: var(--color-slate); }
   .pay { display: flex; flex-direction: column; gap: 0.6rem; align-items: flex-start; }
   .note { margin: 0; }
+  .terms { color: var(--color-ink); text-decoration: underline; text-underline-offset: 3px; }
   .status { display: flex; flex-direction: column; gap: 0.6rem; align-items: flex-start; }
   .status h2 { font-size: var(--step-1); }
   .cardline { font-family: var(--font-mono); font-size: var(--step--1); color: var(--color-slate); }
