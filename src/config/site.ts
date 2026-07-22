@@ -16,6 +16,10 @@ export const site = {
   subscribeEndpoint: 'https://svc.sizlon.io/api/subscribe',
   // Eligibility profile (A2) — token-authed GET (prefill) + POST (save). Empty = no-op.
   subscribeProfileEndpoint: 'https://svc.sizlon.io/api/subscribe/profile',
+  // Paid screening application — one form (alert settings + company credentials);
+  // creates the pending subscription + profile + account, then the confirmation
+  // email's link goes straight to checkout (confirm?next=billing → 302).
+  subscribeScreeningEndpoint: 'https://svc.sizlon.io/api/subscribe/screening',
   // Paid tier — Toss Payments monthly subscription (billing key). The checkout
   // endpoint returns the public Toss clientKey + a per-subscriber customerKey;
   // confirm exchanges the redirect authKey for a billingKey and charges month 1.

@@ -23,7 +23,40 @@ const turnstileKey = site.turnstileSiteKey;
       <span class="eyebrow">{c.eyebrow}</span>
       <h1>{c.h1}</h1>
       <p class="lede">{c.lede}</p>
+      <div class="hero-ctas">
+        <a class="btn btn-primary" href="#signup">{c.heroCtaFree} <span class="arrow">&rarr;</span></a>
+        <a class="btn btn-ghost" href={localizePath('/monitor/screening', lang)}>{c.heroCtaPaid} <span class="arrow">&rarr;</span></a>
+      </div>
       <p class="alt">{tr.contact.applyPrefix} <a href={`${localizePath('/verify-request', lang)}?src=monitor`}>{tr.contact.applyLink} &rarr;</a></p>
+    </div>
+
+    <div class="how">
+      <h2 class="sub-heading">{c.how.heading}</h2>
+      <ol class="steps">
+        {c.how.steps.map((s, i) => (
+          <li class="step">
+            <span class="stepnum">{i + 1}</span>
+            <h3>{s.t}</h3>
+            <p>{s.b}</p>
+          </li>
+        ))}
+      </ol>
+    </div>
+
+    <div class="sample">
+      <h2 class="sub-heading">{c.sample.heading}</h2>
+      <div class="mail">
+        <div class="mail-subject">{c.sample.subject}</div>
+        <ul class="mail-lines">
+          {c.sample.lines.map((l) => (
+            <li>
+              <div class="mline-head"><span class="mline-name">{l.name}</span><span class="mline-meta">{l.meta}</span></div>
+              <div class={`mline-verdict v-${l.kind}`}>{l.verdict}</div>
+            </li>
+          ))}
+        </ul>
+        <p class="mail-note eyebrow">{c.sample.note}</p>
+      </div>
     </div>
 
     <h2 class="tiers-heading">{c.tiers.heading}</h2>
@@ -45,7 +78,7 @@ const turnstileKey = site.turnstileSiteKey;
         </div>
         <p class="tier-tag">{c.tiers.paid.tagline}</p>
         <ul>{c.tiers.paid.features.map((f) => <li>{f}</li>)}</ul>
-        <a class="btn btn-primary" href="#signup">{c.tiers.paid.cta} <span class="arrow">&rarr;</span></a>
+        <a class="btn btn-primary" href={localizePath('/monitor/screening', lang)}>{c.tiers.paid.cta} <span class="arrow">&rarr;</span></a>
         <p class="tier-note">{c.tiers.paid.ctaNote}</p>
       </div>
     </div>
@@ -196,6 +229,32 @@ const turnstileKey = site.turnstileSiteKey;
   .alt { color: var(--color-slate); }
   .alt a { color: var(--color-ink); text-decoration: underline; text-decoration-color: var(--color-recovered); text-underline-offset: 3px; }
 
+  .hero-ctas { display: flex; gap: 0.75rem; flex-wrap: wrap; }
+  .btn-ghost { background: transparent; border: 1px solid var(--color-recovered); color: var(--color-ink); }
+
+  /* How it works — 3 steps */
+  .sub-heading { font-size: var(--step-1); margin: clamp(2rem, 1rem + 3vw, 3.25rem) 0 1.25rem; }
+  .steps { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(3, 1fr); gap: clamp(1rem, 0.5rem + 2vw, 1.75rem); }
+  .step { position: relative; display: flex; flex-direction: column; gap: 0.5rem; padding: 1.5rem; border: 1px solid var(--hairline); border-radius: var(--radius); background: var(--color-mist); }
+  .stepnum { font-family: var(--font-mono); font-size: var(--step--1); color: var(--color-vellum); background: var(--color-recovered); width: 1.7rem; height: 1.7rem; border-radius: 999px; display: grid; place-items: center; font-weight: 700; }
+  .step h3 { font-size: var(--step-0); }
+  .step p { font-size: var(--step--1); color: var(--color-slate); line-height: 1.55; margin: 0; }
+
+  /* Sample screened alert — mock email */
+  .mail { max-width: 46rem; border: 1px solid var(--hairline); border-radius: var(--radius); background: var(--color-mist); overflow: hidden; }
+  .mail-subject { font-family: var(--font-mono); font-size: var(--step--1); color: var(--color-ink); padding: 0.85rem 1.25rem; border-bottom: 1px solid var(--hairline); background: var(--color-vellum); }
+  .mail-lines { list-style: none; margin: 0; padding: 0.5rem 0; }
+  .mail-lines li { padding: 0.7rem 1.25rem; display: flex; flex-direction: column; gap: 0.25rem; }
+  .mail-lines li + li { border-top: 1px dashed var(--hairline); }
+  .mline-head { display: flex; justify-content: space-between; gap: 0.75rem; flex-wrap: wrap; }
+  .mline-name { font-weight: 600; color: var(--color-ink); }
+  .mline-meta { font-family: var(--font-mono); font-size: var(--step--2); color: var(--color-slate); }
+  .mline-verdict { font-size: var(--step--1); font-weight: 600; }
+  .v-ok { color: #1a7f37; }
+  .v-warn { color: #9a6700; }
+  .v-no { color: #b3261e; }
+  .mail-note { margin: 0; padding: 0.75rem 1.25rem; border-top: 1px solid var(--hairline); }
+
   /* Two-tier product comparison */
   .tiers-heading { font-size: var(--step-1); margin: clamp(2rem, 1rem + 3vw, 3.25rem) 0 1.25rem; }
   .tiers { display: grid; grid-template-columns: 1fr 1fr; gap: clamp(1rem, 0.5rem + 2vw, 1.75rem); align-items: stretch; }
@@ -231,5 +290,5 @@ const turnstileKey = site.turnstileSiteKey;
   .hp { position: absolute; left: -9999px; width: 1px; height: 1px; overflow: hidden; }
   .sent { padding: 1.75rem; border: 1px solid var(--color-recovered); border-radius: var(--radius); background: var(--color-mist); display: flex; flex-direction: column; gap: 0.6rem; }
   .sent h2 { font-size: var(--step-1); }
-  @media (max-width: 760px) { .grid { grid-template-columns: 1fr; } .tiers { grid-template-columns: 1fr; } fieldset.sectors { grid-template-columns: 1fr; } }
+  @media (max-width: 760px) { .grid { grid-template-columns: 1fr; } .tiers { grid-template-columns: 1fr; } .steps { grid-template-columns: 1fr; } fieldset.sectors { grid-template-columns: 1fr; } }
 </style>

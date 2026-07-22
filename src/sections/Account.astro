@@ -18,6 +18,7 @@ const strings = {
   crawler: { have: c.crawlerHave, none: c.crawlerNone, noneIntro: c.crawlerNoneIntro, noneCta: c.crawlerNoneCta },
   profile: { company: c.profileCompany, brn: c.profileBrn, person: c.profilePerson, phone: c.profilePhone, email: c.profileEmail, save: c.profileSave, saved: c.profileSaved, error: c.profileError },
   billing: { free: c.billingFree, used: c.billingUsed, amtFree: c.amtFree },
+  monitoring: { free: c.monitoringFree, paid: c.monitoringPaid, off: c.monitoringOff, manage: c.monitoringManage },
 };
 ---
 
@@ -85,6 +86,10 @@ const strings = {
         <div class="cardhead"><h2>{c.miriboaHeading}</h2><span class="chip" hidden data-billing></span></div>
         <ul class="reqlist" data-reqlist></ul>
         <p class="statusnote" hidden data-account-empty>{c.accountEmpty}</p>
+        <p class="monitoring" hidden data-monitoring data-subscribe-path={localizePath('/monitor/subscribe', lang)}>
+          <span data-monitoring-status></span>
+          <a class="alt" data-monitoring-manage href="#">{c.monitoringManage} <span class="arrow">&rarr;</span></a>
+        </p>
         <div class="cardlinks">
           <a class="btn btn-primary" href={localizePath('/verify-request', lang)}>{c.newVerify} <span class="arrow">&rarr;</span></a>
           <a class="alt" href={localizePath('/manage', lang)}>{c.manageLink} <span class="arrow">&rarr;</span></a>
@@ -304,7 +309,7 @@ const strings = {
     btn.disabled = false;
   });
 
-  // ── Crawler 상태 ──
+  // ── 제품 상태 (모니터링 구독 + Crawler) ──
   async function updateCrawler() {
     if (!productsEndpoint) return;
     let d = null;
@@ -312,7 +317,21 @@ const strings = {
       const res = await fetch(productsEndpoint, { headers: bearer() });
       d = await res.json().catch(() => null);
     } catch { return; }
-    if (!d || !d.ok || !d.crawler_known) return;
+    if (!d || !d.ok) return;
+    // 모니터링(무료 알림·자격 사전판정) 구독 상태 — 관리(해지·상태)는 구독 페이지로.
+    const mon = d.monitoring, ms = S.monitoring || {};
+    if (mon) {
+      const wrap = $('[data-monitoring]'), stat = $('[data-monitoring-status]'), mg = $('[data-monitoring-manage]');
+      const paid = mon.billingStatus === 'active' || mon.billingStatus === 'past_due';
+      const txt = mon.active
+        ? (paid ? (ms.paid || '').replace('{amt}', '₩' + Number(mon.amount || 0).toLocaleString()) : ms.free)
+        : ms.off;
+      if (stat) stat.textContent = txt || '';
+      if (mg && wrap && mon.token) mg.setAttribute('href', (wrap.getAttribute('data-subscribe-path') || '') + '?token=' + encodeURIComponent(mon.token));
+      else if (mg) mg.hidden = true;
+      if (wrap) wrap.hidden = false;
+    }
+    if (!d.crawler_known) return;
     const cw = S.crawler || {};
     const badge = $('[data-crawler-status]'), intro = $('[data-crawler-intro]'), cta = $('[data-crawler-cta]');
     if (d.crawler) {
@@ -388,6 +407,8 @@ const strings = {
   .cardhead { display: flex; align-items: baseline; justify-content: space-between; gap: 0.6rem; flex-wrap: wrap; }
   .sec { display: flex; flex-direction: column; gap: 0.5rem; padding-top: 0.9rem; border-top: 1px solid var(--hairline); }
   .hint { font-size: var(--step--1); color: var(--color-slate); margin: 0; }
+  .monitoring { display: flex; align-items: baseline; gap: 1.1rem; flex-wrap: wrap; padding: 0.7rem 1.1rem; border: 1px solid var(--hairline); border-radius: var(--radius); background: var(--color-vellum); font-size: var(--step--1); }
+  .monitoring span { color: var(--color-slate); }
   .cardlinks { display: flex; align-items: baseline; gap: 1.1rem; flex-wrap: wrap; }
   .cardlinks .btn, .cta { align-self: flex-start; }
   .inlineform { display: flex; gap: 0.6rem; flex-wrap: wrap; }
