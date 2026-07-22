@@ -12,6 +12,8 @@ export const site = {
   // deployed URL here to activate the form; while empty, the form no-ops on
   // submit and the mailto fallback carries. Not a secret (it's client-visible).
   contactFormEndpoint: 'https://svc.sizlon.io/api/contact',
+  // Free notice-alert subscription (site-backend, double opt-in). Empty = form no-ops.
+  subscribeEndpoint: 'https://svc.sizlon.io/api/subscribe',
   // Miriboa verification-request endpoint (site-backend, same host). The
   // connector and the site post the SAME form here; only `src` differs so we can
   // compare which surface converts (CONTEXT §94). While empty, the form no-ops.
@@ -73,6 +75,7 @@ export const crawlerPages = [
 // (Demonstrating the parsing capability, its other original job, is now done
 // far better by the connector reading a real notice in chat.)
 export const miriboaPages = [
+  { href: '/monitor', key: 'Free alerts' },
   { href: '/connector', key: 'Connector' },
 ] as const;
 
