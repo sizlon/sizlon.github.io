@@ -312,7 +312,8 @@ const stepKeys = ['notice', 'who', 'docs', 'nda', 'done'] as const;
       rehydrateDraft(d);
       resuming = true; resumeHasDocs = Number(d.doc_count) > 0; token = resume;
       const tw = form.querySelector('.cf-turnstile'); if (tw) tw.hidden = true;   // 재개엔 Turnstile 불필요
-      form.hidden = false; showStep(3);
+      // step1부터 열어 채워진 단계를 훑으며 진행/편집(앞·뒤 이동)하게 한다.
+      form.hidden = false; showStep(1);
     }
     async function resumeFlow(login, resume) {
       form.hidden = true;                                    // 검증 전 깜빡임 방지
