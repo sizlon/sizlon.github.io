@@ -12,7 +12,7 @@ const { lang } = Astro.props;
 const tr = t(lang);
 const c = tr.monitor.profile;
 const endpoint = site.subscribeProfileEndpoint;
-const subscribePath = localizePath('/monitor/subscribe', lang);
+const subscribePath = localizePath('/bid-monitoring/subscribe', lang);
 ---
 
 <Base title={c.title} description={c.lede} lang={lang}>

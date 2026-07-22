@@ -64,12 +64,12 @@ export const site = {
 // (How it works / Security / Editions) stay scoped under that product (see
 // crawlerPages), not in the company-level nav. Labels come from content[lang].
 export const nav = [
-  { href: '/products/miriboa', key: 'Miriboa' },
+  { href: '/bid-verification', key: 'Miriboa' },
   // 입찰 모니터링 — a self-serve product with its own tiers/funnel (Free/Pro), so
   // it gets a one-hop nav entry per the buyer-first rule above (it is also the
   // acquisition wedge; two hops deep would blunt it). Label: content nav['Free alerts'].
-  { href: '/monitor', key: 'Free alerts' },
-  { href: '/products/crawler-platform', key: 'Crawler Platform' },
+  { href: '/bid-monitoring', key: 'Free alerts' },
+  { href: '/web-crawling', key: 'Crawler Platform' },
   { href: '/contact', key: 'Contact' },
 ] as const;
 
@@ -92,7 +92,7 @@ export const crawlerPages = [
 // (Demonstrating the parsing capability, its other original job, is now done
 // far better by the connector reading a real notice in chat.)
 export const miriboaPages = [
-  { href: '/monitor', key: 'Free alerts' },
+  { href: '/bid-monitoring', key: 'Free alerts' },
   { href: '/connector', key: 'Connector' },
 ] as const;
 
@@ -114,8 +114,8 @@ export type Solution = {
 };
 
 export const solutions: Solution[] = [
-  { slug: 'crawler-platform', name: 'Crawler Platform', categoryKey: 'extraction', deliveryKeys: ['selfHosted', 'managed'], status: 'live', href: '/products/crawler-platform' },
-  { slug: 'miriboa', name: 'Miriboa', categoryKey: 'verification', deliveryKeys: ['service'], status: 'live', href: '/products/miriboa' },
+  { slug: 'crawler-platform', name: 'Crawler Platform', categoryKey: 'extraction', deliveryKeys: ['selfHosted', 'managed'], status: 'live', href: '/web-crawling' },
+  { slug: 'miriboa', name: 'Miriboa', categoryKey: 'verification', deliveryKeys: ['service'], status: 'live', href: '/bid-verification' },
 ];
 
 export const legalLinks = [

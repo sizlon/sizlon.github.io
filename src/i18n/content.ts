@@ -26,7 +26,7 @@ export const content = {
         miriboa: 'Pre-submission bid-document verification. It extracts the requirements from a tender package and checks your bid against them — missing documents, mismatched names, pricing errors — before submission, not after a rejection.',
       },
     },
-    nav: { Products: 'Products', Miriboa: 'Miriboa', 'Crawler Platform': 'Crawler Platform', 'How it works': 'How it works', Security: 'Security', Editions: 'Editions', Contact: 'Contact', Connector: 'Claude connector', 'Free alerts': 'Tender monitoring' },
+    nav: { Products: 'Products', Miriboa: 'Bid Verification', 'Crawler Platform': 'Web Crawling', 'How it works': 'How it works', Security: 'Security', Editions: 'Editions', Contact: 'Contact', Connector: 'Claude connector', 'Free alerts': 'Tender monitoring' },
     footer: {
       tagline: 'AI proposes. A deterministic layer verifies.',
       site: 'Site',
@@ -765,7 +765,7 @@ export const content = {
         miriboa: '제출 전 입찰 서류 검증. 공고 패키지에서 요구조건을 추출해 응찰 서류와 대조합니다 — 서류 누락, 명의 불일치, 가격 오류를 탈락 후가 아니라 제출 전에 잡습니다.',
       },
     },
-    nav: { Products: '제품', Miriboa: '미리보아', 'Crawler Platform': 'Crawler Platform', 'How it works': '작동 원리', Security: '보안', Editions: '에디션', Contact: '문의', Connector: 'Claude 커넥터', 'Free alerts': '입찰 모니터링' },
+    nav: { Products: '제품', Miriboa: '입찰검증', 'Crawler Platform': '웹 크롤링', 'How it works': '작동 원리', Security: '보안', Editions: '에디션', Contact: '문의', Connector: 'Claude 커넥터', 'Free alerts': '입찰 모니터링' },
     footer: {
       tagline: 'AI가 제안하고, 규칙 기반 계층이 검증합니다.',
       site: '사이트',

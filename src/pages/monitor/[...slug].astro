@@ -1,0 +1,24 @@
+---
+// Legacy /monitor/* → /bid-monitoring/* redirect stubs. Token links
+// (?token=...) live in already-sent emails, and a plain meta refresh drops the
+// query string — so the primary hop is a query-preserving location.replace,
+// with meta refresh as a no-JS fallback (which loses the query; the target
+// page then shows its invalid-link state rather than a 404).
+export function getStaticPaths() {
+  return ['', 'free', 'screening', 'subscribe', 'profile', 'billing/success', 'billing/fail']
+    .map((s) => ({ params: { slug: s || undefined } }));
+}
+const { slug } = Astro.params;
+const target = `/bid-monitoring${slug ? `/${slug}` : ''}`;
+---
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>Redirecting…</title>
+    <script is:inline define:vars={{ target }}>location.replace(target + location.search);</script>
+    <meta http-equiv="refresh" content={`1;url=${target}`} />
+    <link rel="canonical" href={new URL(target, Astro.site).href} />
+  </head>
+  <body><p>Moved: <a href={target}>{target}</a></p></body>
+</html>

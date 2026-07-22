@@ -12,8 +12,8 @@ interface Props { lang: Lang }
 const { lang } = Astro.props;
 const tr = t(lang);
 const c = tr.monitor;
-const freePath = localizePath('/monitor/free', lang);
-const screeningPath = localizePath('/monitor/screening', lang);
+const freePath = localizePath('/bid-monitoring/free', lang);
+const screeningPath = localizePath('/bid-monitoring/screening', lang);
 ---
 
 <Base title={c.title} description={c.description} lang={lang}>

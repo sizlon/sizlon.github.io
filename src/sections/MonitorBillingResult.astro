@@ -12,8 +12,8 @@ const { lang, mode } = Astro.props;
 const tr = t(lang);
 const c = tr.monitor.subscribe;
 const confirmEndpoint = site.billingConfirmEndpoint;
-const profilePath = localizePath('/monitor/profile', lang);
-const subscribePath = localizePath('/monitor/subscribe', lang);
+const profilePath = localizePath('/bid-monitoring/profile', lang);
+const subscribePath = localizePath('/bid-monitoring/subscribe', lang);
 ---
 
 <Base title={mode === 'success' ? c.successTitle : c.failTitle} description={c.lede} lang={lang}>
