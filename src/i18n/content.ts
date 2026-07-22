@@ -210,6 +210,35 @@ export const content = {
       updatedBody: 'We updated your sectors. Nothing else to do.',
       verifyNeeded: 'Please complete the verification and try again.',
       sendError: 'Something went wrong. Please try again in a moment.',
+      tiers: {
+        heading: 'Two ways to use it',
+        free: {
+          name: 'Free alerts',
+          price: '₩0',
+          tagline: 'Never miss a notice in your field.',
+          features: [
+            'Weekly email of new 나라장터 notices matching your sectors & keywords',
+            'Your first pre-submission verification, on us',
+            'Unsubscribe in one click, anytime',
+          ],
+          cta: 'Subscribe free',
+        },
+        paid: {
+          name: 'Eligibility screening',
+          price: '₩49,000',
+          priceSuffix: '/ month',
+          badge: 'Paid',
+          tagline: 'Only see the notices you can actually win.',
+          features: [
+            'Everything in Free, plus:',
+            'Every matching notice screened against your company profile — region, licenses, track record, grades',
+            'Each alert marks ✓ can bid / ⚠ conditional / ✗ ineligible, with the specific requirement',
+            'Auto-renews monthly · cancel anytime',
+          ],
+          cta: 'Start free, then activate',
+          ctaNote: 'Subscribe free first; activate screening from your confirmation email or profile.',
+        },
+      },
       profile: {
         title: 'Eligibility profile',
         eyebrow: 'miriboa · eligibility',
@@ -856,6 +885,35 @@ export const content = {
       updatedBody: '업종을 갱신했습니다. 추가로 하실 일은 없습니다.',
       verifyNeeded: '검증을 완료한 뒤 다시 시도해 주세요.',
       sendError: '문제가 발생했습니다. 잠시 후 다시 시도해 주세요.',
+      tiers: {
+        heading: '이용 방법 두 가지',
+        free: {
+          name: '무료 알림',
+          price: '₩0',
+          tagline: '내 분야 공고를 놓치지 않기.',
+          features: [
+            '매주 업종·키워드에 맞는 신규 나라장터 공고 이메일',
+            '첫 제출 전 검증 1건 무료',
+            '클릭 한 번으로 언제든 수신거부',
+          ],
+          cta: '무료로 구독',
+        },
+        paid: {
+          name: '자격 사전판정',
+          price: '₩49,000',
+          priceSuffix: '/ 월',
+          badge: '유료',
+          tagline: '낼 수 있는 공고만 보기.',
+          features: [
+            '무료 알림의 모든 것, 그리고:',
+            '맞는 공고마다 귀사 프로필(본점소재지·면허·실적·등급)로 참가자격 대조',
+            '알림에 ✓낼 수 있음 / ⚠조건부 / ✗불충족 + 근거 요건 표시',
+            '매월 자동 갱신 · 언제든 해지',
+          ],
+          cta: '무료로 시작 후 활성화',
+          ctaNote: '먼저 무료로 구독하시고, 확인메일·프로필에서 사전판정을 활성화하세요.',
+        },
+      },
       profile: {
         title: '자격 프로필',
         eyebrow: '미리보아 · 자격 사전판정',
