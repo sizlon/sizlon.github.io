@@ -1,0 +1,44 @@
+name: gitleaks
+
+# CI 층 시크릿 스캔 — pre-push 훅(로컬)을 안 켠 기기에서 올려도 서버 측에서
+# 잡는 이중 안전망. 이 레포는 PUBLIC(Pages 호스팅)이라 커밋된 시크릿은 즉시
+# 전세계 공개되므로 방어선을 CI에도 둔다. 훅과 같은 명령(gitleaks git)을 쓴다.
+#
+# 공식 gitleaks-action 대신 CLI를 직접 실행한다 — gitleaks-action v2는 GitHub
+# 조직 소유 레포에 GITLEAKS_LICENSE를 요구하는데, CLI에는 그 제약이 없고
+# 로컬 훅과 동작이 정확히 일치한다.
+
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: gitleaks-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  scan:
+    runs-on: ubuntu-latest
+    env:
+      GITLEAKS_VERSION: 8.24.3   # 로컬 pre-push 훅과 같은 버전으로 핀
+    steps:
+      - name: Checkout (full history)
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0          # gitleaks git이 전 히스토리를 스캔하도록
+
+      - name: Install gitleaks
+        run: |
+          set -euo pipefail
+          url="https://github.com/gitleaks/gitleaks/releases/download/v${GITLEAKS_VERSION}/gitleaks_${GITLEAKS_VERSION}_linux_x64.tar.gz"
+          curl -sSfL "$url" -o /tmp/gitleaks.tar.gz
+          tar -xzf /tmp/gitleaks.tar.gz -C /tmp gitleaks
+          sudo install -m 0755 /tmp/gitleaks /usr/local/bin/gitleaks
+          gitleaks version
+
+      - name: Scan full history for committed secrets
+        run: gitleaks git --no-banner --redact .
