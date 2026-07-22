@@ -16,6 +16,13 @@ export const site = {
   subscribeEndpoint: 'https://svc.sizlon.io/api/subscribe',
   // Eligibility profile (A2) — token-authed GET (prefill) + POST (save). Empty = no-op.
   subscribeProfileEndpoint: 'https://svc.sizlon.io/api/subscribe/profile',
+  // Paid tier — Toss Payments monthly subscription (billing key). The checkout
+  // endpoint returns the public Toss clientKey + a per-subscriber customerKey;
+  // confirm exchanges the redirect authKey for a billingKey and charges month 1.
+  billingCheckoutEndpoint: 'https://svc.sizlon.io/api/billing/checkout',
+  billingConfirmEndpoint: 'https://svc.sizlon.io/api/billing/confirm',
+  billingStatusEndpoint: 'https://svc.sizlon.io/api/billing/status',
+  billingCancelEndpoint: 'https://svc.sizlon.io/api/billing/cancel',
   // Miriboa verification-request endpoint (site-backend, same host). The
   // connector and the site post the SAME form here; only `src` differs so we can
   // compare which surface converts (CONTEXT §94). While empty, the form no-ops.

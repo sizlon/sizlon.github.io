@@ -2,7 +2,7 @@
 import Base from '../layouts/Base.astro';
 import { site } from '../config/site';
 import type { Lang } from '../i18n/content';
-import { t } from '../i18n/utils';
+import { t, localizePath } from '../i18n/utils';
 // Self-serve eligibility profile (A2). The page reads ?token=<subscriber token>
 // from the subscription/alert email, prefills via GET site.subscribeProfileEndpoint,
 // and saves via POST. `company_url` is a honeypot. The token is the auth.
@@ -12,6 +12,7 @@ const { lang } = Astro.props;
 const tr = t(lang);
 const c = tr.monitor.profile;
 const endpoint = site.subscribeProfileEndpoint;
+const subscribePath = localizePath('/monitor/subscribe', lang);
 ---
 
 <Base title={c.title} description={c.lede} lang={lang}>
@@ -74,9 +75,11 @@ const endpoint = site.subscribeProfileEndpoint;
         <p class="note eyebrow">{c.note}</p>
       </form>
 
-      <div class="sent" hidden data-profile-sent>
+      <div class="sent" hidden data-profile-sent data-subscribe-path={subscribePath}>
         <h2>{c.sentTitle}</h2>
         <p>{c.sentBody}</p>
+        <p class="upsell">{c.sentUpsell}</p>
+        <a class="btn btn-primary" hidden data-subscribe-cta>{c.sentCta} <span class="arrow">&rarr;</span></a>
       </div>
     </div>
   </section>
@@ -137,6 +140,8 @@ const endpoint = site.subscribeProfileEndpoint;
         const data = await res.json().catch(() => null);
         if (res.ok && data && data.ok) {
           form.hidden = true;
+          const cta = sent.querySelector<HTMLAnchorElement>('[data-subscribe-cta]');
+          if (cta && token) { cta.href = `${sent.dataset.subscribePath}?token=${encodeURIComponent(token)}`; cta.hidden = false; }
           sent.hidden = false;
           sent.scrollIntoView({ behavior: 'smooth', block: 'center' });
           return;
