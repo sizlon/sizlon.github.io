@@ -196,6 +196,11 @@ export const content = {
       heroCtaFree: 'Start free',
       heroCtaPaid: 'Apply for eligibility screening',
       trust: 'Built on the official 나라장터 open API · designed from 4.5M bid-award records · run by Sizlon',
+      beta: {
+        short: 'Pre-launch',
+        title: 'Pro is in pre-launch',
+        body: 'Card payment currently runs in a test environment — no real charge is made and the subscription does not officially start. We are finalizing the payment review; at launch we will notify applicants by email.',
+      },
       how: {
         heading: 'How it works',
         steps: [
@@ -935,6 +940,11 @@ export const content = {
       heroCtaFree: '무료로 시작',
       heroCtaPaid: '자격 사전판정 신청',
       trust: '나라장터 공식 개방 API 기반 · 개찰 데이터 450만 행 분석으로 설계 · Sizlon 운영',
+      beta: {
+        short: '정식 오픈 준비 중',
+        title: 'Pro는 정식 오픈 준비 중입니다',
+        body: '카드 결제가 현재 테스트 환경으로 운영됩니다 — 실제 청구가 발생하지 않으며 구독이 정식으로 개시되지 않습니다. 결제 심사를 마무리하는 중이며, 정식 오픈 시 신청하신 이메일로 안내드립니다.',
+      },
       how: {
         heading: '이렇게 작동합니다',
         steps: [

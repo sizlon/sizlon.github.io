@@ -39,6 +39,11 @@ const failPath = localizePath('/bid-monitoring/billing/fail', lang);
            data-pastdue-title={c.pastDueTitle} data-pastdue-body={c.pastDueBody}
            data-canceled-title={c.canceledTitle} data-canceled-body={c.canceledBody}>
 
+        <div class="beta-note" role="note">
+          <strong>{tr.monitor.beta.title}</strong>
+          <p>{tr.monitor.beta.body}</p>
+        </div>
+
         <p class="loading" data-loading>{c.loading}</p>
 
         <div class="price" hidden data-price-row>
@@ -189,6 +194,9 @@ const failPath = localizePath('/bid-monitoring/billing/fail', lang);
   [hidden] { display: none !important; }
   .copy { display: flex; flex-direction: column; gap: 1rem; max-width: 46ch; }
   .card { display: flex; flex-direction: column; gap: 1rem; padding: 1.75rem; border: 1px solid var(--hairline); border-radius: var(--radius); background: var(--color-mist); }
+  .beta-note { border: 1px solid #9a6700; border-radius: var(--radius); background: color-mix(in srgb, #9a6700 7%, var(--color-vellum)); padding: 0.9rem 1.1rem; }
+  .beta-note strong { color: #9a6700; font-size: var(--step--1); }
+  .beta-note p { font-size: var(--step--1); color: var(--color-slate); margin: 0.3rem 0 0; }
   .loading { font-family: var(--font-mono); font-size: var(--step--1); color: var(--color-slate); }
   .price { display: flex; align-items: baseline; gap: 0.4rem; }
   .price .amount { font-size: var(--step-3); font-weight: 700; color: var(--color-ink); }
