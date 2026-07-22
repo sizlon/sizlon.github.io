@@ -17,18 +17,20 @@ const screeningPath = localizePath('/bid-monitoring/screening', lang);
 ---
 
 <Base title={c.title} description={c.description} lang={lang}>
-  <section class="section wrap">
-    <div class="copy hero">
-      <span class="eyebrow">{c.eyebrow}</span>
-      <h1>{c.h1}</h1>
-      <p class="lede">{c.lede}</p>
-      <div class="hero-ctas">
-        <a class="btn btn-primary" href={freePath}>{c.heroCtaFree} <span class="arrow">&rarr;</span></a>
-        <a class="btn btn-ghost" href={screeningPath}>{c.heroCtaPaid} <span class="arrow">&rarr;</span></a>
-      </div>
-      <p class="trust eyebrow">{c.trust}</p>
+  <!-- Site-standard hero: .head + .section.wrap on the SAME element, so the
+       measure-capped column itself is centered (like every other page head). -->
+  <section class="head section wrap">
+    <span class="eyebrow">{c.eyebrow}</span>
+    <h1>{c.h1}</h1>
+    <p class="lede">{c.lede}</p>
+    <div class="hero-ctas">
+      <a class="btn btn-primary" href={freePath}>{c.heroCtaFree} <span class="arrow">&rarr;</span></a>
+      <a class="btn btn-ghost" href={screeningPath}>{c.heroCtaPaid} <span class="arrow">&rarr;</span></a>
     </div>
+    <p class="trust eyebrow">{c.trust}</p>
+  </section>
 
+  <section class="section wrap">
     <div class="sample">
       <h2 class="sub-heading">{c.sample.heading}</h2>
       <div class="mail">
@@ -101,8 +103,7 @@ const screeningPath = localizePath('/bid-monitoring/screening', lang);
 </Base>
 
 <style>
-  .copy { display: flex; flex-direction: column; gap: 1rem; max-width: 46ch; }
-  .hero { max-width: 62ch; }
+  .head { display: flex; flex-direction: column; gap: 1rem; max-width: var(--measure); padding-bottom: 0; }
   .alt { color: var(--color-slate); }
   .alt a { color: var(--color-ink); text-decoration: underline; text-decoration-color: var(--color-recovered); text-underline-offset: 3px; }
   .alt.bottom { margin-top: clamp(2rem, 1rem + 3vw, 3.25rem); padding-top: 1.25rem; border-top: 1px solid var(--hairline); }
