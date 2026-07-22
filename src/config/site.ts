@@ -14,6 +14,8 @@ export const site = {
   contactFormEndpoint: 'https://svc.sizlon.io/api/contact',
   // Free notice-alert subscription (site-backend, double opt-in). Empty = form no-ops.
   subscribeEndpoint: 'https://svc.sizlon.io/api/subscribe',
+  // Eligibility profile (A2) — token-authed GET (prefill) + POST (save). Empty = no-op.
+  subscribeProfileEndpoint: 'https://svc.sizlon.io/api/subscribe/profile',
   // Miriboa verification-request endpoint (site-backend, same host). The
   // connector and the site post the SAME form here; only `src` differs so we can
   // compare which surface converts (CONTEXT §94). While empty, the form no-ops.
