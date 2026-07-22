@@ -30,6 +30,7 @@ const strings = {
     data-account-requests={site.accountRequestsEndpoint}
     data-account-path={localizePath('/account', lang)}
     data-manage-path={localizePath('/manage', lang)}
+    data-verify-path={localizePath('/verify-request', lang)}
     data-doc-badges={JSON.stringify(c.badges)}
     data-strings={JSON.stringify(strings)}
   >
@@ -97,6 +98,11 @@ const strings = {
   const accountEndpoint = root && root.getAttribute('data-account-requests');
   const accountPath = root && root.getAttribute('data-account-path') || '/account';
   const managePath = root && root.getAttribute('data-manage-path') || '/manage';
+  const verifyPath = root && root.getAttribute('data-verify-path') || '/verify-request';
+  // draft는 미완성 신청 → 위저드에서 완료(서류·NDA·finalize). 접수건만 /manage 상세.
+  const hrefFor = (r) => r.status === 'draft'
+    ? (verifyPath + '?resume=' + encodeURIComponent(r.token))
+    : (managePath + '?t=' + encodeURIComponent(r.token));
   let S = {}, badges = {};
   try { S = JSON.parse(root.getAttribute('data-strings') || '{}'); } catch { S = {}; }
   try { badges = JSON.parse(root.getAttribute('data-doc-badges') || '{}'); } catch { badges = {}; }
@@ -151,7 +157,7 @@ const strings = {
         const title = ((r.notice_no || '') + ' ' + (r.notice_name || '')).trim() || '—';
         const when = fmtWhen(r.updated_at || r.created_at);
         const li = document.createElement('li');
-        li.innerHTML = '<a href="' + esc(managePath) + '?t=' + encodeURIComponent(r.token) + '">'
+        li.innerHTML = '<a href="' + esc(hrefFor(r)) + '">'
           + '<span class="rq-main"><span class="rq-title">' + esc(title) + '</span>'
           + '<span class="rq-when">' + esc((S.updatedLabel || '') + ' ' + when) + '</span></span>'
           + '<span class="rq-meta"><span class="rq-status s-' + esc(r.status) + '">' + esc(st) + '</span></span>'
@@ -197,6 +203,8 @@ const strings = {
       const res = await fetch(base + '/' + encodeURIComponent(token), { headers: authHeaders() });
       const d = await res.json().catch(() => null);
       if (!res.ok || !d || !d.ok) { hideAll(); show(notfound); return; }
+      // draft(미완성)는 위저드에서 완료 — 옛 /manage?t= 링크도 위저드 재개로 보낸다.
+      if (d.status === 'draft') { location.href = verifyPath + '?resume=' + encodeURIComponent(token); return; }
       hideAll(); renderSummary(d);
       if (d.editable) {
         const isDraft = d.status === 'draft';
