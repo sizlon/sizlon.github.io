@@ -69,8 +69,9 @@ export const site = {
 // (How it works / Security / Editions) stay scoped under that product (see
 // crawlerPages), not in the company-level nav. Labels come from content[lang].
 export const nav = [
-  // 미리보아는 전용 서비스 사이트로 분리(2026-07-23) — 회사 네비에서는 관문 링크.
-  { href: 'https://miriboa.sizlon.io', key: 'Miriboa' },
+  // 미리보아는 전용 서비스 사이트로 분리(2026-07-23). 네비는 회사 사이트 안의
+  // 소개 페이지(/bid-verification)로 — 외부 점프는 그 페이지의 CTA가 담당한다.
+  { href: '/bid-verification', key: 'Miriboa' },
   { href: '/web-crawling', key: 'Crawler Platform' },
   { href: '/contact', key: 'Contact' },
 ] as const;
