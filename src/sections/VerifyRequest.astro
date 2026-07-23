@@ -60,6 +60,7 @@ const stepKeys = ['notice', 'who', 'docs', 'nda', 'done'] as const;
         data-profile-endpoint={site.accountProfileEndpoint}
         data-auth-verify={site.authVerifyEndpoint}
         data-auth-set-password={site.authSetPasswordEndpoint}
+        data-dup-text={c.dupNotice} data-dup-cta={c.dupCta}
         data-turnstile={turnstileKey ? 'on' : undefined}
       >
         <!-- STEP 1 · Notice -->
@@ -165,6 +166,7 @@ const stepKeys = ['notice', 'who', 'docs', 'nda', 'done'] as const;
           <p class="verr" role="alert" hidden data-nda-error>{c.nda.required}</p>
           <p class="verr" role="alert" hidden data-step-error="4">{c.sendError} <a href={`mailto:${site.contactEmail}`}>{site.contactEmail}</a></p>
           <p class="verr" role="alert" hidden data-no-credit>{c.noCredit} <a href={localizePath('/bid-verification/credits', lang)}>{c.noCreditCta} &rarr;</a></p>
+          <p class="verr" role="alert" hidden data-dup-notice></p>
           <div class="wnav">
             <button type="button" class="btn btn-ghost" data-back="4">&larr; {c.back}</button>
             <button type="button" class="btn btn-primary" data-submit disabled>{c.submitFinal} <span class="arrow">&rarr;</span></button>
@@ -233,6 +235,7 @@ const stepKeys = ['notice', 'who', 'docs', 'nda', 'done'] as const;
   const sent = document.querySelector('[data-verify-sent]');
   if (form && sent) {
     const q = new URLSearchParams(location.search);
+  const dupCopy = { text: form && form.getAttribute('data-dup-text') || '', cta: form && form.getAttribute('data-dup-cta') || '' };
     const noticeEndpoint = form.getAttribute('data-notice-endpoint');
     const draftEndpoint = form.getAttribute('data-draft-endpoint');
     const manageBase = form.getAttribute('data-manage-base');
@@ -703,6 +706,20 @@ const stepKeys = ['notice', 'who', 'docs', 'nda', 'done'] as const;
         const fd = await fin.json().catch(() => null);
         if (fin.status === 402 && fd && fd.error === 'no_credit') {
           const nc = $('[data-no-credit]'); if (nc) nc.hidden = false;
+          btn.innerHTML = lbl; btn.disabled = false; refreshStep4(); return;
+        }
+        if (fin.status === 409 && fd && fd.error === 'duplicate_notice') {
+          const dn = $('[data-dup-notice]');
+          if (dn) {
+            const msg = (dupCopy.text || '').replace('{count}', String(fd.verifyCount)).replace('{max}', String(fd.maxVerifications));
+            dn.innerHTML = '';
+            dn.appendChild(document.createTextNode(msg + ' '));
+            const a = document.createElement('a');
+            a.href = managePath + '?t=' + encodeURIComponent(fd.manageToken);
+            a.textContent = (dupCopy.cta || '') + ' →';
+            dn.appendChild(a);
+            dn.hidden = false;
+          }
           btn.innerHTML = lbl; btn.disabled = false; refreshStep4(); return;
         }
         if (fin.ok && fd && fd.ok) {

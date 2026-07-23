@@ -16,7 +16,7 @@ const c = tr.verifyCredits;
 const endpoint = site.creditsCheckoutEndpoint;
 const successPath = localizePath('/bid-verification/credits/success', lang);
 const failPath = localizePath('/bid-verification/credits/fail', lang);
-const accountPath = localizePath('/account', lang);
+const accountPath = localizePath('/account', lang) + '?return=' + encodeURIComponent(localizePath('/bid-verification/credits', lang));
 ---
 
 <Base title={c.title} description={c.lede} lang={lang}>

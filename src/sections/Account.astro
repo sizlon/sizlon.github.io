@@ -133,6 +133,8 @@ const strings = {
   const esc = (s) => String(s == null ? '' : s).replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
   const SKEY = 'miriboa_session';
   const q = new URLSearchParams(location.search);
+  // 로그인 후 복귀 경로 (?return=/bid-verification/credits 등) — 내부 경로만 허용
+  const returnTo = (() => { const r = q.get('return') || ''; return r.startsWith('/') && !r.startsWith('//') ? r : ''; })();
   const RECENT = 3;
   const bearer = () => ({ Authorization: 'Bearer ' + (localStorage.getItem(SKEY) || '') });
   const fmtWhen = (iso) => { if (!iso) return ''; return String(iso).slice(0, 16).replace('T', ' '); };
@@ -164,6 +166,7 @@ const strings = {
       const d = await res.json().catch(() => null);
       if (res.ok && d && d.ok && d.session) {
         localStorage.setItem(SKEY, d.session);
+        if (returnTo) { location.href = returnTo; return; }
         renderHub(d.email, d.requests || [], !!d.has_password);
       } else if (errEl) errEl.hidden = false;
     } catch { if (errEl) errEl.hidden = false; }
@@ -195,6 +198,7 @@ const strings = {
       const d = await res.json().catch(() => null);
       if (res.ok && d && d.ok && d.session) {
         localStorage.setItem(SKEY, d.session);
+        if (returnTo) { location.href = returnTo; return; }
         history.replaceState(null, '', accountPath);
         renderHub(d.email, d.requests || [], !!d.has_password);
       } else { hideAll(); show(loginP); }
