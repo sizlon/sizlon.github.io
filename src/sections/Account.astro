@@ -20,6 +20,7 @@ const strings = {
   billing: { free: c.billingFree, used: c.billingUsed, amtFree: c.amtFree },
   monitoring: { free: c.monitoringFree, paid: c.monitoringPaid, off: c.monitoringOff, manage: c.monitoringManage },
   credits: { chip: c.creditsChip },
+  runsBadge: c.runsBadge,
 };
 ---
 
@@ -244,7 +245,9 @@ const strings = {
         li.innerHTML = '<a href="' + esc(hrefFor(r)) + '">'
           + '<span class="rq-main"><span class="rq-title">' + esc(title) + '</span>'
           + '<span class="rq-when">' + esc((S.updatedLabel || '') + ' ' + when) + '</span></span>'
-          + '<span class="rq-meta"><span class="rq-status s-' + esc(r.status) + '">' + esc(st) + '</span>' + amt + '</span>'
+          + '<span class="rq-meta">'
+          + (r.credit_used ? '<span class="rq-runs">' + esc((S.runsBadge || '').replace('{n}', String(r.verify_count)).replace('{max}', String(r.max_verifications))) + '</span>' : '')
+          + '<span class="rq-status s-' + esc(r.status) + '">' + esc(st) + '</span>' + amt + '</span>'
           + '</a>';
         list.appendChild(li);
       });
@@ -451,6 +454,7 @@ const strings = {
   .reqlist :global(.rq-title) { font-weight: 600; }
   .reqlist :global(.rq-meta) { display: flex; flex-direction: column; align-items: flex-end; gap: 0.15rem; font-family: var(--font-mono); font-size: var(--step--1); white-space: nowrap; }
   .reqlist :global(.rq-status) { font-weight: 700; color: var(--color-slate); }
+  .reqlist :global(.rq-runs) { font-family: var(--font-mono); font-size: var(--step--2); color: var(--color-slate); border: 1px solid var(--hairline); border-radius: 999px; padding: 0.15rem 0.55rem; margin-right: 0.4rem; }
   .reqlist :global(.rq-status.s-draft) { color: #a2570f; }
   .reqlist :global(.rq-status.s-received) { color: var(--color-recovered); }
   .reqlist :global(.rq-amt) { color: var(--color-ink); }

@@ -46,12 +46,17 @@ const accountPath = localizePath('/account', lang) + '?return=' + encodeURICompo
         <a class="btn btn-primary" href={accountPath}>{c.loginCta} <span class="arrow">&rarr;</span></a>
       </div>
 
-      <div hidden data-shop-view>
+      <div hidden data-shop-view
+           data-reason-labels={JSON.stringify(c.reasonLabels)} data-valid-until={c.validUntil}>
         <p class="balance">{c.balanceLabel}: <strong data-balance></strong> {c.creditUnit}</p>
         <div class="packs" data-packs></div>
         <p class="locked" hidden data-locked>{c.lockedNote}</p>
         <p class="note eyebrow">{c.afterNote}</p>
         <p class="note eyebrow">{c.refundNote} · <a class="terms" href={localizePath('/legal/terms', lang)}>{c.termsLabel}</a></p>
+        <div class="history" hidden data-history>
+          <h2>{c.historyHeading}</h2>
+          <ul data-ledger></ul>
+        </div>
       </div>
 
       <p class="verr" hidden data-error-msg>{c.error}</p>
@@ -103,6 +108,30 @@ const accountPath = localizePath('/account', lang) + '?return=' + encodeURICompo
       }
     }
     if (data.locked) show('locked', true);
+    // 구매·사용 내역 (원장 최근 10건)
+    const shop = root.querySelector<HTMLElement>('[data-shop-view]');
+    const ledger = root.querySelector<HTMLElement>('[data-ledger]');
+    if (ledger && shop && Array.isArray(data.ledger) && data.ledger.length) {
+      let labels: Record<string, string> = {};
+      try { labels = JSON.parse(shop.dataset.reasonLabels || '{}'); } catch {}
+      for (const e of data.ledger) {
+        const li = document.createElement('li');
+        const sign = e.delta > 0 ? '+' + e.delta : String(e.delta);
+        const parts = [
+          String(e.created_at || '').slice(0, 10),
+          labels[e.reason] || e.reason,
+          sign,
+        ];
+        if (e.amount_krw > 0) parts.push(fmt(e.amount_krw));
+        if (e.delta > 0 && e.expires_at) parts.push(`${shop.dataset.validUntil} ${String(e.expires_at).slice(0, 10)}`);
+        li.innerHTML = `<span class="h-date"></span><span class="h-reason"></span><span class="h-delta ${e.delta > 0 ? 'pos' : 'neg'}"></span><span class="h-extra"></span>`;
+        const cells = li.querySelectorAll('span');
+        cells[0].textContent = parts[0]; cells[1].textContent = parts[1];
+        cells[2].textContent = parts[2]; cells[3].textContent = parts.slice(3).join(' · ');
+        ledger.appendChild(li);
+      }
+      show('history', true);
+    }
     show('shop-view', true);
   }
 
@@ -150,6 +179,15 @@ const accountPath = localizePath('/account', lang) + '?return=' + encodeURICompo
   .packs :global(.btn) { margin-top: auto; }
   .locked { border: 1px solid #9a6700; border-radius: var(--radius); background: color-mix(in srgb, #9a6700 7%, var(--color-vellum)); padding: 0.9rem 1.1rem; font-size: var(--step--1); color: var(--color-slate); }
   .note { margin: 0; }
+  .history { margin-top: 0.75rem; }
+  .history h2 { font-size: var(--step-0); font-family: var(--font-mono); color: var(--color-slate); margin-bottom: 0.6rem; }
+  .history ul { list-style: none; margin: 0; padding: 0; border: 1px solid var(--hairline); border-radius: var(--radius); background: var(--color-mist); }
+  .history :global(li) { display: grid; grid-template-columns: 6.5rem 1fr auto auto; gap: 0.75rem; padding: 0.55rem 1rem; font-size: var(--step--1); color: var(--color-ink); align-items: baseline; }
+  .history :global(li + li) { border-top: 1px dashed var(--hairline); }
+  .history :global(.h-date), .history :global(.h-extra) { font-family: var(--font-mono); font-size: var(--step--2); color: var(--color-slate); }
+  .history :global(.h-delta) { font-weight: 700; }
+  .history :global(.h-delta.pos) { color: #1a7f37; }
+  .history :global(.h-delta.neg) { color: #b3261e; }
   .terms { color: var(--color-ink); text-decoration: underline; text-underline-offset: 3px; }
   .verr { color: #b3261e; font-size: var(--step--1); }
   @media (max-width: 760px) { .packs { grid-template-columns: 1fr; } }

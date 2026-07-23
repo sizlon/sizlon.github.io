@@ -182,6 +182,7 @@ const stepKeys = ['notice', 'who', 'docs', 'nda', 'done'] as const;
         <p hidden data-sent-first>{c.sentFirst}</p>
         <p hidden data-sent-first-express>{c.sentFirstExpress}</p>
         <p hidden data-sent-returning>{c.sentReturning}</p>
+        <p class="sent-credit" hidden data-sent-credit data-sent-credit-text={c.sentCredit}></p>
         <p class="sent-manage" hidden data-sent-manage><a data-sent-manage-link href="">{c.sentManage} <span class="arrow">&rarr;</span></a></p>
       </div>
 
@@ -728,6 +729,11 @@ const stepKeys = ['notice', 'who', 'docs', 'nda', 'done'] as const;
           if (pf) pf.hidden = !(first && !paid);
           if (pfx) pfx.hidden = !(first && paid);
           if (pr) pr.hidden = first;
+          const sc = sent.querySelector('[data-sent-credit]');
+          if (sc && fd.creditBalance != null) {
+            sc.textContent = (sc.getAttribute('data-sent-credit-text') || '').replace('{n}', String(fd.creditBalance));
+            sc.hidden = false;
+          }
           const sm = sent.querySelector('[data-sent-manage]'), smLink = sent.querySelector('[data-sent-manage-link]');
           if (sm && smLink) { smLink.setAttribute('href', managePath + '?t=' + encodeURIComponent(token)); sm.hidden = false; }
           form.hidden = true; sent.hidden = false; sent.focus();

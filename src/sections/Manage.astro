@@ -18,6 +18,7 @@ const c = tr.verifyManage;
 const strings = {
   f: c.f, noDocs: c.noDocs, purgeAt: c.purgeAt, error: c.error, deleteConfirm: c.deleteConfirm,
   reverify: { intro: c.reverifyIntro, ok: c.reverifyOk, errLimit: c.reverifyErrLimit, errDeadline: c.reverifyErrDeadline },
+  runsBadge: c.runsBadge,
   statusMap: c.statusMap, updatedLabel: c.updatedLabel, discardConfirm: c.discardConfirm,
 };
 ---
@@ -168,7 +169,9 @@ const strings = {
         li.innerHTML = '<a href="' + esc(hrefFor(r)) + '">'
           + '<span class="rq-main"><span class="rq-title">' + esc(title) + '</span>'
           + '<span class="rq-when">' + esc((S.updatedLabel || '') + ' ' + when) + '</span></span>'
-          + '<span class="rq-meta"><span class="rq-status s-' + esc(r.status) + '">' + esc(st) + '</span></span>'
+          + '<span class="rq-meta">'
+          + (r.credit_used ? '<span class="rq-runs">' + esc((S.runsBadge || '').replace('{n}', String(r.verify_count)).replace('{max}', String(r.max_verifications))) + '</span>' : '')
+          + '<span class="rq-status s-' + esc(r.status) + '">' + esc(st) + '</span></span>'
           + '</a>';
         list.appendChild(li);
       });
@@ -193,6 +196,7 @@ const strings = {
     const rows = [
       [f.notice, ((d.notice_no || '') + ' ' + (d.notice_name || '')).trim()],
       [f.deadline, d.deadline], [f.institution, d.institution], [f.status, st],
+      [d.creditUsed ? f.runs : '', d.creditUsed ? d.verifyCount + '/' + d.maxVerifications : ''],
     ];
     let html = rows.filter((r) => r[1]).map((r) => '<div><dt>' + esc(r[0]) + '</dt><dd>' + esc(r[1]) + '</dd></div>').join('');
     const docs = (d.doc_names && d.doc_names.length)
@@ -365,6 +369,7 @@ const strings = {
   .reqlist :global(.rq-title) { font-weight: 600; }
   .reqlist :global(.rq-meta) { font-family: var(--font-mono); font-size: var(--step--1); color: var(--color-slate); white-space: nowrap; }
   .reqlist :global(.rq-status) { font-weight: 700; }
+  .reqlist :global(.rq-runs) { font-family: var(--font-mono); font-size: var(--step--2); color: var(--color-slate); border: 1px solid var(--hairline); border-radius: 999px; padding: 0.15rem 0.55rem; margin-right: 0.4rem; }
   .reqlist :global(.rq-status.s-draft) { color: #a2570f; }
   .reqlist :global(.rq-status.s-received) { color: var(--color-recovered); }
 
