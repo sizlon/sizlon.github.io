@@ -31,6 +31,7 @@ const strings = {
     data-auth-logout={site.authLogoutEndpoint}
     data-account-requests={site.accountRequestsEndpoint}
     data-account-path={localizePath('/account', lang)}
+    data-home-path={localizePath('/', lang)}
     data-manage-path={localizePath('/manage', lang)}
     data-verify-path={localizePath('/verify-request', lang)}
     data-doc-badges={JSON.stringify(c.badges)}
@@ -133,7 +134,8 @@ const strings = {
     const sess = localStorage.getItem(SKEY);
     localStorage.removeItem(SKEY);
     if (authLogout) { try { fetch(authLogout, { method: 'POST', credentials: 'include', headers: sess ? { Authorization: 'Bearer ' + sess } : {}, keepalive: true }); } catch (e) {} }
-    location.href = accountPath;
+    // 로그아웃 후엔 홈으로 (Account 와 동일).
+    location.href = (root && root.getAttribute('data-home-path')) || '/';
   });
 
   async function boot() {

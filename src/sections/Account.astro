@@ -36,6 +36,7 @@ const strings = {
     data-account-products={site.accountProductsEndpoint}
     data-account-profile={site.accountProfileEndpoint}
     data-account-path={localizePath('/account', lang)}
+    data-home-path={localizePath('/', lang)}
     data-manage-path={localizePath('/manage', lang)}
     data-verify-path={localizePath('/verify-request', lang)}
     data-strings={JSON.stringify(strings)}
@@ -370,7 +371,8 @@ const strings = {
     const sess = localStorage.getItem(SKEY);
     localStorage.removeItem(SKEY);
     if (authLogout) { try { fetch(authLogout, { method: 'POST', credentials: 'include', headers: sess ? { Authorization: 'Bearer ' + sess } : {}, keepalive: true }); } catch (e) {} }
-    location.href = accountPath;
+    // 로그아웃 후엔 홈으로 — 방금 나온 로그인 화면을 다시 보여주지 않는다.
+    location.href = (root && root.getAttribute('data-home-path')) || '/';
   });
 
   const setpwForm = $('[data-setpw-form]');
