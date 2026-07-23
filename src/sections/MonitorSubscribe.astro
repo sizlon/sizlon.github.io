@@ -64,6 +64,8 @@ const failPath = localizePath('/bid-monitoring/billing/fail', lang);
           <button class="btn btn-line" type="button" hidden data-cancel-btn>{c.cancel}</button>
         </div>
 
+        <p class="locked" hidden data-locked>{c.lockedNote}</p>
+
         <p class="verr" hidden data-bad-token>{c.badToken}</p>
         <p class="verr" hidden data-disabled>{c.disabled}</p>
         <p class="verr" hidden data-error-msg>{c.error}</p>
@@ -85,7 +87,7 @@ const failPath = localizePath('/bid-monitoring/billing/fail', lang);
 
   const checkoutEndpoint = root?.dataset.checkoutEndpoint || '';
   const cancelEndpoint = root?.dataset.cancelEndpoint || '';
-  let clientKey = '', customerKey = '', email = '';
+  let clientKey = '', customerKey = '', email = '', locked = false;
 
   function fail(kind: 'badToken' | 'disabled' | 'errorMsg') {
     show('loading', false);
@@ -116,6 +118,7 @@ const failPath = localizePath('/bid-monitoring/billing/fail', lang);
 
   function showPay() {
     show('loading', false);
+    if (locked) { show('locked', true); return; }   // 프리런치 — 결제 버튼 잠금
     show('pay-view', true);
   }
 
@@ -172,6 +175,7 @@ const failPath = localizePath('/bid-monitoring/billing/fail', lang);
     const data = await res.json().catch(() => null);
     if (!res.ok || !data || !data.ok) { fail('errorMsg'); return; }
     clientKey = data.clientKey; customerKey = data.customerKey; email = data.email || '';
+    locked = !!data.locked;
     const priceEl = root?.querySelector<HTMLElement>('[data-price]');
     const sufEl = root?.querySelector<HTMLElement>('[data-price-suffix-el]');
     if (priceEl) priceEl.textContent = `₩${Number(data.amount).toLocaleString()}`;
@@ -208,6 +212,7 @@ const failPath = localizePath('/bid-monitoring/billing/fail', lang);
   .status h2 { font-size: var(--step-1); }
   .cardline { font-family: var(--font-mono); font-size: var(--step--1); color: var(--color-slate); }
   .btn-line { background: transparent; border: 1px solid var(--hairline); color: var(--color-slate); }
+  .locked { border: 1px solid #9a6700; border-radius: var(--radius); background: color-mix(in srgb, #9a6700 7%, var(--color-vellum)); padding: 0.9rem 1.1rem; font-size: var(--step--1); color: var(--color-slate); }
   .verr { color: #b3261e; font-size: var(--step--1); }
   @media (max-width: 760px) { .grid { grid-template-columns: 1fr; } }
 </style>
