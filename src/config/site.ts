@@ -27,6 +27,11 @@ export const site = {
   billingConfirmEndpoint: 'https://svc.sizlon.io/api/billing/confirm',
   billingStatusEndpoint: 'https://svc.sizlon.io/api/billing/status',
   billingCancelEndpoint: 'https://svc.sizlon.io/api/billing/cancel',
+  // Verification credits (self-serve 입찰검증) — one-time Toss payment. checkout
+  // returns packs+orderIds (session-authed); confirm approves and credits the ledger.
+  creditsEndpoint: 'https://svc.sizlon.io/api/credits',
+  creditsCheckoutEndpoint: 'https://svc.sizlon.io/api/credits/checkout',
+  creditsConfirmEndpoint: 'https://svc.sizlon.io/api/credits/confirm',
   // Miriboa verification-request endpoint (site-backend, same host). The
   // connector and the site post the SAME form here; only `src` differs so we can
   // compare which surface converts (CONTEXT §94). While empty, the form no-ops.
