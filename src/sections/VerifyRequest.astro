@@ -20,6 +20,7 @@ const turnstileKey = site.turnstileSiteKey;
 const privacyHref = localizePath('/legal/privacy', lang);
 const termsHref = localizePath('/legal/terms', lang);
 const stepKeys = ['notice', 'who', 'docs', 'nda', 'done'] as const;
+const accountGatePath = localizePath('/account', lang);
 ---
 
 <Base title={c.title} description={c.description} lang={lang}>
@@ -42,6 +43,11 @@ const stepKeys = ['notice', 'who', 'docs', 'nda', 'done'] as const;
     </div>
 
     <div class="formcol">
+      <div class="sent logingate" hidden data-login-gate>
+        <h2>{c.loginGateTitle}</h2>
+        <p>{c.loginGateBody}</p>
+        <a class="btn btn-primary" data-login-gate-cta href={accountGatePath}>{c.loginGateCta} <span class="arrow">&rarr;</span></a>
+      </div>
       <ol class="progress" aria-label="Steps">
         {stepKeys.map((k, i) => (
           <li class="pstep" data-pstep={i + 1}><span class="pnum">{i + 1}</span>{c.steps[k]}</li>
@@ -59,6 +65,7 @@ const stepKeys = ['notice', 'who', 'docs', 'nda', 'done'] as const;
         data-manage-path={localizePath('/manage', lang)}
         data-profile-endpoint={site.accountProfileEndpoint}
         data-auth-verify={site.authVerifyEndpoint}
+        data-account-requests={site.accountRequestsEndpoint}
         data-auth-set-password={site.authSetPasswordEndpoint}
         data-dup-text={c.dupNotice} data-dup-cta={c.dupCta}
         data-turnstile={turnstileKey ? 'on' : undefined}
@@ -367,10 +374,42 @@ const stepKeys = ['notice', 'who', 'docs', 'nda', 'done'] as const;
       form.hidden = false; showStep(1);   // 못 찾음/무효 → 새 폼
     }
 
+    // 로그인 게이트 (가입 전제 신청): 일반 진입은 세션부터 확인한다 — 신청은 계정
+    // 크레딧을 쓰는 행위라, 폼을 다 채운 뒤 2단계에서 끊기는 것보다 입구에서 밝힌다.
+    // 이어하기 경로(login+resume 매직 교환, resume 캐퍼빌리티 링크)는 자체 인증이
+    // 있으므로 게이트를 거치지 않는다.
+    async function loginGate() {
+      const gate = document.querySelector('[data-login-gate]');
+      const progress = document.querySelector('.progress');
+      const acct = form.getAttribute('data-account-requests');
+      const showGate = () => {
+        form.hidden = true; if (progress) progress.hidden = true;
+        const cta = gate && gate.querySelector('[data-login-gate-cta]');
+        if (cta) cta.setAttribute('href', cta.getAttribute('href') + '?return=' + encodeURIComponent(location.pathname + location.search));
+        if (gate) gate.hidden = false;
+      };
+      const sess = localStorage.getItem('miriboa_session');
+      if (!sess || !acct) { showGate(); return; }
+      form.hidden = true;                                 // 검증 중 깜빡임 방지
+      try {
+        const res = await fetch(acct, { headers: { Authorization: 'Bearer ' + sess } });
+        const d = await res.json().catch(() => null);
+        if (res.ok && d && d.ok && d.email) {
+          // 세션 이메일로 접수 고정 — 계정 소유 크레딧이 차감되므로 변경 불가
+          const em = form.querySelector('[name="email"]');
+          if (em) { em.value = d.email; em.readOnly = true; em.classList.add('locked'); }
+          form.hidden = false; showStep(1);
+          return;
+        }
+        if (res.status === 401) localStorage.removeItem('miriboa_session');
+      } catch {}
+      showGate();
+    }
+
     const loginQ = q.get('login'), resumeQ = q.get('resume');
     if (loginQ && resumeQ && authVerify) resumeFlow(loginQ, resumeQ);
     else if (resumeQ) capabilityResume(resumeQ);
-    else showStep(1);
+    else loginGate();   // 성공 시 내부에서 showStep(1)
 
     // ── STEP 1: 공고 자동채움 ──
     const noticeInput = $('[data-field-notice]');
@@ -817,6 +856,9 @@ const stepKeys = ['notice', 'who', 'docs', 'nda', 'done'] as const;
   .wnav .btn-primary { margin-left: auto; }
   .note { margin: 0; }
   .verr { color: #b3261e; font-size: var(--step--1); }
+  .logingate { display: flex; flex-direction: column; gap: 0.75rem; align-items: flex-start; }
+  .logingate h2 { font-size: var(--step-1); }
+  input.locked { background: var(--color-mist); color: var(--color-slate); }
   .hp { position: absolute; left: -9999px; width: 1px; height: 1px; overflow: hidden; }
   .sent { padding: 1.75rem; border: 1px solid var(--color-recovered); border-radius: var(--radius); background: var(--color-mist); display: flex; flex-direction: column; gap: 0.6rem; }
   .sent h2 { font-size: var(--step-1); }
