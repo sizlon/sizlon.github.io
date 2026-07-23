@@ -378,8 +378,13 @@ const stepKeys = ['notice', 'who', 'docs', 'nda', 'done'] as const;
     // 공고가 실제로 추출됐을 때만 '다음'이 활성화된다. 번호가 바뀌면 즉시 다시 비활성.
     const setNoticeOk = (ok) => { if (next1) next1.disabled = !ok; };
     let lookSeq = 0;
+    let lastOkNo = '';   // 마지막으로 성공 조회된 번호 — blur 재조회 가드
     async function lookupNotice(no) {
       no = (no || '').trim();
+      // 같은 번호가 이미 성공 조회된 상태면 재조회하지 않는다. 특히 '다음' 클릭
+      // 직전의 blur 가 재조회를 돌리면 setNoticeOk(false)로 버튼이 꺼져 첫
+      // 클릭이 씹히는 버그(클릭보다 blur 가 먼저 발생)가 있었다.
+      if (no && no === lastOkNo) return;
       if (notfound) notfound.hidden = true;
       setNoticeOk(false);
       if (!no || !noticeEndpoint) { if (auto) auto.hidden = true; return; }
@@ -399,6 +404,7 @@ const stepKeys = ['notice', 'who', 'docs', 'nda', 'done'] as const;
           if (hStakes) hStakes.value = (d.stakes || '').slice(0, 200);
           if (auto) auto.hidden = false;
           if (d.no && noticeInput && d.no !== no) noticeInput.value = d.no;
+          lastOkNo = (noticeInput && noticeInput.value.trim()) || no;
           setNoticeOk(true);
         } else {
           if (auto) auto.hidden = true;
@@ -408,7 +414,14 @@ const stepKeys = ['notice', 'who', 'docs', 'nda', 'done'] as const;
     }
     let lookTimer;
     if (noticeInput) {
-      noticeInput.addEventListener('input', () => { setNoticeOk(false); clearTimeout(lookTimer); lookTimer = setTimeout(() => lookupNotice(noticeInput.value), 450); });
+      noticeInput.addEventListener('input', () => {
+        const v = noticeInput.value.trim();
+        clearTimeout(lookTimer);
+        if (v && v === lastOkNo) { setNoticeOk(true); return; }  // 지웠다 같은 번호로 복귀
+        lastOkNo = '';
+        setNoticeOk(false);
+        lookTimer = setTimeout(() => lookupNotice(noticeInput.value), 450);
+      });
       noticeInput.addEventListener('blur', () => lookupNotice(noticeInput.value));
     }
     const srcQ = q.get('src'); const srcEl = $('[data-field-src]'); if (srcEl && srcQ) srcEl.value = srcQ;
