@@ -329,7 +329,7 @@ const accountGatePath = localizePath('/account', lang);
         const res = await fetch(authVerify, { method: 'POST', body: fd, credentials: 'include' });
         const d = await res.json().catch(() => null);
         if (!(res.ok && d && d.ok && d.session)) { form.hidden = false; showStep(1); return; }
-        localStorage.setItem('miriboa_session', d.session);
+        localStorage.setItem('miriboa_session', d.session); try { window.dispatchEvent(new Event('miriboa-session-change')); } catch (e) {}
         history.replaceState(null, '', location.pathname);   // 링크에서 토큰 제거
         const dd = await fetchDraft(resume);
         if (!dd) { form.hidden = false; showStep(1); return; }   // draft 없음/무효

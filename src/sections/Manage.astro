@@ -132,7 +132,7 @@ const strings = {
   if (logoutBtn && localStorage.getItem(SKEY)) logoutBtn.hidden = false;
   if (logoutBtn) logoutBtn.addEventListener('click', () => {
     const sess = localStorage.getItem(SKEY);
-    localStorage.removeItem(SKEY);
+    localStorage.removeItem(SKEY); try { window.dispatchEvent(new Event('miriboa-session-change')); } catch (e) {}
     if (authLogout) { try { fetch(authLogout, { method: 'POST', credentials: 'include', headers: sess ? { Authorization: 'Bearer ' + sess } : {}, keepalive: true }); } catch (e) {} }
     // 로그아웃 후엔 홈으로 (Account 와 동일).
     location.href = (root && root.getAttribute('data-home-path')) || '/';
@@ -153,7 +153,7 @@ const strings = {
       const res = await fetch(accountEndpoint, { headers: { Authorization: 'Bearer ' + session } });
       const d = await res.json().catch(() => null);
       if (res.ok && d && d.ok) renderList(d.requests || []);
-      else { localStorage.removeItem(SKEY); location.href = accountPath; }
+      else { localStorage.removeItem(SKEY); try { window.dispatchEvent(new Event('miriboa-session-change')); } catch (e) {} location.href = accountPath; }
     } catch { hideAll(); show(notfound); }
   }
 

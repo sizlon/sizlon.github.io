@@ -97,13 +97,20 @@ const homeHref = localizePath('/', lang);
   });
 
   // Sizlon 계정(미리보아 세션) 로그인 상태를 nav에 반영: 로그인 중이면 '내 계정'.
-  try {
-    if (localStorage.getItem('miriboa_session')) {
+  // 같은 페이지에서 로그인/로그아웃해도 즉시 바뀌도록, 로그인 코드가 쏘는
+  // 'miriboa-session-change' 이벤트와 (타 탭용) storage 이벤트에도 반응한다.
+  const applyAcctLabel = () => {
+    try {
+      const on = !!localStorage.getItem('miriboa_session');
       document.querySelectorAll<HTMLElement>('[data-acct-text]').forEach((el) => {
-        if (el.dataset.account) el.textContent = el.dataset.account;
+        const label = on ? el.dataset.account : el.dataset.login;
+        if (label) el.textContent = label;
       });
-    }
-  } catch (e) {}
+    } catch (e) {}
+  };
+  applyAcctLabel();
+  window.addEventListener('miriboa-session-change', applyAcctLabel);
+  window.addEventListener('storage', (e) => { if (e.key === 'miriboa_session') applyAcctLabel(); });
 </script>
 
 <style>

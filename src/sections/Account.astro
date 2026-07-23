@@ -167,7 +167,7 @@ const strings = {
       const res = await fetch(authLogin, { method: 'POST', body: fd, credentials: 'include' });
       const d = await res.json().catch(() => null);
       if (res.ok && d && d.ok && d.session) {
-        localStorage.setItem(SKEY, d.session);
+        localStorage.setItem(SKEY, d.session); try { window.dispatchEvent(new Event('miriboa-session-change')); } catch (e) {}
         if (returnTo) { location.href = returnTo; return; }
         renderHub(d.email, d.requests || [], !!d.has_password);
       } else if (errEl) errEl.hidden = false;
@@ -199,7 +199,7 @@ const strings = {
       const res = await fetch(authVerify, { method: 'POST', body: fd, credentials: 'include' });
       const d = await res.json().catch(() => null);
       if (res.ok && d && d.ok && d.session) {
-        localStorage.setItem(SKEY, d.session);
+        localStorage.setItem(SKEY, d.session); try { window.dispatchEvent(new Event('miriboa-session-change')); } catch (e) {}
         if (returnTo) { location.href = returnTo; return; }
         history.replaceState(null, '', accountPath);
         renderHub(d.email, d.requests || [], !!d.has_password);
@@ -213,7 +213,7 @@ const strings = {
       const res = await fetch(accountEndpoint, { headers: { Authorization: 'Bearer ' + session } });
       const d = await res.json().catch(() => null);
       if (res.ok && d && d.ok) renderHub(d.email, d.requests || [], !!d.has_password);
-      else { localStorage.removeItem(SKEY); hideAll(); show(loginP); }
+      else { localStorage.removeItem(SKEY); try { window.dispatchEvent(new Event('miriboa-session-change')); } catch (e) {} hideAll(); show(loginP); }
     } catch { hideAll(); show(loginP); }
   }
 
@@ -369,7 +369,7 @@ const strings = {
   const logoutBtn = $('[data-logout]');
   if (logoutBtn) logoutBtn.addEventListener('click', () => {
     const sess = localStorage.getItem(SKEY);
-    localStorage.removeItem(SKEY);
+    localStorage.removeItem(SKEY); try { window.dispatchEvent(new Event('miriboa-session-change')); } catch (e) {}
     if (authLogout) { try { fetch(authLogout, { method: 'POST', credentials: 'include', headers: sess ? { Authorization: 'Bearer ' + sess } : {}, keepalive: true }); } catch (e) {} }
     // 로그아웃 후엔 홈으로 — 방금 나온 로그인 화면을 다시 보여주지 않는다.
     location.href = (root && root.getAttribute('data-home-path')) || '/';
