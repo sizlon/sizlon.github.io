@@ -17,6 +17,7 @@ export function logicalPath(url: URL): string {
 
 /** Map a logical path to its localized URL ('/products' + ko → '/ko/products'). */
 export function localizePath(path: string, lang: Lang): string {
+  if (path.startsWith('http')) return path;   // 외부(서비스 사이트) 링크는 로케일 무가공
   if (lang === defaultLang) return path;
   return path === '/' ? '/ko/' : `/ko${path}`;
 }

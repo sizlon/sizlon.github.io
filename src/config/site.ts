@@ -69,11 +69,8 @@ export const site = {
 // (How it works / Security / Editions) stay scoped under that product (see
 // crawlerPages), not in the company-level nav. Labels come from content[lang].
 export const nav = [
-  { href: '/bid-verification', key: 'Miriboa' },
-  // 입찰 모니터링 — a self-serve product with its own tiers/funnel (Free/Pro), so
-  // it gets a one-hop nav entry per the buyer-first rule above (it is also the
-  // acquisition wedge; two hops deep would blunt it). Label: content nav['Free alerts'].
-  { href: '/bid-monitoring', key: 'Free alerts' },
+  // 미리보아는 전용 서비스 사이트로 분리(2026-07-23) — 회사 네비에서는 관문 링크.
+  { href: 'https://miriboa.sizlon.io', key: 'Miriboa' },
   { href: '/web-crawling', key: 'Crawler Platform' },
   { href: '/contact', key: 'Contact' },
 ] as const;
@@ -97,8 +94,8 @@ export const crawlerPages = [
 // (Demonstrating the parsing capability, its other original job, is now done
 // far better by the connector reading a real notice in chat.)
 export const miriboaPages = [
-  { href: '/bid-monitoring', key: 'Free alerts' },
-  { href: '/connector', key: 'Connector' },
+  { href: 'https://miriboa.sizlon.io/bid-monitoring', key: 'Free alerts' },
+  { href: 'https://miriboa.sizlon.io/connector', key: 'Connector' },
 ] as const;
 
 // The MCP connector endpoint users paste into Claude. Public, no auth.
@@ -120,7 +117,7 @@ export type Solution = {
 
 export const solutions: Solution[] = [
   { slug: 'crawler-platform', name: 'Crawler Platform', categoryKey: 'extraction', deliveryKeys: ['selfHosted', 'managed'], status: 'live', href: '/web-crawling' },
-  { slug: 'miriboa', name: 'Miriboa', categoryKey: 'verification', deliveryKeys: ['service'], status: 'live', href: '/bid-verification' },
+  { slug: 'miriboa', name: 'Miriboa', categoryKey: 'verification', deliveryKeys: ['service'], status: 'live', href: 'https://miriboa.sizlon.io' },
 ];
 
 export const legalLinks = [

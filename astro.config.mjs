@@ -7,9 +7,9 @@ export default defineConfig({
   site: 'https://sizlon.io',
   // Legacy product URLs — landing pages moved top-level with function slugs.
   redirects: {
-    '/products/miriboa': '/bid-verification',
+    '/products/miriboa': 'https://miriboa.sizlon.io',
     '/products/crawler-platform': '/web-crawling',
-    '/ko/products/miriboa': '/ko/bid-verification',
+    '/ko/products/miriboa': 'https://miriboa.sizlon.io',
     '/ko/products/crawler-platform': '/ko/web-crawling',
   },
   i18n: {
