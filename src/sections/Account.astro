@@ -19,6 +19,7 @@ const strings = {
   profile: { company: c.profileCompany, brn: c.profileBrn, person: c.profilePerson, phone: c.profilePhone, email: c.profileEmail, save: c.profileSave, saved: c.profileSaved, error: c.profileError },
   billing: { free: c.billingFree, used: c.billingUsed, amtFree: c.amtFree },
   monitoring: { free: c.monitoringFree, paid: c.monitoringPaid, off: c.monitoringOff, manage: c.monitoringManage },
+  credits: { chip: c.creditsChip },
 };
 ---
 
@@ -92,6 +93,7 @@ const strings = {
         </p>
         <div class="cardlinks">
           <a class="btn btn-primary" href={localizePath('/verify-request', lang)}>{c.newVerify} <span class="arrow">&rarr;</span></a>
+          <a class="alt" href={localizePath('/bid-verification/credits', lang)}>{c.creditsBuy} <span class="arrow">&rarr;</span></a>
           <a class="alt" href={localizePath('/manage', lang)}>{c.manageLink} <span class="arrow">&rarr;</span></a>
         </div>
       </section>
@@ -257,7 +259,7 @@ const strings = {
     if (!d || !d.ok) return;
     renderProfile(d.companies || [], email);
     const chip = $('[data-billing]');
-    if (chip && S.billing) {
+    if (chip && S.billing && !chip.dataset.credits) {
       const anyFree = (d.companies || []).some((co) => !co.first_free_used);
       chip.textContent = anyFree ? S.billing.free : S.billing.used;
       chip.classList.add(anyFree ? 'free' : 'used');
@@ -318,6 +320,14 @@ const strings = {
       d = await res.json().catch(() => null);
     } catch { return; }
     if (!d || !d.ok) return;
+    // 검증 크레딧 잔액 — billing chip 을 크레딧 표시로 (크레딧 모델이 첫검증무료를 대체).
+    if (d.credits && S.credits) {
+      const chip = $('[data-billing]');
+      if (chip) {
+        chip.textContent = (S.credits.chip || '').replace('{n}', String(d.credits.balance));
+        chip.classList.add('free'); chip.dataset.credits = '1'; chip.hidden = false;
+      }
+    }
     // 모니터링(무료 알림·자격 사전판정) 구독 상태 — 관리(해지·상태)는 구독 페이지로.
     const mon = d.monitoring, ms = S.monitoring || {};
     if (mon) {
