@@ -17,6 +17,7 @@ const tr = t(lang);
 const c = tr.verifyManage;
 const strings = {
   f: c.f, noDocs: c.noDocs, purgeAt: c.purgeAt, error: c.error, deleteConfirm: c.deleteConfirm,
+  reverify: { intro: c.reverifyIntro, ok: c.reverifyOk, errLimit: c.reverifyErrLimit, errDeadline: c.reverifyErrDeadline },
   statusMap: c.statusMap, updatedLabel: c.updatedLabel, discardConfirm: c.discardConfirm,
 };
 ---
@@ -55,6 +56,13 @@ const strings = {
       <dl class="summary" data-summary></dl>
       <p class="statusnote" hidden data-locked>{c.lockedNote}</p>
       <p class="statusnote" hidden data-purged>{c.purgedNote}</p>
+      <div class="block reverify" hidden data-reverify-block>
+        <h2>{c.reverifyHeading}</h2>
+        <p class="hint" data-reverify-intro></p>
+        <button class="btn btn-primary" type="button" data-reverify>{c.reverifyBtn}</button>
+        <p class="verr" role="alert" hidden data-reverify-err></p>
+      </div>
+      <p class="ok" role="status" hidden data-reverify-ok></p>
       <div class="editblock" hidden data-editblock>
         <div class="block">
           <h2>{c.addHeading}</h2>
@@ -212,10 +220,46 @@ const strings = {
         if (discardBlock) discardBlock.hidden = !isDraft;
         show(editblock);
       } else if (d.purged) show(purgedEl);
-      else show(lockedEl);
+      else if (!d.reverifiable) show(lockedEl);
+      // 재검증 (delivered 이후·마감 전·횟수 남음): 요청 → received 로 되돌아가
+      // 서류 교체가 열린다. 요청 성공 시 loadRequest 재호출로 편집 화면 전환.
+      const rvBlock = $('[data-reverify-block]');
+      if (rvBlock) {
+        rvBlock.hidden = !d.reverifiable;
+        if (d.reverifiable) {
+          const intro = $('[data-reverify-intro]');
+          if (intro) intro.textContent = (S.reverify && S.reverify.intro || '')
+            .replace('{remaining}', String(d.maxVerifications - d.verifyCount));
+        }
+      }
       show(requestP);
     } catch { hideAll(); show(notfound); }
   }
+
+  const rvBtn = $('[data-reverify]');
+  if (rvBtn) rvBtn.addEventListener('click', async () => {
+    if (!reqToken || !base) return;
+    rvBtn.disabled = true;
+    const ok = $('[data-reverify-ok]'), err = $('[data-reverify-err]');
+    try {
+      const res = await fetch(base + '/' + encodeURIComponent(reqToken) + '/reverify', { method: 'POST', headers: authHeaders() });
+      const d = await res.json().catch(() => null);
+      if (res.ok && d && d.ok) {
+        if (ok) { ok.textContent = (S.reverify && S.reverify.ok || '').replace('{count}', String(d.verifyCount)); ok.hidden = false; }
+        await loadRequest(reqToken);   // received 로 돌아가 서류 교체 UI가 열린다
+        if (ok) ok.hidden = false;
+        return;
+      }
+      const code = d && d.error;
+      if (err) {
+        err.textContent = code === 'limit' ? (S.reverify && S.reverify.errLimit || '')
+          : code === 'deadline_passed' ? (S.reverify && S.reverify.errDeadline || '')
+          : (S.error || '');
+        err.hidden = false;
+      }
+    } catch { if (err) { err.textContent = S.error || ''; err.hidden = false; } }
+    rvBtn.disabled = false;
+  });
 
   // dropzone (add/replace)
   const docInput = $('[data-docs-input]'), drop = $('[data-drop]'), filelist = $('[data-filelist]'), docChecking = $('[data-docs-checking]');
