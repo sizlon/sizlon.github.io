@@ -2,7 +2,7 @@
 // Moved to the dedicated Miriboa service site (2026-07-23 split). Query-string
 // preserving JS redirect — token links (?token=, ?t=) live in sent emails.
 export function getStaticPaths() {
-  return ['', 'credits', 'credits/success', 'credits/fail'].map((s) => ({ params: { slug: s || undefined } }));
+  return ['credits', 'credits/success', 'credits/fail'].map((s) => ({ params: { slug: s || undefined } }));
 }
 const { slug } = Astro.params;
 const target = `https://miriboa.sizlon.io/bid-verification${slug ? `/${slug}` : ''}`;

@@ -26,7 +26,7 @@ export const content = {
         miriboa: 'Pre-submission bid-document verification. It extracts the requirements from a tender package and checks your bid against them — missing documents, mismatched names, pricing errors — before submission, not after a rejection.',
       },
     },
-    nav: { Products: 'Products', Miriboa: 'Miriboa', 'Crawler Platform': 'Web Crawling', 'How it works': 'How it works', Security: 'Security', Editions: 'Editions', Contact: 'Contact', Connector: 'Claude connector', 'Free alerts': 'Tender monitoring' },
+    nav: { Products: 'Products', Miriboa: 'Bid Verification', 'Crawler Platform': 'Web Crawling', 'How it works': 'How it works', Security: 'Security', Editions: 'Editions', Contact: 'Contact', Connector: 'Claude connector', 'Free alerts': 'Tender monitoring' },
     footer: {
       tagline: 'AI proposes. A deterministic layer verifies.',
       site: 'Site',
@@ -364,6 +364,19 @@ export const content = {
         failBody: 'No charge was made. You can try again from the subscription page.',
         retry: 'Back to subscription',
       },
+    },
+    miriboaGw: {
+      title: 'Bid Verification — Miriboa',
+      eyebrow: 'miriboa · bid services',
+      h1: 'Catch the flaw before you submit.',
+      lede: 'Miriboa is Sizlon’s bid service for 나라장터 bidders: it checks your submission package against what the notice actually requires — the document list, the qualifications, the evaluation weights — and reports the defects before you submit.',
+      cards: [
+        { t: 'Bid Verification', d: 'Your bid package checked against the notice, returned as a findings report. One credit = up to 3 runs of one notice until it closes. First verification free.', cta: 'Request a verification', href: 'https://miriboa.sizlon.io/verify-request' },
+        { t: 'Tender Monitoring', d: 'New notices in your sectors, every week, free — and the Pro tier screens each one for whether you can actually bid.', cta: 'See monitoring', href: 'https://miriboa.sizlon.io/bid-monitoring' },
+      ],
+      trust: 'Built on the official 나라장터 open API · designed from 4.5M bid-award records',
+      cta: 'Open the Miriboa site',
+      href: 'https://miriboa.sizlon.io',
     },
     verifyCredits: {
       title: 'Verification credits',
@@ -821,7 +834,7 @@ export const content = {
         miriboa: '제출 전 입찰 서류 검증. 공고 패키지에서 요구조건을 추출해 응찰 서류와 대조합니다 — 서류 누락, 명의 불일치, 가격 오류를 탈락 후가 아니라 제출 전에 잡습니다.',
       },
     },
-    nav: { Products: '제품', Miriboa: '미리보아', 'Crawler Platform': '웹 크롤링', 'How it works': '작동 원리', Security: '보안', Editions: '에디션', Contact: '문의', Connector: 'Claude 커넥터', 'Free alerts': '입찰 모니터링' },
+    nav: { Products: '제품', Miriboa: '입찰검증', 'Crawler Platform': '웹 크롤링', 'How it works': '작동 원리', Security: '보안', Editions: '에디션', Contact: '문의', Connector: 'Claude 커넥터', 'Free alerts': '입찰 모니터링' },
     footer: {
       tagline: 'AI가 제안하고, 규칙 기반 계층이 검증합니다.',
       site: '사이트',
@@ -1159,6 +1172,19 @@ export const content = {
         failBody: '청구된 금액은 없습니다. 구독 페이지에서 다시 시도하실 수 있습니다.',
         retry: '구독 페이지로',
       },
+    },
+    miriboaGw: {
+      title: '입찰검증 — 미리보아',
+      eyebrow: '미리보아 · 입찰 서비스',
+      h1: '떨어질 서류를, 제출 전에 잡아냅니다.',
+      lede: '미리보아는 나라장터 응찰 팀을 위한 시즐론의 입찰 서비스입니다. 공고가 실제로 요구하는 것 — 제출서류 목록·참가자격·평가 배점 —에 응찰 패키지를 대조해, 제출 전에 결함을 리포트로 돌려드립니다.',
+      cards: [
+        { t: '입찰검증', d: '응찰 서류를 공고 요구조건에 대조해 판정 리포트로. 크레딧 1개 = 한 공고를 마감일까지 최대 3회 검증. 첫 검증은 무료입니다.', cta: '검증 신청', href: 'https://miriboa.sizlon.io/verify-request' },
+        { t: '입찰 모니터링', d: '내 업종 신규 공고를 매주 이메일로 — 무료. Pro는 공고마다 귀사가 낼 수 있는지 자격 사전판정까지 붙여드립니다.', cta: '모니터링 보기', href: 'https://miriboa.sizlon.io/bid-monitoring' },
+      ],
+      trust: '나라장터 공식 개방 API 기반 · 개찰 데이터 450만 행 분석으로 설계',
+      cta: '미리보아 사이트로',
+      href: 'https://miriboa.sizlon.io',
     },
     verifyCredits: {
       title: '검증 크레딧',
