@@ -2,7 +2,7 @@
 import Base from '../layouts/Base.astro';
 import { site } from '../config/site';
 import type { Lang } from '../i18n/content';
-import { t } from '../i18n/utils';
+import { t, localizePath } from '../i18n/utils';
 // Paid eligibility-screening application (account signup path). One form collects
 // alert settings (email/sectors/keywords) AND the company credentials the
 // screening judges against. POST to site.subscribeScreeningEndpoint creates the
@@ -17,6 +17,8 @@ const m = tr.monitor;           // shared alert labels/sectors
 const p = tr.monitor.profile;   // credential labels/hints (same as profile form)
 const s = tr.monitor.screening; // this page's copy
 const endpoint = site.subscribeScreeningEndpoint;
+const gatePath = localizePath('/account', lang) + '?return=' + encodeURIComponent(localizePath('/bid-monitoring/screening', lang));
+const subscribePath = localizePath('/bid-monitoring/subscribe', lang);
 const turnstileKey = site.turnstileSiteKey;
 ---
 
@@ -29,12 +31,20 @@ const turnstileKey = site.turnstileSiteKey;
     </div>
 
     <div class="formcol">
+      <div class="sent logingate" hidden data-login-gate>
+        <h2>{m.gate.title}</h2>
+        <p>{m.gate.body}</p>
+        <a class="btn btn-primary" href={gatePath}>{m.gate.cta} <span class="arrow">&rarr;</span></a>
+      </div>
       <div class="beta-note" role="note">
         <strong>{tr.monitor.beta.title}</strong>
         <p>{tr.monitor.beta.body}</p>
       </div>
       <form class="form" method="post" action={endpoint || undefined}
-            data-screening-form data-sending={s.sending} data-turnstile={turnstileKey ? 'on' : undefined}>
+            data-screening-form data-sending={s.sending} data-redirecting={s.redirecting}
+            data-subscribe-path={subscribePath}
+            data-account-requests={site.accountRequestsEndpoint}
+            data-turnstile={turnstileKey ? 'on' : undefined}>
 
         <h2 class="formpart">{s.alertHeading}</h2>
 
@@ -131,6 +141,30 @@ const turnstileKey = site.turnstileSiteKey;
   const loadedAt = Date.now();
   const form = document.querySelector<HTMLFormElement>('[data-screening-form]');
   const sent = document.querySelector<HTMLElement>('[data-screening-sent]');
+  // 계정-우선 게이트 (2026-07-23): 세션 확인 후에만 폼 — 이메일은 계정으로 고정.
+  async function gateBoot() {
+    if (!form) return;
+    const gate = document.querySelector<HTMLElement>('[data-login-gate]');
+    const acct = form.getAttribute('data-account-requests');
+    const sess = localStorage.getItem('miriboa_session');
+    const showGate = () => { form.hidden = true; if (gate) gate.hidden = false; };
+    if (!sess || !acct) { showGate(); return; }
+    form.hidden = true;
+    try {
+      const res = await fetch(acct, { headers: { Authorization: 'Bearer ' + sess } });
+      const d = await res.json().catch(() => null);
+      if (res.ok && d && d.ok && d.email) {
+        const em = form.querySelector<HTMLInputElement>('[name="email"]');
+        if (em) { em.value = d.email; em.readOnly = true; }
+        form.hidden = false;
+        return;
+      }
+      if (res.status === 401) localStorage.removeItem('miriboa_session');
+    } catch {}
+    showGate();
+  }
+  gateBoot();
+
   if (form && sent) {
     form.addEventListener('submit', async (e) => {
       e.preventDefault();
@@ -160,8 +194,13 @@ const turnstileKey = site.turnstileSiteKey;
       const label = btn ? btn.innerHTML : '';
       if (btn) { btn.disabled = true; btn.textContent = form.dataset.sending || 'Submitting…'; }
       try {
-        const res = await fetch(endpoint, { method: 'POST', body: new FormData(form) });
+        const res = await fetch(endpoint, { method: 'POST', body: new FormData(form), headers: { Authorization: 'Bearer ' + (localStorage.getItem('miriboa_session') || '') } });
         const data = await res.json().catch(() => null);
+        if (res.ok && data && data.ok && data.token) {
+          if (btn) { btn.textContent = form.dataset.redirecting || '…'; }
+          location.href = (form.dataset.subscribePath || '') + '?token=' + encodeURIComponent(data.token);
+          return;                                   // 결제 페이지로 직행
+        }
         if (res.ok && data && data.ok) {
           form.hidden = true;
           sent.hidden = false;
@@ -205,6 +244,8 @@ const turnstileKey = site.turnstileSiteKey;
   .note { margin-top: 0.25rem; }
   .verr { color: #b3261e; font-size: var(--step--1); }
   .hp { position: absolute; left: -9999px; width: 1px; height: 1px; overflow: hidden; }
+  .logingate { display: flex; flex-direction: column; gap: 0.75rem; align-items: flex-start; }
+  .logingate h2 { font-size: var(--step-1); }
   .sent { padding: 1.75rem; border: 1px solid var(--color-recovered); border-radius: var(--radius); background: var(--color-mist); display: flex; flex-direction: column; gap: 0.6rem; }
   .sent h2 { font-size: var(--step-1); }
   @media (max-width: 760px) { .grid { grid-template-columns: 1fr; } .copy { position: static; } fieldset.sectors { grid-template-columns: 1fr; } }

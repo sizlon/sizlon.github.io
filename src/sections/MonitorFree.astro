@@ -15,6 +15,7 @@ const tr = t(lang);
 const c = tr.monitor;
 const f = tr.monitor.free;
 const endpoint = site.subscribeEndpoint;
+const gatePath = localizePath('/account', lang) + '?return=' + encodeURIComponent(localizePath('/bid-monitoring/free', lang));
 const turnstileKey = site.turnstileSiteKey;
 ---
 
@@ -28,6 +29,11 @@ const turnstileKey = site.turnstileSiteKey;
     </div>
 
     <div class="formcol">
+      <div class="sent logingate" hidden data-login-gate>
+        <h2>{c.gate.title}</h2>
+        <p>{c.gate.body}</p>
+        <a class="btn btn-primary" href={gatePath}>{c.gate.cta} <span class="arrow">&rarr;</span></a>
+      </div>
       <form
         class="form"
         method="post"
@@ -38,6 +44,7 @@ const turnstileKey = site.turnstileSiteKey;
         data-updated-title={c.updatedTitle}
         data-updated-body={c.updatedBody}
         data-turnstile={turnstileKey ? 'on' : undefined}
+        data-account-requests={site.accountRequestsEndpoint}
       >
         <label>
           <span>{c.labels.email}</span>
@@ -104,6 +111,30 @@ const turnstileKey = site.turnstileSiteKey;
       body: form?.getAttribute('data-updated-body') || '',
     },
   };
+  // 계정-우선 게이트 (2026-07-23): 세션 확인 후에만 폼 — 이메일은 계정으로 고정.
+  async function gateBoot() {
+    if (!form) return;
+    const gate = document.querySelector<HTMLElement>('[data-login-gate]');
+    const acct = form.getAttribute('data-account-requests');
+    const sess = localStorage.getItem('miriboa_session');
+    const showGate = () => { form.hidden = true; if (gate) gate.hidden = false; };
+    if (!sess || !acct) { showGate(); return; }
+    form.hidden = true;
+    try {
+      const res = await fetch(acct, { headers: { Authorization: 'Bearer ' + sess } });
+      const d = await res.json().catch(() => null);
+      if (res.ok && d && d.ok && d.email) {
+        const em = form.querySelector<HTMLInputElement>('[name="email"]');
+        if (em) { em.value = d.email; em.readOnly = true; }
+        form.hidden = false;
+        return;
+      }
+      if (res.status === 401) localStorage.removeItem('miriboa_session');
+    } catch {}
+    showGate();
+  }
+  gateBoot();
+
   if (form && sent) {
     form.addEventListener('submit', async (e) => {
       e.preventDefault();
@@ -137,7 +168,7 @@ const turnstileKey = site.turnstileSiteKey;
       const btnLabel = btn ? btn.innerHTML : '';
       if (btn) { btn.disabled = true; btn.textContent = form.dataset.sending || 'Subscribing…'; }
       try {
-        const res = await fetch(endpoint, { method: 'POST', body: new FormData(form) });
+        const res = await fetch(endpoint, { method: 'POST', body: new FormData(form), headers: { Authorization: 'Bearer ' + (localStorage.getItem('miriboa_session') || '') } });
         const data = await res.json().catch(() => null);
         if (res.ok && data && data.ok) {
           if (data.status === 'updated' && monitorCopy.updated.title) {
@@ -184,6 +215,8 @@ const turnstileKey = site.turnstileSiteKey;
   .note { margin-top: 0.25rem; }
   .verr { color: #b3261e; font-size: var(--step--1); }
   .hp { position: absolute; left: -9999px; width: 1px; height: 1px; overflow: hidden; }
+  .logingate { display: flex; flex-direction: column; gap: 0.75rem; align-items: flex-start; }
+  .logingate h2 { font-size: var(--step-1); }
   .sent { padding: 1.75rem; border: 1px solid var(--color-recovered); border-radius: var(--radius); background: var(--color-mist); display: flex; flex-direction: column; gap: 0.6rem; }
   .sent h2 { font-size: var(--step-1); }
   @media (max-width: 760px) { .grid { grid-template-columns: 1fr; } fieldset.sectors { grid-template-columns: 1fr; } }
