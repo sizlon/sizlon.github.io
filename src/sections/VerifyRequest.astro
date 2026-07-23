@@ -169,6 +169,7 @@ const stepKeys = ['notice', 'who', 'docs', 'nda', 'done'] as const;
           </label>
           <p class="verr" role="alert" hidden data-nda-error>{c.nda.required}</p>
           <p class="verr" role="alert" hidden data-step-error="4">{c.sendError} <a href={`mailto:${site.contactEmail}`}>{site.contactEmail}</a></p>
+          <p class="verr" role="alert" hidden data-no-credit>{c.noCredit} <a href={localizePath('/bid-verification/credits', lang)}>{c.noCreditCta} &rarr;</a></p>
           <div class="wnav">
             <button type="button" class="btn btn-ghost" data-back="4">&larr; {c.back}</button>
             <button type="button" class="btn btn-primary" data-submit disabled>{c.submitFinal} <span class="arrow">&rarr;</span></button>
@@ -686,6 +687,10 @@ const stepKeys = ['notice', 'who', 'docs', 'nda', 'done'] as const;
         const exp = form.querySelector('[name="express"]'); if (exp && exp.checked) fdFin.append('express', '1');
         const fin = await fetch(manageBase + '/' + encodeURIComponent(token) + '/finalize', { method: 'POST', body: fdFin });
         const fd = await fin.json().catch(() => null);
+        if (fin.status === 402 && fd && fd.error === 'no_credit') {
+          const nc = $('[data-no-credit]'); if (nc) nc.hidden = false;
+          btn.innerHTML = lbl; btn.disabled = false; refreshStep4(); return;
+        }
         if (fin.ok && fd && fd.ok) {
           const first = !!fd.first_time, paid = Number(fd.amount) > 0;
           const pf = sent.querySelector('[data-sent-first]'), pfx = sent.querySelector('[data-sent-first-express]'), pr = sent.querySelector('[data-sent-returning]');
