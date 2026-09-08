@@ -20,7 +20,7 @@ def api(key, no, tries=3, timeout=20):
 def safe(name): return re.sub(r'[\\/:*?"<>|]+', '_', name)[:120]
 if __name__ == '__main__':
     ap = argparse.ArgumentParser(); ap.add_argument('--n', type=int, default=60); ap.add_argument('--out', default='corpus_g2b'); ap.add_argument('--seed', type=int, default=11)
-    ap.add_argument('--corpus', default=os.path.expanduser('~/Projects/docs/tokenizer-experiment-2026-09-06/corpus.jsonl')); ap.add_argument('--since', default='2026-05-01'); ap.add_argument('--timeout', type=int, default=10); ap.add_argument('--tries', type=int, default=4)
+    ap.add_argument('--corpus', default=os.path.expanduser('~/Projects/docs/experiments/tokenizer-experiment-2026-09-06/corpus.jsonl')); ap.add_argument('--since', default='2026-05-01'); ap.add_argument('--timeout', type=int, default=10); ap.add_argument('--tries', type=int, default=4)
     a = ap.parse_args(); key = os.environ['G2B_SERVICE_KEY']
     docs = [json.loads(l) for l in open(a.corpus, encoding='utf8')]
     pool = [d for d in docs if d['div'] == '용역' and d['method'] in ('일반경쟁', '제한경쟁') and d['date'] >= a.since]

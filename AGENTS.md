@@ -10,7 +10,7 @@ root, one English page at `/en/`), deployed to GitHub Pages at
 with a little inline JS. See `README.md` for the file-tree overview.
 
 **What it sells (since the 2026-09-05 restructure, plan v3 at
-`~/Projects/docs/sizlon-site-restructure-plan-v3.md`):** three services done by
+`~/Projects/docs/plans/sizlon-site-restructure-plan-v3.md`):** three services done by
 the founder — Korean search-quality diagnostics (`/services/search`), audit-
 response requirements traceability (`/services/rtm`), and monthly data feeds
 (`/services/data`). Miriboa is *evidence* (`/work`), not a product being sold
@@ -138,7 +138,7 @@ repository exists — see the 30-day gate in memory). Two copies drift. Language
 same slug in both makes a translation pair and `Note.astro` emits the hreflang
 pair through Base's `hreflang` prop (the only pages besides `/`↔`/en/` that
 carry one). Add both URLs to `lastmod.ts`. The first note is `korean-tokenizer`
-(experiment record in `~/Projects/docs/tokenizer-experiment-2026-09-06.md`); its
+(experiment record in `~/Projects/docs/experiments/tokenizer-experiment-2026-09-06.md`); its
 English twin is listed in `content.en.page.cases` (the /en/ "Case studies" block; every English note goes there).
 
 ## URLs and redirects
