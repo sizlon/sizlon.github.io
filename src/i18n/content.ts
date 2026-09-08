@@ -85,7 +85,7 @@ export const content = {
       workItems: [
         { name: '미리보아', proof: '골든셋 기준 recall 87.4% · "확실" 판정 precision 96.5%', href: '/work/#miriboa' },
         { name: '나라장터 개찰 데이터 파이프라인', proof: '협상에 의한 계약 응찰 73,373건 · 업체 13,220곳 (6개월분)', href: '/work/#pipeline' },
-        // 수치 출처는 노트 본문(docs/tokenizer-experiment-2026-09.md 정본). 2026-09-07 개선 작업 C.
+        // 수치 출처는 노트 본문(docs/tokenizer-experiment-2026-09-06.md 정본). 2026-09-07 개선 작업 C.
         { name: '한국어 토크나이저 실측 노트', proof: '공고명 183,240건, Nori 기본 vs 코퍼스 사전 — P@10 0.906→0.986', href: '/notes/korean-tokenizer/' },
       ],
       workLink: '만든 것들 보기',
