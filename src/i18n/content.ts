@@ -14,7 +14,7 @@ const proof = {
   careerFull: '코리아뉴스와이어 재직 시 언론 모니터링 서비스 미디어비의 수집·검색 인프라 구축·운영 — 매체 7,000여 곳, 일평균 신규 기사 20만 건 인덱싱',
   careerShort: '매체 7,000곳 · 일 20만 건 수집·색인 인프라 구축·운영 (前 코리아뉴스와이어)',
   current: '나라장터 개찰 데이터 6개월분 수집·첨부 파싱·집계 — 협상에 의한 계약 응찰 73,373건·업체 13,220곳 (시즐론)',
-  engine: '미리보아 요구조건 추출·대조 엔진 — 골든셋 기준 recall 87.4%, "확실" 판정 precision 96.5%',
+  engine: '미리보아 요구조건 추출·대조 엔진 — 골든셋 2,013항목(공고 3건 전수) 기준 요구조건 추출 recall 87.4%, "확실" 판정 precision 96.5%',
   tool: 'API가 있으면 API로, 없으면 자체 자동 복구 크롤러로 수집합니다.',
   en: 'Built and ran ingestion & search infra for a media-monitoring service: 7,000 news sources, ~200K new articles/day (prior role at Korea Newswire)',
 } as const;
@@ -83,10 +83,10 @@ export const content = {
       workEyebrow: '만든 것들',
       workLine: '시즐론 명의로 만들고 실제로 쓰이는 것들, 그리고 그 위에서 잰 수치입니다.',
       workItems: [
-        { name: '미리보아', proof: '골든셋 기준 recall 87.4% · "확실" 판정 precision 96.5%', href: '/work/#miriboa' },
-        { name: '나라장터 개찰 데이터 파이프라인', proof: '협상에 의한 계약 응찰 73,373건 · 업체 13,220곳 (6개월분)', href: '/work/#pipeline' },
+        { name: '미리보아', proof: '요구조건 추출 recall 87.4% · "확실" 판정 precision 96.5% — 골든셋 2,013항목(공고 3건 전수) 기준', href: '/work/#miriboa' },
+        { name: '나라장터 개찰 데이터 파이프라인', proof: '협상에 의한 계약 응찰 73,373건 · 업체 13,220곳 — 나라장터 개찰 원자료 6개월분 집계', href: '/work/#pipeline' },
         // 수치 출처는 노트 본문(docs/experiments/tokenizer-experiment-2026-09-06.md 정본). 2026-09-07 개선 작업 C.
-        { name: '한국어 토크나이저 실측 노트', proof: '공고명 183,240건, Nori 기본 vs 코퍼스 사전 — P@10 0.906→0.986', href: '/notes/korean-tokenizer/' },
+        { name: '한국어 토크나이저 실측 노트', proof: '공고명 183,240건 코퍼스, Nori 기본 vs 사용자 사전 — P@10 0.906→0.986 (loose 기준, 실패 질의)', href: '/notes/korean-tokenizer/' },
       ],
       workLink: '만든 것들 보기',
       closingH2: '어느 쪽이든 먼저 20분 통화로 범위를 잡습니다.',
@@ -199,7 +199,7 @@ export const content = {
         // 정확도로 읽히지 않게 출처를 밝히고, 감리 산출물 측정치는 첫 프로젝트에서 만든다
         // (ENGINE_BOUNDARY.md: 도메인마다 골든셋을 새로 잡는다).
         heroProof: [
-          '같은 엔진을 입찰 공고 문서에서 측정한 수치 — 요구조건 추출 recall 87.4%, "확실" 판정 precision 96.5%.',
+          '같은 엔진을 입찰 공고 문서에서 측정한 수치 — 요구조건 추출 recall 87.4%, "확실" 판정 precision 96.5% (골든셋 2,013항목 전수 기준, 측정 방법은 miriboa.sizlon.io/benchmark).',
           '감리 산출물(RFP·요구사항정의서·설계서·테스트결과서) 기준 측정치는 아직 없습니다. 첫 프로젝트에서 골든셋을 만들어 같은 방식으로 공개합니다.',
         ],
         heroProofLink: { label: '벤치마크 보기', href: 'https://miriboa.sizlon.io/benchmark/' },
@@ -303,7 +303,7 @@ export const content = {
           id: 'pipeline',
           name: '나라장터 개찰 데이터 파이프라인',
           tag: '공공 데이터 수집 · 첨부 파싱 · 집계',
-          body: 'API 수집, HWP/PDF 첨부 파싱, 정제·집계로 이루어진 파이프라인입니다. 6개월분 개찰 자료에서 협상에 의한 계약 응찰 73,373건·업체 13,220곳을 집계했고, 그 결과가 탈락 사유 리포트입니다. 데이터 피드는 이 파이프라인으로 합니다.',
+          body: 'API 수집, HWP/PDF 첨부 파싱(표 보존율 99.4% — 2026-09-08 나라장터 하루치 첨부 500건, 선호 형식·파싱 오류 제외), 정제·집계로 이루어진 파이프라인입니다. 6개월분 개찰 자료에서 협상에 의한 계약 응찰 73,373건·업체 13,220곳을 집계했고, 그 결과가 탈락 사유 리포트입니다. 데이터 피드는 이 파이프라인으로 합니다.',
           proves: ['공공 데이터 지속 수집', '첨부 파싱', '집계'],
           links: [
             { label: '2026 상반기 탈락 리포트', href: 'https://miriboa.sizlon.io/reports/2026-h1-disqualification/' },
@@ -585,7 +585,7 @@ export const content = {
       blocks: [
         {
           h: 'Korean web, HWP & PDF extraction',
-          p: 'Korean public-sector data lives in HWP attachments and PDF tables that generic tooling drops silently. I extract them with tables intact, deliver CSV/JSON/API on a fixed schema, and run the source on a self-healing crawler that recovers when a page changes instead of quietly stopping. API first when one exists.',
+          p: 'Korean public-sector data lives in HWP attachments and PDF tables that generic tooling drops silently. I extract them with tables intact, deliver CSV/JSON/API on a fixed schema, and run the source on a self-healing crawler that recovers when a page changes instead of quietly stopping. API first when one exists. Measured table preservation: 99.4% on 500 attachments from one day of 나라장터 notices (2026-09-08; preferred format, parse errors excluded).',
         },
         {
           // 대상은 한국 시장에 들어온 해외 서비스·글로벌 SaaS 의 한국어 검색(2026-09-07, 개선 작업 F). 수치는 토크나이저 노트에서.
