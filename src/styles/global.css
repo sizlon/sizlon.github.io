@@ -78,7 +78,8 @@ h2,
 h3 {
   font-family: var(--font-display);
   font-weight: 600;
-  line-height: 1.12;
+  /* 1.12 → 1.35 (2026-09-10): 한글 제목이 두세 줄로 꺾이면 1.12 는 위아래가 붙어 보인다(노트 제목에서 실측). 사이트 공통. */
+  line-height: 1.35;
   letter-spacing: -0.02em;
   margin: 0;
   text-wrap: balance;
