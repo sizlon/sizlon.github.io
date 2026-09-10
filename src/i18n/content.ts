@@ -205,7 +205,7 @@ export const content = {
         heroProofLink: { label: '벤치마크 보기', href: 'https://miriboa.sizlon.io/benchmark/' },
         notesH: '노트',
         notes: [
-          { label: '정보시스템 감리 산출물 — 요구사항정의서·과업대비표·요구사항추적표·검사기준서, 누가 언제 무엇을 내나', href: '/notes/audit-deliverables/', line: '현행 감리기준(2024-53호)·NIA 수행 가이드 조문과 예시 컬럼 그대로. 20억 미만 사업의 2단계 감리, 감리원이 대비표에서 보는 세 가지, 빈 양식.' },
+          { label: '정보시스템 감리 산출물 — 요구사항정의서 · 과업대비표 · 요구사항추적표 · 검사기준서, 누가 언제 무엇을 내나', href: '/notes/audit-deliverables/', line: '현행 감리기준(2024-53호)·NIA 수행 가이드 조문과 예시 컬럼 그대로. 20억 미만 사업의 2단계 감리, 감리원이 대비표에서 보는 세 가지, 빈 양식.' },
         ],
         termsH: '조건',
         terms: ['NDA 체결 후 자료 수령', '자료는 납품 후 15일 내 파기', '대표가 직접 수행, 외부 인력 없음'],
