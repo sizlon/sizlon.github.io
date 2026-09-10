@@ -9,14 +9,15 @@
 export const LASTMOD: Record<string, string> = {
   '/': '2026-09-07',   // 09-07 개선 작업: 작업 방식 위치·카드 관계 줄·만든 것들 3번째·무료 스캔 줄
   '/en/': '2026-09-07',   // 09-07 검색 블록 포지셔닝·Case studies 링크
-  '/notes/': '2026-09-07',
+  '/notes/': '2026-09-10',   // 09-10 감리 산출물 노트 추가·lede
   '/en/notes/': '2026-09-07',
   '/services/search/': '2026-09-08',   // 09-07 H1·FAQ 3건·분할 금액·무료 스캔·이 다음에
   '/notes/korean-tokenizer/': '2026-09-07',   // 09-07 동의어 각주(4d3576c, 당시 미갱신) + metaTitle
   '/en/notes/korean-tokenizer/': '2026-09-07',
   '/notes/korean-tables/': '2026-09-06',
   '/en/notes/korean-tables/': '2026-09-06',
-  '/services/rtm/': '2026-09-07',   // 09-07 이 다음에 보통 필요한 것
+  '/services/rtm/': '2026-09-10',   // 09-10 가격 구조·결과물·노트 링크
+  '/notes/audit-deliverables/': '2026-09-10',
   '/services/data/': '2026-09-07',   // 09-07 이 다음에 보통 필요한 것
   '/work/': '2026-09-06',
   '/about/': '2026-09-08',   // 09-08 크롤러 문장 사실 정정(자동 복구는 시즐론에서 더한 것)

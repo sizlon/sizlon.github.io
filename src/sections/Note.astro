@@ -47,8 +47,8 @@ const article = {
 
   <section class="section wrap tail">
     {lang === 'ko'
-      ? <p>{tr.notes.tailLine} <a href={svc.href}>{tr.nav[d.service]} &rarr;</a></p>
-      : <p>{tr.notes.tailLine} <a href={`mailto:${site.contactEmail}`}>{site.contactEmail}</a></p>}
+      ? <p>{('tailLineBy' in tr.notes && tr.notes.tailLineBy?.[d.service]) || tr.notes.tailLine} <a href={svc.href}>{tr.nav[d.service]} &rarr;</a></p>
+      : <p>{('tailLineBy' in tr.notes && tr.notes.tailLineBy?.[d.service]) || tr.notes.tailLine} <a href={`mailto:${site.contactEmail}`}>{site.contactEmail}</a></p>}
     <a class="btn btn-primary" href={bookingHref(svc.topic)}>{tr.common.book} <span class="arrow">&rarr;</span></a>
   </section>
 </Base>
