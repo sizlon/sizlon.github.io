@@ -152,7 +152,7 @@ export const content = {
         next: [
           { label: '색인할 외부 데이터가 필요하면', line: '공공 공고·HWP 첨부·PDF 표를 매달 정제해 색인 가능한 형태로 넣습니다.', href: '/services/data/' },
           { label: '키워드로 안 잡히는 질의가 남으면', line: 'BM25 + kNN 하이브리드 설계. 진단 뒤 별도 견적.', href: '/contact/?service=search#form' },
-          { label: '이 검색 모듈이 공공 SI 납품물이면', line: '감리 전에 RFP 요구사항과 산출물을 대조합니다.', href: '/services/rtm/' },
+          { label: '이 검색 모듈이 공공 SI 납품물이면', line: '감리 전에 대비표를 대조해 빈 칸과 반영 미흡을 찾습니다.', href: '/services/rtm/' },
         ],
         // 증거 글(/notes/*) — 실측이 있는 글만. 글 본문은 src/content/notes/.
         notesH: '실측 노트',
@@ -273,7 +273,7 @@ export const content = {
         nextH,
         next: [
           { label: '받은 데이터를 검색에 넣었는데 안 나오면', line: '대개 형태소·사전에서 시작합니다. 실패 질의로 골든셋을 만들어 전후를 잽니다.', href: '/services/search/' },
-          { label: '이 데이터가 공공 SI 산출물에 들어가면', line: '감리 제출용 요구사항 추적표와 대조 리포트까지.', href: '/services/rtm/' },
+          { label: '이 데이터가 공공 SI 산출물에 들어가면', line: '감리 전 대비표 검토 — 행마다 판정과 원문 근거까지.', href: '/services/rtm/' },
         ],
         cta: '받고 싶은 데이터와 출처 URL 만 알려주시면 하루 안에 구축비·월정액 견적을 드립니다',
       },
