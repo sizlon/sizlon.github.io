@@ -18,6 +18,7 @@ export const LASTMOD: Record<string, string> = {
   '/en/notes/korean-tables/': '2026-09-06',
   '/services/rtm/': '2026-09-10',   // 09-10 가격 구조·결과물·노트 링크
   '/notes/audit-deliverables/': '2026-09-10',
+  '/notes/audit-findings/': '2026-09-10',
   '/services/data/': '2026-09-07',   // 09-07 이 다음에 보통 필요한 것
   '/work/': '2026-09-06',
   '/about/': '2026-09-08',   // 09-08 크롤러 문장 사실 정정(자동 복구는 시즐론에서 더한 것)
