@@ -46,7 +46,7 @@ export const content = {
       koreanSite: '한국어 사이트',
       legalNote: '법적 고지',
       vatNote: '표시 가격은 모두 부가세 별도입니다.',
-      fixedLine: '고정가 · 결과물 명시 · 대표가 직접 수행',
+      fixedLine: '고정가 · 결과물 명시 · 대표가 직접 운영',
     },
     // v4(2026-09-11): 미리보아는 서비스(헤더·푸터·홈 카드), 검색 진단은 헤더에서 뺌(홈·푸터·'이 다음에'·노트에서 간다).
     nav: { rtm: '감리 대비표 사전 검토', miriboa: '입찰 서류 검증', data: '데이터 피드', search: '검색 품질 진단', notes: '실측 노트', work: '만든 것들', about: '회사 소개', contact: '문의', founder: '대표 소개' },
@@ -66,7 +66,7 @@ export const content = {
         { href: '/notes/', label: '실측 노트' },
         { href: '/engine/', label: '문서 검증 엔진' },
       ],
-      baseline: '고정가 · 결과물 명시 · 대표가 직접 수행',
+      baseline: '고정가 · 결과물 명시 · 대표가 직접 운영',
       business: '주식회사 시즐론 · 대표 이광연 · 사업자등록번호 420-86-03864 · 전화 02-702-5795 · 서울특별시 용산구 원효로 189-7, 302호 · hello@sizlon.io',
     },
     legalNav: { Terms: '약관', Privacy: '개인정보처리방침', Licenses: '라이선스' },
@@ -78,7 +78,8 @@ export const content = {
       description: '감리 대비표 사전 검토, 입찰 서류 검증(미리보아), 데이터 피드, 검색 품질 진단 — 심사받기 전에 지적당할 곳을 먼저 찾습니다. 어떻게 재는지와 얼마나 틀리는지를 공개합니다. 고정가, 결과물 명시.',
       // v4(2026-09-11, docs/plans/sizlon-site-restructure-plan-v4.md): 구매자는 '심사받는 쪽'(감리원·평가위원 앞), 파는 건 지적당할 곳을 먼저 아는 것.
       h1: '심사에서 지적당할 곳을, 심사 전에 먼저 찾습니다.',
-      lede: '감리원·평가위원이 볼 요구 문서와 제출 서류를 항목마다 대조해, 빠진 것과 어긋난 것을 원문 근거와 함께 드립니다. 어떻게 재는지와 얼마나 틀리는지는 공개합니다. 매체 7,000곳에서 하루 20만 건을 수집·색인하던 엔지니어가 직접 합니다.',
+      // 주어 분리(2026-09-11 오너 결정): 판정은 엔진이, 만들고 운영하는 건 사람이. '직접 합니다'는 미리보아(사람 검토 없음)에서 거짓이었다.
+      lede: '시즐론이 만든 문서 검증 엔진이 감리원·평가위원이 볼 요구 문서와 제출 서류를 항목마다 대조해, 빠진 것과 어긋난 것을 원문 근거와 함께 냅니다. 어떻게 재는지와 얼마나 틀리는지는 공개합니다. 매체 7,000곳에서 하루 20만 건을 수집·색인하던 엔지니어가 그 엔진을 만들고 직접 운영합니다.',
       servicesEyebrow: '심사 앞에서',
       servicesH2: '감리 앞과 입찰 마감 앞. 같은 엔진으로, 같은 방식으로 봅니다.',
       // v4: 심사 앞 카드 둘(situation = 어떤 심사 앞인가). 미리보아 카드는 링크만 — 가격·크레딧·SLA 는 제품 사이트가 정본(AGENTS.md).
@@ -312,7 +313,7 @@ export const content = {
         // 근거는 히어로 아래 두 줄(2026-09-06): 이 방식으로 실제로 한 것 → 만든 것들.
         heroProof: [
           '나라장터 개찰 데이터를 이 방식으로 수집·파싱·집계합니다 — 6개월분 집계에서 협상에 의한 계약 응찰 73,373건·업체 13,220곳, 2026-09-11 부터는 매일 어제까지 받습니다. HWP·PDF 첨부 표 보존율 99.4% (2026-09-08 하루치 첨부 500건, 선호 형식·파싱 오류 제외).',
-          proof.careerShort + ' — 그 엔지니어가 직접 합니다.',
+          proof.careerShort + ' — 그 엔지니어가 이 시스템을 만들고 직접 운영합니다.',
         ],
         heroProofLink: { label: '만든 것들', href: '/work/#pipeline' },
         engineLink: { label: '문서 검증 엔진 보기', href: '/engine/' },
@@ -499,11 +500,11 @@ export const content = {
     },
     about: {
       title: '회사 소개',
-      description: '주식회사 시즐론 — 대표 이광연. 감리 대비표 사전 검토, 입찰 서류 검증(미리보아), 데이터 피드, 검색 품질 진단. 매체 7,000곳·일 20만 건 수집·색인 인프라를 구축·운영한 엔지니어가 직접 수행합니다.',
+      description: '주식회사 시즐론 — 대표 이광연. 감리 대비표 사전 검토, 입찰 서류 검증(미리보아), 데이터 피드, 검색 품질 진단. 판정은 시즐론이 만든 문서 검증 엔진이 하고, 매체 7,000곳·일 20만 건 수집·색인 인프라를 구축·운영한 엔지니어가 그 엔진을 만들고 직접 운영합니다.',
       eyebrow: '회사 소개',
       // h1 은 사실 선언이 아니라 그 사실이 고객에게 주는 것으로(2026-09-08 오너 결정, 후보 1). 1인은 lede 로.
       h1: '견적을 낸 사람이 코드를 쓰고 결과물을 넘깁니다.',
-      lede: '시즐론은 서울 용산의 1인 소프트웨어 회사입니다. 심사받기 전에 지적당할 곳을 먼저 찾는 일 — 감리 대비표 사전 검토, 입찰 서류 검증(미리보아) — 과 데이터 피드, 검색 품질 진단을 대표가 직접 합니다.',
+      lede: '시즐론은 서울 용산의 1인 소프트웨어 회사입니다. 심사받기 전에 지적당할 곳을 먼저 찾는 일 — 감리 대비표 사전 검토, 입찰 서류 검증(미리보아) — 과 데이터 피드, 검색 품질 진단을 합니다. 판정은 시즐론이 만든 문서 검증 엔진이 하고, 그 엔진과 수집 시스템을 만든 대표가 직접 운영합니다.',
       sections: [
         { h: '무엇을 하는가 (시즐론, 2026.4~)', p: ['감리 대비표 사전 검토, 입찰 서류 검증(미리보아), 데이터 피드, 검색 품질 진단(Elasticsearch·OpenSearch)을 합니다. 앞의 둘은 같은 문서 검증 엔진 위에 있고, 데이터 피드는 그 엔진의 표 추출 층만 같이 쓰며 수집은 자체 크롤러와 API 로 합니다. 검색 진단은 그 엔진을 만든 경력의 일입니다. 사이트가 바뀌면 스스로 복구하는 크롤러를 시즐론에서 만들었습니다.'] },
         { h: '작업 방식', p: [method] },
@@ -719,7 +720,7 @@ export const content = {
       koreanSite: 'Korean site',
       legalNote: 'Legal (Korean)',
       vatNote: 'Prices exclude VAT.',
-      fixedLine: 'Fixed price · deliverables named up front · done by the founder',
+      fixedLine: 'Fixed price · deliverables named up front · built and run by the founder',
     },
     nav: { rtm: 'Audit RTM', miriboa: 'Bid document check', data: 'Data feeds', search: 'Search diagnostics', notes: 'Notes', work: 'Work', about: 'About', contact: 'Contact', founder: 'Founder' },
     navShort: {} as Partial<Record<string, string>>,
@@ -735,7 +736,7 @@ export const content = {
         { href: '/work/#pipeline', label: 'Bid-opening data pipeline' },
         { href: '/en/notes/', label: 'Notes' },
       ],
-      baseline: 'Fixed price · deliverables named up front · done by the founder',
+      baseline: 'Fixed price · deliverables named up front · built and run by the founder',
       business: 'Sizlon Inc. (주식회사 시즐론) · CEO Kwangyeon Lee · Biz. Reg. 420-86-03864 · Tel: +82-2-702-5795 · 302, 189-7 Wonhyo-ro, Yongsan-gu, Seoul, Republic of Korea · hello@sizlon.io',
     },
     legalNav: { Terms: 'Terms', Privacy: 'Privacy', Licenses: 'Licenses' },
