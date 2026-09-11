@@ -1,4 +1,5 @@
 ---
+import { ext } from '../i18n/utils';
 // 서비스 페이지 공통 본문 (v3 §3.2~3.4). 세 서비스가 같은 뼈대를 쓰고 블록은
 // 내용이 비면 렌더하지 않는다. rtm 은 `brief` 로 짧은 판(제목·부제·가격·근거·CTA).
 import Base from '../layouts/Base.astro';
@@ -80,7 +81,7 @@ const serviceSchema = {
       {heroProof.length > 0 && (
         <div class="proof">
           {heroProof.map((l) => <p>{l}</p>)}
-          {heroProofLink && <a href={heroProofLink.href}>{heroProofLink.label} &rarr;</a>}
+          {heroProofLink && <a href={heroProofLink.href} {...ext(heroProofLink.href)}>{heroProofLink.label} &rarr;</a>}
           {engineLink && <a href={engineLink.href}>{engineLink.label} &rarr;</a>}
         </div>
       )}
@@ -110,7 +111,7 @@ const serviceSchema = {
             <p>{s.text}</p>
             {'items' in s && <ol class="sub">{s.items.map((it) => <li>{it}</li>)}</ol>}
             {'after' in s && <p>{s.after}</p>}
-            {'note' in s && <p class="note">{s.note} {'link' in s && <a href={s.link.href}>{s.link.label} &rarr;</a>}</p>}
+            {'note' in s && <p class="note">{s.note} {'link' in s && <a href={s.link.href} {...ext(s.link.href)}>{s.link.label} &rarr;</a>}</p>}
           </li>
         ))}
       </ol>
@@ -124,7 +125,7 @@ const serviceSchema = {
       <ul class="notes">
         {notes.map((n) => (
           <li>
-            <a href={n.href}>{n.label} &rarr;</a>
+            <a href={n.href} {...ext(n.href)}>{n.label} &rarr;</a>
             <p>{n.line}</p>
           </li>
         ))}
@@ -190,7 +191,7 @@ const serviceSchema = {
       <ul class="notes">
         {next.map((n) => (
           <li>
-            <a href={n.href}>{n.label} &rarr;</a>
+            <a href={n.href} {...ext(n.href)}>{n.label} &rarr;</a>
             <p>{n.line}</p>
           </li>
         ))}

@@ -30,3 +30,12 @@ export function localizePath(path: string, lang: Lang): string {
 export function t(lang: Lang) {
   return content[lang];
 }
+
+/**
+ * 외부 링크(다른 오리진 — 미리보아 제품 사이트 포함)는 새 탭으로(2026-09-11 오너 결정).
+ * 미리보아는 내비·계정이 따로인 다른 사이트라 같은 탭으로 보내면 회사 사이트로 돌아올 길이 끊긴다.
+ * 사용: <a href={href} {...ext(href)}>
+ */
+export function ext(href: string): { target?: '_blank'; rel?: string } {
+  return /^https?:\/\//.test(href) ? { target: '_blank', rel: 'noopener' } : {};
+}

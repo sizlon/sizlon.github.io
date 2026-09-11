@@ -1,4 +1,5 @@
 ---
+import { ext } from '../i18n/utils';
 import { site, servicePages, legalLinks } from '../config/site';
 import type { Lang } from '../i18n/content';
 import { t, localizePath } from '../i18n/utils';
@@ -39,12 +40,12 @@ const tr = t(lang);
 
     <nav class="col" aria-label={tr.footer.services}>
       <span class="eyebrow">{tr.footer.services}</span>
-      {servicePages.map((item) => <a href={item.href}>{tr.nav[item.key]}</a>)}
+      {servicePages.map((item) => <a href={item.href} {...ext(item.href)}>{tr.nav[item.key]}</a>)}
     </nav>
 
     <nav class="col" aria-label={tr.footer.work}>
       <span class="eyebrow">{tr.footer.work}</span>
-      {tr.footer.workItems.map((item) => <a href={item.href}>{item.label}</a>)}
+      {tr.footer.workItems.map((item) => <a href={item.href} {...ext(item.href)}>{item.label}</a>)}
     </nav>
 
     <nav class="col" aria-label={tr.footer.company}>

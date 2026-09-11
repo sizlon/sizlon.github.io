@@ -1,4 +1,5 @@
 ---
+import { ext } from '../i18n/utils';
 // 만든 것들 (v3 §3.5) — 시즐론 명의로 만들고 실제로 쓰이는 것만. 크롤러 섹션 없음.
 import Base from '../layouts/Base.astro';
 import { servicePages } from '../config/site';
@@ -36,11 +37,11 @@ const serviceLabel = (key: string) => tr.nav[key as keyof typeof tr.nav] ?? key;
           </div>
           <div>
             <span class="eyebrow">{c.evidenceLabel}</span>
-            <p><a href={serviceHref(it.evidenceFor)}>{serviceLabel(it.evidenceFor)} &rarr;</a></p>
+            <p><a href={serviceHref(it.evidenceFor)} {...ext(serviceHref(it.evidenceFor))}>{serviceLabel(it.evidenceFor)} &rarr;</a></p>
           </div>
         </div>
         <div class="links">
-          {it.links.map((l) => <a class="btn btn-ghost" href={l.href}>{l.label} <span class="arrow">&rarr;</span></a>)}
+          {it.links.map((l) => <a class="btn btn-ghost" href={l.href} {...ext(l.href)}>{l.label} <span class="arrow">&rarr;</span></a>)}
         </div>
       </article>
     ))}

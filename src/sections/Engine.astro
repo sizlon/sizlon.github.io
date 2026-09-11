@@ -1,4 +1,5 @@
 ---
+import { ext } from '../i18n/utils';
 // 문서 검증 엔진 페이지 (2026-09-11). 회사 포장용이되 없는 것을 있다고 하지 않는다 — 수치마다 잣대, 잰 적 없는
 // 도메인은 "측정치 없음". 접수 창구는 문의 폼 재사용(주제 '기타') — 전용 주제는 백엔드 TOPIC_LABELS 와 함께 바꿔야 한다.
 import Base from '../layouts/Base.astro';
@@ -24,7 +25,7 @@ const c = content.ko.engine;
         <li>
           <span class="eyebrow">{s.name}</span>
           <p>{s.text}</p>
-          <p class="measure">{s.measure} {'link' in s && <a href={s.link.href}>{s.link.label} &rarr;</a>}</p>
+          <p class="measure">{s.measure} {'link' in s && <a href={s.link.href} {...ext(s.link.href)}>{s.link.label} &rarr;</a>}</p>
         </li>
       ))}
     </ol>
@@ -36,7 +37,7 @@ const c = content.ko.engine;
     <h3>{c.evidenceH}</h3>
     <p class="note">{c.evidenceNote}</p>
     <ul class="plain evidence">
-      {c.evidence.map((e) => <li>{e.text} <a href={e.href} rel="noopener">출처 &rarr;</a></li>)}
+      {c.evidence.map((e) => <li>{e.text} <a href={e.href} {...ext(e.href)}>출처 &rarr;</a></li>)}
     </ul>
   </section>
 
@@ -49,7 +50,7 @@ const c = content.ko.engine;
     <h2>{c.servicesH}</h2>
     <div class="cards">
       {c.services.map((s) => (
-        <a class="card" href={s.href}>
+        <a class="card" href={s.href} {...ext(s.href)}>
           <span class="name">{s.name}</span>
           <p>{s.what}</p>
           <p class="measured">{s.measured}</p>
@@ -69,7 +70,7 @@ const c = content.ko.engine;
 
   <section class="section wrap block">
     <h2>{c.sourcesH}</h2>
-    <ul class="sources">{c.sources.map((s) => <li><a href={s.href}>{s.label} &rarr;</a></li>)}</ul>
+    <ul class="sources">{c.sources.map((s) => <li><a href={s.href} {...ext(s.href)}>{s.label} &rarr;</a></li>)}</ul>
     <a class="btn btn-secondary cta" href={bookingHref()}>{c.cta} <span class="arrow">&rarr;</span></a>
   </section>
 </Base>

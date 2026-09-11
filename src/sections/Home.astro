@@ -1,4 +1,5 @@
 ---
+import { ext } from '../i18n/utils';
 // 홈 (v3 §3.1) — 서비스 3 + 근거. 히어로 철학 문구는 푸터로, 제품 카드는 없다.
 import Base from '../layouts/Base.astro';
 import { site, servicePages, bookingHref } from '../config/site';
@@ -36,7 +37,7 @@ const hrefOf = (key: string) => servicePages.find((s) => s.key === key)?.href ??
     </div>
     <div class="cards">
       {c.cards.map((card) => (
-        <a class="card" href={hrefOf(card.key)}>
+        <a class="card" href={hrefOf(card.key)} {...ext(hrefOf(card.key))}>
           <span class="eyebrow situation">{card.situation}</span>
           <h3>{card.name}</h3>
           <p class="terms">{card.terms}</p>
@@ -53,7 +54,7 @@ const hrefOf = (key: string) => servicePages.find((s) => s.key === key)?.href ??
     </div>
     <div class="cards others">
       {c.others.map((card) => (
-        <a class="card minor" href={hrefOf(card.key)}>
+        <a class="card minor" href={hrefOf(card.key)} {...ext(hrefOf(card.key))}>
           <h3>{card.name}</h3>
           <p class="terms">{card.terms}</p>
           <p class="deliverable">{card.deliverable}</p>
@@ -72,7 +73,7 @@ const hrefOf = (key: string) => servicePages.find((s) => s.key === key)?.href ??
     <dl class="facts">
       {c.workItems.map((w) => (
         <div class="row">
-          <dt><a href={w.href}>{w.name} &rarr;</a></dt>
+          <dt><a href={w.href} {...ext(w.href)}>{w.name} &rarr;</a></dt>
           <dd>{w.proof}</dd>
         </div>
       ))}

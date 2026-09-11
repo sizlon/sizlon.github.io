@@ -1,7 +1,7 @@
 ---
+import { t, localizePath, logicalPath, ext } from '../i18n/utils';
 import { site, nav } from '../config/site';
 import type { Lang } from '../i18n/content';
-import { t, localizePath, logicalPath } from '../i18n/utils';
 
 interface Props { lang: Lang }
 const { lang } = Astro.props;
@@ -33,6 +33,7 @@ const langLabel = lang === 'en' ? tr.common.koreanSite : tr.common.langSwitch;
       {navItems.map((item) => (
         <a
           href={localizePath(item.href, lang)}
+          {...ext(item.href)}
           class="link"
           aria-current={logical === item.href ? 'page' : undefined}
         >
@@ -61,6 +62,7 @@ const langLabel = lang === 'en' ? tr.common.koreanSite : tr.common.langSwitch;
           {navItems.map((item) => (
             <a
               href={localizePath(item.href, lang)}
+              {...ext(item.href)}
               class="m-link"
               aria-current={logical === item.href ? 'page' : undefined}
             >
