@@ -40,7 +40,7 @@ const homeKo = new URL('/', Astro.site);
 const homeEn = new URL('/en/', Astro.site);
 // hreflang 쌍: 홈(/ ↔ /en/)은 자동, 나머지는 페이지가 넘긴 짝만. x-default 는 ko.
 const pair = isHome ? { ko: homeKo.href, en: homeEn.href } : hreflang ? { ko: new URL(hreflang.ko, Astro.site).href, en: new URL(hreflang.en, Astro.site).href } : null;
-const ogImage = new URL('/og-v3.png', Astro.site).href;
+const ogImage = new URL('/og-v4.png', Astro.site).href;
 
 // JSON-LD — 회사 노드 하나를 모든 페이지가 공유하고(@id 로 참조), 홈이 아닌 페이지에는
 // BreadcrumbList, 페이지 고유 노드(Service·Person)는 `schema` prop 으로 받는다 (2026-09-06).
@@ -52,7 +52,7 @@ const org = {
   url: 'https://sizlon.io/',
   logo: 'https://sizlon.io/logo/sizlon-logo.svg',
   image: ogImage,
-  description: '검색 품질 진단(Elasticsearch·OpenSearch), 공공 SI 감리 대비표 사전 검토, 월정액 데이터 피드. 매체 7,000곳·일 20만 건 수집·색인 인프라를 구축·운영한 검색 엔지니어가 직접 수행합니다.',
+  description: '감리 대비표 사전 검토, 입찰 서류 검증(미리보아), 데이터 피드, 검색 품질 진단. 심사받기 전에 지적당할 곳을 먼저 찾고, 어떻게 재는지와 얼마나 틀리는지를 공개합니다. 매체 7,000곳·일 20만 건 수집·색인 인프라를 구축·운영한 엔지니어가 직접 수행합니다.',
   founder: { '@type': 'Person', '@id': FOUNDER_ID, name: '이광연', alternateName: 'Kwangyeon Lee' },
   // 2026-09-05 전화 규칙 철회(v3 §3.7): 검색 결과의 통화 버튼이 원하는 신호다.
   telephone: site.contactPhoneIntl,

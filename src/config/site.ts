@@ -1,8 +1,8 @@
 /*
  * 사이트 설정 — 내비, 서비스 목록, 연락 채널, 폼 엔드포인트. 카피는 content.ts.
- * 2026-09-05 개편 v3(~/Projects/docs/sizlon-site-restructure-plan-v3.md):
- * 제품 사이트가 아니라 서비스 셋(검색 진단·감리 대응 RTM·데이터 피드)을 파는
- * 회사 사이트. 미리보아는 증거물(/work), 크롤러는 도구 문장 한 줄.
+ * 2026-09-05 개편 v3 → 2026-09-11 v4(~/Projects/docs/plans/sizlon-site-restructure-plan-v4.md):
+ * "심사받는 쪽의 사전 점검" 프레임. 서비스는 감리 대비표 사전 검토·입찰 서류 검증(미리보아,
+ * 제품 사이트로 링크)·데이터 피드·검색 품질 진단. 크롤러는 도구 문장 한 줄.
  */
 // 환경별 호스트 재매핑 — miriboa-site와 동일 장치(그쪽 site.ts 주석 참조).
 const DEV_HOSTS: Array<[string, string]> = [
@@ -30,7 +30,7 @@ function devRemap<T extends Record<string, string>>(config: T): T {
 
 export const site = devRemap({
   name: 'Sizlon',
-  tagline: 'AI proposes. A deterministic layer verifies.',
+  tagline: 'Measured, not claimed.',
   contactEmail: 'hello@sizlon.io',
   // 전화는 영업 채널이다(2026-09-05, v3 §3.7 — 07-29 "표기 의무용" 규칙 철회).
   // 평일 09–18 응대, 히어로·/contact 최상단, tel: 링크·JSON-LD telephone 허용.
@@ -56,9 +56,10 @@ export function bookingHref(service?: string): string {
 
 // 내부 경로는 항상 `/…/` (astro.config trailingSlash 'always', 슬래시 없으면 GitHub Pages 가 301).
 // 전역 내비 — 서비스 셋이 먼저, 근거(만든 것들)·회사·문의 순. 라벨은 content[lang].nav.
+// v4(2026-09-11): 심사 앞 둘이 먼저(RTM·미리보아), 검색 진단은 헤더에서 뺌 — 6항목 유지.
 export const nav = [
-  { href: '/services/search/', key: 'search' },
   { href: '/services/rtm/', key: 'rtm' },
+  { href: 'https://miriboa.sizlon.io/', key: 'miriboa' },
   { href: '/services/data/', key: 'data' },
   // 실측 노트(2026-09-07, 개선 작업 C) — 노트가 유입의 주 경로라 서비스 셋 바로 뒤.
   // '만든 것들'은 헤더에서 뺐다(오너 결정 09-07): 7항목이면 821~900px 에서 줄바꿈. 푸터 열·홈 버튼·노트에서 간다.
@@ -67,10 +68,12 @@ export const nav = [
   { href: '/contact/', key: 'contact' },
 ] as const;
 
+// 순서가 푸터 서비스 열 순서. 미리보아는 제품 사이트가 본체(topic 'pilot' 은 백엔드 TOPIC_LABELS 기존 키).
 export const servicePages = [
-  { href: '/services/search/', key: 'search', topic: 'search' },
   { href: '/services/rtm/', key: 'rtm', topic: 'rtm' },
+  { href: 'https://miriboa.sizlon.io/', key: 'miriboa', topic: 'pilot' },
   { href: '/services/data/', key: 'data', topic: 'datafeed' },
+  { href: '/services/search/', key: 'search', topic: 'search' },
 ] as const;
 
 export const legalLinks = [

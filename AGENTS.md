@@ -9,14 +9,20 @@ root, one English page at `/en/`), deployed to GitHub Pages at
 [sizlon.io](https://sizlon.io). No SSR, no database — output is plain HTML/CSS
 with a little inline JS. See `README.md` for the file-tree overview.
 
-**What it sells (since the 2026-09-05 restructure, plan v3 at
-`~/Projects/docs/plans/sizlon-site-restructure-plan-v3.md`):** three services done by
-the founder — Korean search-quality diagnostics (`/services/search`), audit-
-response requirements traceability (`/services/rtm`), and monthly data feeds
-(`/services/data`). Miriboa is *evidence* (`/work`), not a product being sold
-here; the crawler is a one-line tool mention on the data-feed page. The old
-product pages (`/bid-verification`, `/web-crawling`, `/how-it-works`,
-`/security`, `/editions`) are redirect stubs.
+**What it sells (v4 reframe 2026-09-11, plan at
+`~/Projects/docs/plans/sizlon-site-restructure-plan-v4.md`; v3 of 2026-09-05 underneath):**
+the frame is *pre-check for the party being audited* — find what the auditor or
+evaluator will flag, before they do, and publish how it is measured. Two
+"before the review" services lead: audit-traceability pre-review (`/services/rtm`,
+done by the founder) and bid-document verification (**Miriboa**, self-serve,
+linked out to miriboa.sizlon.io — a service card, header item and footer entry,
+never a restated price). Two more sit under "그 밖에 하는 일": monthly data feeds
+(`/services/data`) and Korean search-quality diagnostics (`/services/search`,
+still a full page but no longer in the header). The crawler is a one-line tool
+mention on the data-feed page. The old product pages (`/bid-verification`,
+`/web-crawling`, `/how-it-works`, `/security`, `/editions`) are redirect stubs.
+Settlement pre-check (jeongsan) is deliberately absent until a pilot customer
+exists (plan v4 §7).
 
 ## Dev / build / verify
 
@@ -78,9 +84,8 @@ URL 301 with the expected `Location` (those 301s come from Cloudflare, see
 - **Never restate Miriboa prices, credit rules, or SLA here** — the 2026-07-29
   audit found this site advertising a paid tier that had become free because the
   copy was duplicated and drifted. Link to miriboa.sizlon.io instead.
-- **RTM page ships in "brief" mode** (`content.ko.services.rtm.brief = true`)
-  until two or three SI-PM calls confirm "감리 대응"/"RTM" is their vocabulary.
-  The full blocks are already written; flip the flag.
+- **RTM page `brief` flag is off since 2026-09-11** (vocabulary confirmed from the
+  MOIS audit-preparation guide); the flag still exists in content.ts.
 
 ## Structure & where things go
 
@@ -96,17 +101,20 @@ URL 301 with the expected `Location` (those 301s come from Cloudflare, see
   the `schema` prop — `/founder` passes `Person` + `ProfilePage` (`FOUNDER_ID`),
   the service pages pass `Service` + `Offer` whose numbers come from
   `content.ko.services.*.offer` (keep them equal to the displayed `price` line).
-- **OG image is `public/og-v3.png`** (1200×630, Korean v3 hero line). The old
-  `og.png` carried the pre-v3 English "AI proposes… human-in-the-loop" card and
-  was removed 2026-09-06; a new filename was chosen on purpose so KakaoTalk/Slack
+- **OG image is `public/og-v4.png`** (1200×630, Korean v4 hero line, 2026-09-11;
+  `og-v3.png` kept for rollback). The old `og.png` carried the pre-v3 English
+  "AI proposes… human-in-the-loop" card and was removed 2026-09-06; a new
+  filename is chosen on purpose each time the hero line changes so KakaoTalk/Slack
   scrapers don't keep serving the cached old card. Source: an HTML mock rendered
   in Chrome at 1200×630 — redo the same way if the hero line changes.
 
 **Adding a page:** section + one route file; copy in `content.ko`; nav entry in
 `site.ts` if it belongs in the nav. The header holds six items on purpose —
-services ×3, 실측 노트, 회사 소개, 문의; `/work/` was dropped from it 2026-09-07
-because a seventh item wraps between 821 and ~900px (footer column, the home
-"만든 것들 보기" button and the notes still link it).
+감리 대비표 사전 검토, 입찰 서류 검증 (external, miriboa.sizlon.io), 데이터 피드,
+실측 노트, 회사 소개, 문의 (v4, 2026-09-11; search diagnostics left the header
+then, `/work/` left it 2026-09-07) because a seventh item wraps between 821 and
+~900px. Footer column, home cards, "이 다음에" blocks and the notes still link
+what the header does not.
 
 **Service page blocks (2026-09-07 improvement pass, plan in
 `~/Projects/docs/sizlon_io_개선_2단계_변경안.md`):** every service ends with an
@@ -184,7 +192,8 @@ The form fetch-POSTs to the site backend at `svc.sizlon.io/api/contact`
 (source: **sizlon-platform repo, `site-backend/`**). It verifies Cloudflare
 Turnstile server-side, stores the submission, and emails hello@sizlon.io. The
 backend requires `name`, `email`, `message`; `topic` is mapped through
-`TOPIC_LABELS` there (keys here: `search`, `rtm`, `datafeed`, `other`). The form
+`TOPIC_LABELS` there (keys here: `rtm`, `pilot` (Miriboa), `datafeed`, `search`,
+`other`; the visible labels are situations since v4, the keys are unchanged). The form
 prefixes the message with `[서비스] …` and `[전화] …` itself, so a topic is
 never silently lost even if the backend table lags. Never remove keys from the
 backend table — miriboa-site posts to the same endpoint.

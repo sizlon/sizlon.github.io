@@ -7,7 +7,7 @@
  * 경로는 sitemap 의 loc 과 같은 꼴(`/…/`). 여기 없는 경로는 lastmod 없이 나간다.
  */
 export const LASTMOD: Record<string, string> = {
-  '/': '2026-09-07',   // 09-07 개선 작업: 작업 방식 위치·카드 관계 줄·만든 것들 3번째·무료 스캔 줄
+  '/': '2026-09-11',   // 09-11 v4 프레임: h1·카드 2단·태그라인
   '/en/': '2026-09-07',   // 09-07 검색 블록 포지셔닝·Case studies 링크
   '/notes/': '2026-09-10',   // 09-10 감리 산출물 노트 추가·lede
   '/en/notes/': '2026-09-07',
@@ -16,14 +16,15 @@ export const LASTMOD: Record<string, string> = {
   '/en/notes/korean-tokenizer/': '2026-09-07',
   '/notes/korean-tables/': '2026-09-06',
   '/en/notes/korean-tables/': '2026-09-06',
-  '/services/rtm/': '2026-09-10',   // 09-10 가격 구조·결과물·노트 링크
+  '/services/rtm/': '2026-09-11',   // 09-11 eyebrow·이 다음에 미리보아
   '/notes/audit-deliverables/': '2026-09-10',
   '/notes/audit-findings/': '2026-09-10',
-  '/services/data/': '2026-09-07',   // 09-07 이 다음에 보통 필요한 것
-  '/work/': '2026-09-06',
-  '/about/': '2026-09-08',   // 09-08 크롤러 문장 사실 정정(자동 복구는 시즐론에서 더한 것)
-  '/founder/': '2026-09-06',
-  '/contact/': '2026-09-08',   // 09-07 무료 스캔 안내
+  '/services/data/': '2026-09-11',   // 09-11 sub·개찰 매일 수집
+  '/work/': '2026-09-11',   // 09-11 기술 문단·미리보아 tag
+  '/about/': '2026-09-11',   // 09-11 v4 서비스 넷
+  '/engine/': '2026-09-11',   // 09-11 게재 + lede 잣대 문장
+  '/founder/': '2026-09-11',   // 09-11 경력 첫 줄
+  '/contact/': '2026-09-11',   // 09-11 상황 선택지
   '/legal/terms/': '2026-09-06',
   '/legal/privacy/': '2026-09-06',
   '/legal/licenses/': '2026-09-06',
