@@ -56,16 +56,17 @@ export function bookingHref(service?: string): string {
 
 // 내부 경로는 항상 `/…/` (astro.config trailingSlash 'always', 슬래시 없으면 GitHub Pages 가 301).
 // 전역 내비 — 서비스 셋이 먼저, 근거(만든 것들)·회사·문의 순. 라벨은 content[lang].nav.
-// v4(2026-09-11): 심사 앞 둘이 먼저(RTM·미리보아), 검색 진단은 헤더에서 뺌 — 6항목 유지.
+// v4 헤더(2026-09-11 오너 결정): 링크 6 = 서비스 넷(심사 앞 둘 먼저) + 실측 노트 + 회사. '문의'는 링크가
+// 아니라 오른쪽 전화 자리의 버튼(Nav.astro utility, 문의 · 02-…)으로 합쳤다 — 그래서 검색 진단이 들어간다.
+// 라벨은 content.navShort(헤더 전용 짧은 말), 없으면 nav. 7항목이면 821~900px 에서 줄바꿈(09-07 실측).
+// '만든 것들'·엔진·대표 소개는 근거 페이지라 헤더에 안 둔다(푸터·홈·서비스 페이지에서 간다).
 export const nav = [
   { href: '/services/rtm/', key: 'rtm' },
   { href: 'https://miriboa.sizlon.io/', key: 'miriboa' },
   { href: '/services/data/', key: 'data' },
-  // 실측 노트(2026-09-07, 개선 작업 C) — 노트가 유입의 주 경로라 서비스 셋 바로 뒤.
-  // '만든 것들'은 헤더에서 뺐다(오너 결정 09-07): 7항목이면 821~900px 에서 줄바꿈. 푸터 열·홈 버튼·노트에서 간다.
+  { href: '/services/search/', key: 'search' },
   { href: '/notes/', key: 'notes' },
   { href: '/about/', key: 'about' },
-  { href: '/contact/', key: 'contact' },
 ] as const;
 
 // 순서가 푸터 서비스 열 순서. 미리보아는 제품 사이트가 본체(topic 'pilot' 은 백엔드 TOPIC_LABELS 기존 키).

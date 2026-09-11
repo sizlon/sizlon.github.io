@@ -109,11 +109,14 @@ URL 301 with the expected `Location` (those 301s come from Cloudflare, see
   in Chrome at 1200×630 — redo the same way if the hero line changes.
 
 **Adding a page:** section + one route file; copy in `content.ko`; nav entry in
-`site.ts` if it belongs in the nav. The header holds six items on purpose —
-감리 대비표 사전 검토, 입찰 서류 검증 (external, miriboa.sizlon.io), 데이터 피드,
-실측 노트, 회사 소개, 문의 (v4, 2026-09-11; search diagnostics left the header
-then, `/work/` left it 2026-09-07) because a seventh item wraps between 821 and
-~900px. Footer column, home cards, "이 다음에" blocks and the notes still link
+`site.ts` if it belongs in the nav. The header holds six links on purpose —
+감리 대비표 검토, 입찰 서류 검증 (external, miriboa.sizlon.io), 데이터 피드,
+검색 진단, 실측 노트, 회사 — plus the right-hand **문의 · 02-702-5795 button**
+(`/contact/`; the English chrome keeps a `tel:` link there). Header labels come
+from `content.navShort` (short forms) falling back to `nav`; footer/notes/work
+keep the long `nav` labels. Seven links wrap between 821 and ~900px, which is
+why 문의 became the button (2026-09-11) and `/work/` left the header
+(2026-09-07). Footer column, home cards, "이 다음에" blocks and the notes link
 what the header does not.
 
 **Service page blocks (2026-09-07 improvement pass, plan in

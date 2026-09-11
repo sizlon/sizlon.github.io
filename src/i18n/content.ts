@@ -46,6 +46,8 @@ export const content = {
     },
     // v4(2026-09-11): 미리보아는 서비스(헤더·푸터·홈 카드), 검색 진단은 헤더에서 뺌(홈·푸터·'이 다음에'·노트에서 간다).
     nav: { rtm: '감리 대비표 사전 검토', miriboa: '입찰 서류 검증', data: '데이터 피드', search: '검색 품질 진단', notes: '실측 노트', work: '만든 것들', about: '회사 소개', contact: '문의', founder: '대표 소개' },
+    // 헤더 전용 짧은 라벨(2026-09-11) — 6항목이 821px 에서 안 접히게. 푸터·노트·만든 것들은 nav 의 긴 말을 쓴다.
+    navShort: { rtm: '감리 대비표 검토', search: '검색 진단', about: '회사' } as Partial<Record<string, string>>,
     footer: {
       // v4(2026-09-11): 차별 한 줄은 '잰다' — 경쟁 30곳 중 잣대와 함께 수치를 공개한 곳이 없었다. '결정론'은 판정 안쪽 얘기라 전면에서 뺌.
       tagline: 'Measured, not claimed.',
@@ -652,6 +654,7 @@ export const content = {
       fixedLine: 'Fixed price · deliverables named up front · done by the founder',
     },
     nav: { rtm: 'Audit RTM', miriboa: 'Bid document check', data: 'Data feeds', search: 'Search diagnostics', notes: 'Notes', work: 'Work', about: 'About', contact: 'Contact', founder: 'Founder' },
+    navShort: {} as Partial<Record<string, string>>,
     footer: {
       tagline: 'Measured, not claimed.',
       services: 'Services',

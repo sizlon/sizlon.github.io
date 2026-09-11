@@ -16,6 +16,10 @@ const phoneLabel = lang === 'en' ? site.contactPhoneIntl : site.contactPhone;
 // /en/ 은 한 장뿐이다 — 내비가 한국어 페이지로 이끌면 영어로 들어온 사람이 한 번 클릭에
 // 한국어 사이트로 떨어진다(2026-09-06 보고). 영어 크롬은 이메일·전화·KO 만 낸다.
 const navItems = lang === 'en' ? [] : nav;
+// 헤더 라벨은 짧은 말(navShort) 우선 — 6항목이 821px 에서 접히지 않게(2026-09-11).
+const label = (key: string) => tr.navShort[key] ?? tr.nav[key as keyof typeof tr.nav];
+// 문의는 링크 대신 오른쪽 전화 자리의 버튼으로 합쳤다(2026-09-11): 한국어는 /contact/ 로, 영어는 종전대로 tel:.
+const utilityHref = lang === 'en' ? telHref : '/contact/';
 const langLabel = lang === 'en' ? tr.common.koreanSite : tr.common.langSwitch;
 ---
 
@@ -32,14 +36,15 @@ const langLabel = lang === 'en' ? tr.common.koreanSite : tr.common.langSwitch;
           class="link"
           aria-current={logical === item.href ? 'page' : undefined}
         >
-          {tr.nav[item.key]}
+          {label(item.key)}
         </a>
       ))}
     </nav>
 
     <div class="utility">
       {lang === 'en' && <a class="phone" href={`mailto:${site.contactEmail}`}>{site.contactEmail}</a>}
-      <a class="phone" href={telHref}>{phoneLabel}</a>
+      {/* 960px 아래에선 번호를 숨겨 '문의' 만 — 링크 6 + 버튼이 821px 에서 한 줄에 들어가야 한다(09-11 실측: 필요 821 vs 가용 729). */}
+      <a class="phone" href={utilityHref} aria-current={lang !== 'en' && logical === '/contact/' ? 'page' : undefined}>{lang === 'en' ? phoneLabel : <>{tr.nav.contact}<span class="num"> · {phoneLabel}</span></>}</a>
       {/* 접근 가능 이름은 보이는 글자를 포함해야 한다(axe label-content-name-mismatch, 2026-09-07). */}
       <a class="lang" href={otherLangHref} aria-label={lang === 'en' ? `${langLabel} (한국어)` : `${langLabel} — English site`}>{langLabel}</a>
     </div>
@@ -59,9 +64,10 @@ const langLabel = lang === 'en' ? tr.common.koreanSite : tr.common.langSwitch;
               class="m-link"
               aria-current={logical === item.href ? 'page' : undefined}
             >
-              {tr.nav[item.key]}
+              {label(item.key)}
             </a>
           ))}
+          {lang !== 'en' && <a href="/contact/" class="m-link" aria-current={logical === '/contact/' ? 'page' : undefined}>{tr.nav.contact}</a>}
         </nav>
 
         <div class="m-divider"></div>
@@ -114,7 +120,7 @@ const langLabel = lang === 'en' ? tr.common.koreanSite : tr.common.langSwitch;
   .brand img { display: block; height: 27px; width: auto; }
   .links {
     display: flex;
-    gap: 1.25rem;
+    gap: 1.1rem;
     margin-inline-start: auto;
     flex-wrap: wrap;
   }
@@ -211,6 +217,7 @@ const langLabel = lang === 'en' ? tr.common.koreanSite : tr.common.langSwitch;
     padding-top: 0.4rem;
   }
 
+  @media (max-width: 960px) { .phone .num { display: none; } }
   @media (max-width: 820px) {
     .links, .utility { display: none; }
     .mnav { display: block; margin-inline-start: auto; }
