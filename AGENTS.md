@@ -14,9 +14,10 @@ with a little inline JS. See `README.md` for the file-tree overview.
 the frame is *pre-check for the party being audited* — find what the auditor or
 evaluator will flag, before they do, and publish how it is measured. Two
 "before the review" services lead: audit-traceability pre-review (`/services/rtm`,
-done by the founder) and bid-document verification (**Miriboa**, self-serve,
-linked out to miriboa.sizlon.io — a service card, header item and footer entry,
-never a restated price). Two more sit under "그 밖에 하는 일": monthly data feeds
+done by the founder) and bid-document verification (**Miriboa**, self-serve —
+a thin gateway page at `/services/miriboa/` (`BidCheck.astro`, `content.ko.bidcheck`)
+that explains and links out to miriboa.sizlon.io in a new tab; never a restated
+price, credit rule or SLA). Two more sit under "그 밖에 하는 일": monthly data feeds
 (`/services/data`) and Korean search-quality diagnostics (`/services/search`,
 still a full page but no longer in the header). The crawler is a one-line tool
 mention on the data-feed page. The old product pages (`/bid-verification`,
@@ -110,7 +111,7 @@ URL 301 with the expected `Location` (those 301s come from Cloudflare, see
 
 **Adding a page:** section + one route file; copy in `content.ko`; nav entry in
 `site.ts` if it belongs in the nav. The header holds six links on purpose —
-감리 대비표 검토, 입찰 서류 검증 (external, miriboa.sizlon.io), 데이터 피드,
+감리 대비표 검토, 입찰 서류 검증 (`/services/miriboa/` gateway), 데이터 피드,
 검색 진단, 실측 노트, 회사 — plus the right-hand **문의 · 02-702-5795 button**
 (`/contact/`; the English chrome keeps a `tel:` link there). Header labels come
 from `content.navShort` (short forms) falling back to `nav`; footer/notes/work
@@ -154,6 +155,9 @@ English twin is listed in `content.en.page.cases` (the /en/ "Case studies" block
 
 ## URLs and redirects
 
+- **External links open in a new tab** via `ext(href)` from `src/i18n/utils.ts`
+  (`target=_blank rel=noopener` for any `http(s)://` href — Miriboa included;
+  2026-09-11 owner decision). Redirect stubs and the 404 Miriboa note stay same-tab.
 - **Internal links always end in `/`** (`/services/search/`, `/work/#pipeline`,
   `/contact/?service=rtm#form`) — `trailingSlash: 'always'` in astro.config, and
   `scripts/check-dist-links.mjs` (runs as part of `npm run build`) fails the build

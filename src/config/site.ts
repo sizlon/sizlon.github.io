@@ -62,7 +62,7 @@ export function bookingHref(service?: string): string {
 // '만든 것들'·엔진·대표 소개는 근거 페이지라 헤더에 안 둔다(푸터·홈·서비스 페이지에서 간다).
 export const nav = [
   { href: '/services/rtm/', key: 'rtm' },
-  { href: 'https://miriboa.sizlon.io/', key: 'miriboa' },
+  { href: '/services/miriboa/', key: 'miriboa' },   // 관문 페이지(회사 사이트 안), 제품 사이트는 거기 버튼
   { href: '/services/data/', key: 'data' },
   { href: '/services/search/', key: 'search' },
   { href: '/notes/', key: 'notes' },
@@ -72,7 +72,7 @@ export const nav = [
 // 순서가 푸터 서비스 열 순서. 미리보아는 제품 사이트가 본체(topic 'pilot' 은 백엔드 TOPIC_LABELS 기존 키).
 export const servicePages = [
   { href: '/services/rtm/', key: 'rtm', topic: 'rtm' },
-  { href: 'https://miriboa.sizlon.io/', key: 'miriboa', topic: 'pilot' },
+  { href: '/services/miriboa/', key: 'miriboa', topic: 'pilot' },
   { href: '/services/data/', key: 'data', topic: 'datafeed' },
   { href: '/services/search/', key: 'search', topic: 'search' },
 ] as const;

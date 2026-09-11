@@ -19,6 +19,7 @@ export const LASTMOD: Record<string, string> = {
   '/services/rtm/': '2026-09-11',   // 09-11 eyebrow·이 다음에 미리보아
   '/notes/audit-deliverables/': '2026-09-10',
   '/notes/audit-findings/': '2026-09-10',
+  '/services/miriboa/': '2026-09-11',   // 09-11 신설(입찰 서류 검증 관문)
   '/services/data/': '2026-09-11',   // 09-11 sub·개찰 매일 수집
   '/work/': '2026-09-11',   // 09-11 기술 문단·미리보아 tag
   '/about/': '2026-09-11',   // 09-11 v4 서비스 넷
