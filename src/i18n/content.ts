@@ -422,7 +422,7 @@ export const content = {
       byline: '시즐론 이광연',
       tailLine: '이 절차를 고객 코퍼스에 적용하는 서비스:',
       // 서비스별 꼬리 문장(2026-09-10). 없으면 tailLine.
-      tailLineBy: { rtm: '이 글은 대비표를 감리 전에 미리 대조하는 서비스를 준비하며 정리한 것입니다. 그 서비스:' } as Partial<Record<'search' | 'rtm' | 'data', string>>,
+      tailLineBy: { rtm: '이 글은 감리 대비표를 감리 전에 미리 대조하는 서비스를 준비하며 정리한 것입니다. 그 서비스:' } as Partial<Record<'search' | 'rtm' | 'data', string>>,
     },
     // ── 노트 목록 /notes/ (2026-09-07, 개선 작업 C) — 컬렉션에서 자동 생성 ──
     notesIndex: {
