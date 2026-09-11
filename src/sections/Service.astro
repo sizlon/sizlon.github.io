@@ -17,6 +17,7 @@ const principlesH = 'principlesH' in c ? c.principlesH : '';
 const minLine = 'minLine' in c ? c.minLine : '';
 const heroProof = 'heroProof' in c ? c.heroProof : [];
 const heroProofLink = 'heroProofLink' in c ? c.heroProofLink : null;
+const engineLink = 'engineLink' in c ? c.engineLink : null;
 const termsH = 'termsH' in c ? c.termsH : '';
 const terms = 'terms' in c ? c.terms : [];
 const notesH = 'notesH' in c ? c.notesH : '';
@@ -80,6 +81,7 @@ const serviceSchema = {
         <div class="proof">
           {heroProof.map((l) => <p>{l}</p>)}
           {heroProofLink && <a href={heroProofLink.href}>{heroProofLink.label} &rarr;</a>}
+          {engineLink && <a href={engineLink.href}>{engineLink.label} &rarr;</a>}
         </div>
       )}
       <p class="vat eyebrow">{tr.common.vatNote}</p>
