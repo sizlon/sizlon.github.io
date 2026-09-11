@@ -119,6 +119,13 @@ const serviceSchema = {
     </section>
   )}
 
+  {'systemH' in c && (
+    <section class="section wrap block" id="system">
+      <h2>{c.systemH}</h2>
+      <ul class="plain">{c.system.map((l) => <li>{l}</li>)}</ul>
+    </section>
+  )}
+
   {notes.length > 0 && (
     <section class="section wrap block">
       <h2>{notesH}</h2>
