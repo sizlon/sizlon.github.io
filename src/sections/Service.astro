@@ -134,6 +134,7 @@ const serviceSchema = {
     <section class="section wrap block">
       <h2>{c.deliverH}</h2>
       <ul class="plain">{c.deliverables.map((d) => <li>{d}</li>)}</ul>
+      {'deliverLink' in c && <p class="note"><a href={c.deliverLink.href}>{c.deliverLink.label} &rarr;</a> {c.deliverLink.line}</p>}
       {c.options.length > 0 && (
         <div class="options">
           <span class="eyebrow">{c.optionH}</span>
