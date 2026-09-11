@@ -16,6 +16,10 @@ const proof = {
   current: '나라장터 개찰 데이터 6개월분 수집·첨부 파싱·집계 — 협상에 의한 계약 응찰 73,373건·업체 13,220곳 (시즐론)',
   engine: '미리보아 요구조건 추출·대조 엔진 — 골든셋 2,013항목(공고 3건 전수) 기준 요구조건 추출 recall 87.4%, "확실" 판정 precision 96.5%',
   tool: 'API가 있으면 API로, 없으면 자체 자동 복구 크롤러로 수집합니다.',
+  // /work 기술 문단(2026-09-11). 공개 범위 정책(docs/plans/site-exposure-policy.md §2) "보인다·요약만" 층까지:
+  // 방법의 이름·포맷 수·표 수는 적고, 확신 규칙의 수치·프롬프트·골든셋 원본은 적지 않는다.
+  techExtract: '첨부는 자체 추출기로 텍스트와 표를 풉니다. hwp·hwpx·pdf·xlsx·xls·docx·pptx·html·csv·txt 10종과 zip 첨부를 처리하고, HWP 바이너리는 표 구조가 유지되는 변환 경로만 씁니다(텍스트 변환은 표를 잃습니다). 추출 결과는 골든 픽스처 회귀 테스트로 지키고, 표 보존율은 같은 추출기에 하루치 첨부 전체를 넣어 잽니다. 수집·파싱·집계 각 단계가 파일과 로그로 남아 재실행이 됩니다.',
+  techJudge: '공고와 응찰 서류를 문서 파이프라인으로 텍스트·표로 풀고, 요구조건을 항목 단위로 추출한 뒤 응찰 서류와 대조합니다. 판정은 독립된 3표를 받아 만장일치일 때만 "확실"로 내고, 그때도 근거로 붙인 인용이 원문에 실제로 있는지를 규칙으로 검사해 지어낸 인용을 걸러냅니다. 하나라도 어긋나면 단정하지 않고 사람 검토로 돌립니다. 수치는 골든셋으로 잽니다 — 답안을 먼저 쓰고 동결한 뒤 엔진을 돌려, 사후에 답을 맞추는 일이 없습니다. 한국어·영어 두 로케일이 같은 엔진입니다.',
   en: 'Built and ran ingestion & search infra for a media-monitoring service: 7,000 news sources, ~200K new articles/day (prior role at Korea Newswire)',
 } as const;
 
@@ -297,6 +301,7 @@ export const content = {
           name: '미리보아',
           tag: '입찰 서류 검증 · miriboa.sizlon.io',
           body: '나라장터·미 연방조달 공고에서 요구조건을 전부 뽑아 응찰 서류가 각 항목에 응답했는지 대조하는 서비스입니다. HWP·PDF 문서 파이프라인, 요구조건 추출·대조 엔진, 항목마다 붙는 원문 근거, 공개 벤치마크로 이루어져 있습니다. 감리 대응 RTM 은 이 엔진으로 합니다.',
+          tech: proof.techJudge,
           proves: ['문서 파이프라인', '요구조건 추출·대조', '근거 인용', '공개 벤치마크'],
           links: [
             { label: '미리보아 열기', href: 'https://miriboa.sizlon.io/' },
@@ -309,6 +314,7 @@ export const content = {
           name: '나라장터 개찰 데이터 파이프라인',
           tag: '공공 데이터 수집 · 첨부 파싱 · 집계',
           body: 'API 수집, HWP/PDF 첨부 파싱(표 보존율 99.4% — 2026-09-08 나라장터 하루치 첨부 500건, 선호 형식·파싱 오류 제외), 정제·집계로 이루어진 파이프라인입니다. 6개월분 개찰 자료에서 협상에 의한 계약 응찰 73,373건·업체 13,220곳을 집계했고, 그 결과가 탈락 사유 리포트입니다. 데이터 피드는 이 파이프라인으로 합니다.',
+          tech: proof.techExtract,
           proves: ['공공 데이터 지속 수집', '첨부 파싱', '집계'],
           links: [
             { label: '2026 상반기 탈락 리포트', href: 'https://miriboa.sizlon.io/reports/2026-h1-disqualification/' },
@@ -316,6 +322,7 @@ export const content = {
           evidenceFor: 'data',
         },
       ],
+      techLabel: '어떤 기술로',
       provesLabel: '증명하는 것',
       evidenceLabel: '근거가 되는 서비스',
     },

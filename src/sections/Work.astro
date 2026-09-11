@@ -25,6 +25,10 @@ const serviceLabel = (key: string) => tr.nav[key as keyof typeof tr.nav] ?? key;
         <span class="eyebrow">{it.tag}</span>
         <h2>{it.name}</h2>
         <p class="body">{it.body}</p>
+        <div class="tech">
+          <span class="eyebrow">{c.techLabel}</span>
+          <p class="body">{it.tech}</p>
+        </div>
         <div class="meta">
           <div>
             <span class="eyebrow">{c.provesLabel}</span>
@@ -50,6 +54,7 @@ const serviceLabel = (key: string) => tr.nav[key as keyof typeof tr.nav] ?? key;
   .item:last-child { border-bottom: 0; }
   .item h2 { font-size: var(--step-2); }
   .body { color: color-mix(in srgb, var(--color-ink) 85%, var(--color-vellum)); line-height: 1.7; }
+  .tech { display: flex; flex-direction: column; gap: 0.4rem; }
   .meta { display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; margin-top: 0.5rem; }
   .meta > div { display: flex; flex-direction: column; gap: 0.4rem; }
   .tags { list-style: none; margin: 0; padding: 0; display: flex; flex-wrap: wrap; gap: 0.4rem; }
