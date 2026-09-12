@@ -16,7 +16,7 @@ export const LASTMOD: Record<string, string> = {
   '/en/notes/korean-tokenizer/': '2026-09-07',
   '/notes/korean-tables/': '2026-09-06',
   '/en/notes/korean-tables/': '2026-09-06',
-  '/services/rtm/': '2026-09-12',   // 09-12 FAQ 감리법인 반론·누구 항목 한 문장
+  '/services/rtm/': '2026-09-12',   // 09-12 FAQ 감리법인 반론·누구 항목 한 문장·형식 견본 일곱 시트(출력기 산출)
   '/notes/audit-deliverables/': '2026-09-10',
   '/notes/audit-findings/': '2026-09-10',
   '/services/miriboa/': '2026-09-11',   // 09-11 신설(입찰 서류 검증 관문)
