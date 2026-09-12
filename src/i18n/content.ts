@@ -14,7 +14,7 @@ const proof = {
   careerFull: '코리아뉴스와이어 재직 시 언론 모니터링 서비스 미디어비의 수집·검색 인프라 구축·운영 — 매체 7,000여 곳, 일평균 신규 기사 20만 건 인덱싱',
   careerShort: '매체 7,000곳 · 일 20만 건 수집·색인 인프라 구축·운영 (前 코리아뉴스와이어)',
   current: '나라장터 개찰 데이터 6개월분 수집·첨부 파싱·집계 — 협상에 의한 계약 응찰 73,373건·업체 13,220곳 (시즐론)',
-  engine: '미리보아 요구조건 추출·대조 엔진 — 골든셋 2,013항목(공고 3건 전수) 기준 요구조건 추출 recall 87.4%, "확실" 판정 precision 96.5%',
+  engine: '미리보아 요구조건 추출·대조 엔진 — 동결 골든셋 2,013항목(공고 3건 전수, 유효 1,985항목) 기준 요구조건 추출 recall 87.4%, "확실" 판정 precision 96.5%',
   tool: 'API가 있으면 API로, 없으면 자체 자동 복구 크롤러로 수집합니다.',
   // 수집 시스템 자동 테스트 수 — sizlon-platform app·tests 의 test_ 함수 수(2026-09-11 집계). 재집계는 docs/tools/asset-check.sh.
   crawlerTests: '자동 테스트 2,411건(2026-09-11, 테스트 함수 수 집계)',
@@ -104,7 +104,7 @@ export const content = {
       workEyebrow: '만든 것들',
       workLine: '서비스의 근거는 전부 여기서 나옵니다 — 시즐론 명의로 만들어 실제로 쓰이는 것과, 그 위에서 잰 수치.',
       workItems: [
-        { name: '미리보아', proof: '요구조건 추출 recall 87.4% · "확실" 판정 precision 96.5% — 골든셋 2,013항목(공고 3건 전수) 기준', href: '/work/#miriboa' },
+        { name: '미리보아', proof: '요구조건 추출 recall 87.4% · "확실" 판정 precision 96.5% — 동결 골든셋 2,013항목(공고 3건 전수, 유효 1,985항목) 기준', href: '/work/#miriboa' },
         { name: '나라장터 개찰 데이터 파이프라인', proof: '협상에 의한 계약 응찰 73,373건 · 업체 13,220곳 — 나라장터 개찰 원자료 6개월분 집계', href: '/work/#pipeline' },
         // 수치 출처는 노트 본문(docs/experiments/tokenizer-experiment-2026-09-06.md 정본). 2026-09-07 개선 작업 C.
         { name: '한국어 토크나이저 실측 노트', proof: '공고명 183,240건 코퍼스, Nori 기본 vs 사용자 사전 — P@10 0.906→0.986 (loose 기준, 실패 질의)', href: '/notes/korean-tokenizer/' },
@@ -233,7 +233,7 @@ export const content = {
         // 정확도로 읽히지 않게 출처를 밝히고, 감리 산출물 측정치는 첫 프로젝트에서 만든다
         // (ENGINE_BOUNDARY.md: 도메인마다 골든셋을 새로 잡는다).
         heroProof: [
-          '같은 엔진을 입찰 공고 문서에서 측정한 수치 — 요구조건 추출 recall 87.4%, "확실" 판정 precision 96.5% (골든셋 2,013항목 전수 기준, 측정 방법은 miriboa.sizlon.io/benchmark).',
+          '같은 엔진을 입찰 공고 문서에서 측정한 수치 — 요구조건 추출 recall 87.4%, "확실" 판정 precision 96.5% (동결 골든셋 2,013항목 전수·유효 1,985항목 기준, 측정 방법은 miriboa.sizlon.io/benchmark).',
           '감리 산출물(RFP·요구사항정의서·설계서·테스트결과서) 기준 측정치는 아직 없습니다. 첫 프로젝트에서 골든셋을 만들어 같은 방식으로 공개합니다.',
         ],
         heroProofLink: { label: '벤치마크 보기', href: 'https://miriboa.sizlon.io/benchmark/' },
