@@ -111,9 +111,9 @@ URL 301 with the expected `Location` (those 301s come from Cloudflare, see
   the `schema` prop — `/founder` passes `Person` + `ProfilePage` (`FOUNDER_ID`),
   the service pages pass `Service` + `Offer` whose numbers come from
   `content.ko.services.*.offer` (keep them equal to the displayed `price` line).
-- **OG image is `public/og-v5.png`** (1200×630, Korean v5 hero line, 2026-09-14; rendered with
+- **OG image is `public/og-v6.png`** (1200×630, Korean hero line "문서를 대조하는 엔진을 만들고, …", 2026-09-14; rendered with
   `google-chrome --headless --window-size=1200,630 --screenshot` from an HTML mock, Noto Sans CJK KR;
-  `og-v4.png`·`og-v3.png` kept for rollback). The old `og.png` carried the pre-v3 English
+  `og-v5.png`·`og-v4.png`·`og-v3.png` kept for rollback). The old `og.png` carried the pre-v3 English
   "AI proposes… human-in-the-loop" card and was removed 2026-09-06; a new
   filename is chosen on purpose each time the hero line changes so KakaoTalk/Slack
   scrapers don't keep serving the cached old card. Source: an HTML mock rendered

@@ -40,7 +40,7 @@ const homeKo = new URL('/', Astro.site);
 const homeEn = new URL('/en/', Astro.site);
 // hreflang 쌍: 홈(/ ↔ /en/)은 자동, 나머지는 페이지가 넘긴 짝만. x-default 는 ko.
 const pair = isHome ? { ko: homeKo.href, en: homeEn.href } : hreflang ? { ko: new URL(hreflang.ko, Astro.site).href, en: new URL(hreflang.en, Astro.site).href } : null;
-const ogImage = new URL('/og-v5.png', Astro.site).href;
+const ogImage = new URL('/og-v6.png', Astro.site).href;
 
 // JSON-LD — 회사 노드 하나를 모든 페이지가 공유하고(@id 로 참조), 홈이 아닌 페이지에는
 // BreadcrumbList, 페이지 고유 노드(Service·Person)는 `schema` prop 으로 받는다 (2026-09-06).

@@ -13,7 +13,7 @@ const hrefOf = (key: string) => servicePages.find((s) => s.key === key)?.href ??
 <Base title={c.title} description={c.description} lang="ko" rawTitle>
   <section class="hero band-ink">
     <div class="wrap hero-copy">
-      <h1>{c.h1}</h1>
+      <h1>{c.h1Lines.map((l) => <span class="h1-line">{l}</span>)}</h1>
       <p class="lede">{c.lede}</p>
       <div class="cta-row">
         <a class="btn btn-primary" href={bookingHref()}>{tr.common.book} <span class="arrow">&rarr;</span></a>
@@ -93,7 +93,9 @@ const hrefOf = (key: string) => servicePages.find((s) => s.key === key)?.href ??
 <style>
   .hero { padding-block: clamp(3.5rem, 2rem + 8vw, 7rem); }
   .hero-copy { display: flex; flex-direction: column; gap: 1.25rem; align-items: flex-start; max-width: 60ch; }
-  .hero h1 { max-width: 26ch; }
+  /* 쉼표마다 한 줄(09-14) — 가장 긴 줄이 약 11.8em 이라 좁은 폰에서도 세 줄을 넘지 않게 폭에 맞춰 줄인다 */
+  .hero h1 { max-width: none; font-size: min(var(--step-4), calc((100vw - 2 * var(--gutter)) / 12.6)); }
+  .h1-line { display: block; }
   .cta-row { display: flex; gap: 0.75rem; flex-wrap: wrap; margin-top: 0.5rem; }
   .fixed { margin-top: 0.5rem; }
   .head { display: flex; flex-direction: column; gap: 0.75rem; margin-bottom: 2rem; max-width: var(--measure); }
