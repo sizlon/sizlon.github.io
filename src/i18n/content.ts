@@ -51,7 +51,7 @@ export const content = {
     },
     // v4(2026-09-11): 미리보아는 서비스(헤더·푸터·홈 카드), 검색 진단은 헤더에서 뺌(홈·푸터·'이 다음에'·노트에서 간다).
     // 09-14 오너: 엔진 이름 '문서 검증 엔진' → '요구사항 대조 엔진'('문서검증'은 시장에서 진위·위변조 판별(eKYC) 뜻, '검증'은 확정 권한처럼 읽힘).
-    nav: { engine: '요구사항 대조 엔진', rtm: '감리 대비표 사전 검토', miriboa: '입찰 서류 검증', data: '데이터 피드', search: '검색 품질 진단', notes: '실측 노트', work: '만든 것들', about: '회사 소개', contact: '문의', founder: '대표 소개' },
+    nav: { engine: '요구사항 대조 엔진', rtm: '감리 대비표 사전 검토', miriboa: '입찰 서류 검증', data: '데이터 피드', search: '검색 품질 진단', notes: '실측 노트', work: '공개 작업', about: '회사 소개', contact: '문의', founder: '대표 소개' },
     // 헤더 전용 짧은 라벨(2026-09-11) — 6항목이 821px 에서 안 접히게. 푸터·노트·만든 것들은 nav 의 긴 말을 쓴다.
     navShort: { rtm: '감리 대비표 검토', search: '검색 진단', about: '회사' } as Partial<Record<string, string>>,
     footer: {
@@ -63,10 +63,10 @@ export const content = {
       legal: '법적 고지',
       principles: '데이터 수집 원칙',
       workItems: [
-        { href: '/work/#miriboa', label: '미리보아' },
-        { href: '/work/#pipeline', label: '개찰 데이터 파이프라인' },
-        { href: '/notes/', label: '실측 노트' },
         { href: '/engine/', label: '요구사항 대조 엔진' },
+        { href: '/#pipeline', label: '개찰 데이터 파이프라인' },
+        { href: '/notes/', label: '실측 노트' },
+        { href: '/work/', label: '공개 작업' },
       ],
       baseline: '고정가 · 결과물 명시 · 대표가 직접 운영',
       business: '주식회사 시즐론 · 대표 이광연 · 사업자등록번호 420-86-03864 · 전화 02-702-5795 · 서울특별시 용산구 원효로 189-7, 302호 · hello@sizlon.io',
@@ -78,15 +78,16 @@ export const content = {
       // v5(2026-09-14, docs/plans/sizlon-site-restructure-plan-v5-draft.md, 오너 승인 h1 1번·헤더 A안): 소프트웨어 회사 — 만든 시스템 셋과 그 쓰임새.
       // 서비스 페이지 URL·h1·가격은 v4 그대로. 수치는 proof·/engine/ 에 잣대와 함께 이미 실린 것만.
       title: '시즐론 | 요구사항 대조 엔진·데이터 파이프라인·한국어 검색',
-      description: '시즐론은 소프트웨어 회사입니다. 한국 공공 문서를 표째 읽어 요구사항마다 제출 문서와 맞춰 보는 요구사항 대조 엔진, 매일 도는 데이터 파이프라인, 한국어 검색을 만들고 직접 운영합니다. 감리 대비표 사전 검토·입찰 서류 검증·데이터 피드·검색 품질 진단. 어떻게 재는지와 얼마나 틀리는지를 공개합니다.',
+      description: '시즐론은 소프트웨어 회사입니다. 한국 공공 문서를 표째 읽어 요구사항마다 제출 문서와 맞춰 보는 요구사항 대조 엔진, 매일 도는 데이터 파이프라인을 만들고 직접 운영하며, 한국어 검색 시스템을 진단하고 고칩니다. 감리 대비표 사전 검토·입찰 서류 검증·데이터 피드·검색 품질 진단. 어떻게 재는지와 얼마나 틀리는지를 공개합니다.',
       // 09-14 오너: 옛 h1("읽고·모으고·찾게 만드는")이 모호 → 동사를 시스템 셋과 1:1 로. 쉼표마다 한 줄(h1Lines 로 렌더).
       h1: '요구사항을 대조하는 엔진을 만들고, 공공 데이터를 수집·정제하고, 한국어 검색 시스템을 고칩니다.',
       h1Lines: ['요구사항을 대조하는 엔진을 만들고,', '공공 데이터를 수집·정제하고,', '한국어 검색 시스템을 고칩니다.'],
-      lede: '시즐론은 소프트웨어 회사입니다. 요구사항 대조 엔진과 데이터 파이프라인, 한국어 검색을 직접 만들고 운영하며, 그 위에서 서비스를 합니다. 수치는 잣대와 함께 공개하고, 잰 적 없는 것은 없다고 씁니다.',
+      lede: '시즐론은 소프트웨어 회사입니다. 요구사항 대조 엔진과 데이터 파이프라인을 직접 만들고 운영하며, 그 위에서 서비스를 합니다. 한국어 검색은 고객의 검색 시스템을 진단하고 고칩니다. 수치는 잣대와 함께 공개하고, 잰 적 없는 것은 없다고 씁니다.',
       methodEyebrow: '작업 방식',
       method,
-      systemsEyebrow: '만든 것',
-      systemsH2: '시스템 셋, 그리고 그 위에서 하는 일',
+      systemsEyebrow: '만든 것과 하는 일',
+      // 09-14: 03 한국어 검색은 '만든 것'에서 '하는 일'로 — 운영 중인 자체 검색 시스템이 없다(미리보아 검색은 SQLite FTS5+번역 사전).
+      systemsH2: '만든 시스템 둘, 그리고 한국어 검색 진단',
       usesLabel: '이 시스템으로 하는 일',
       systems: [
         {
@@ -109,19 +110,18 @@ export const content = {
           text: 'API가 있으면 API로, 없으면 자체 자동 복구 크롤러로 수집하고, HWP·PDF 첨부는 표째 풀어 매일 갱신합니다.',
           facts: [
             { v: '응찰 73,373건 · 업체 13,220곳', note: '나라장터 개찰 원자료 6개월분 수집·첨부 파싱·집계' },
-            { v: '자동 테스트 2,411건', note: '수집 시스템 테스트 함수 수(2026-09-11)' },
-            { v: '매체 7,000곳 · 일 20만 건', note: '前 코리아뉴스와이어 수집·색인 인프라 구축·운영' },
           ],
           uses: [
             { key: 'data', situation: '데이터가 매달 필요할 때', name: '데이터 피드', terms: '구축 100~300만원 + 월 30~80만원', deliverable: '매달 오는 정제 데이터' },
           ],
         },
         {
-          key: 'search', no: '03', name: '한국어 검색',
-          text: '형태소 분석·사용자 사전·동의어로, 한국어 검색이 못 찾는 이유를 재고 고칩니다. Elasticsearch·OpenSearch·Nori.',
+          key: 'search', no: '하는 일', name: '한국어 검색 품질 진단', usesLabel: '서비스',
+          text: '고객이 운영하는 Elasticsearch·OpenSearch 검색에서, 형태소 분석·사용자 사전·동의어 때문에 못 찾는 이유를 재고 고칩니다. 시즐론이 운영하는 검색 시스템이 아니라 고객의 검색을 진단하는 일입니다.',
           facts: [
-            { v: 'P@10 0.906 → 0.986', note: '공고명 183,240건 코퍼스, Nori 기본 vs 사용자 사전(loose, 실패 질의)', href: '/notes/korean-tokenizer/' },
-            { v: '실험 재현 저장소 공개', note: 'sizlon/nori-user-dictionary-eval', href: 'https://github.com/sizlon/nori-user-dictionary-eval' },
+            { v: 'P@10 0.906 → 0.986', note: '실측 실험 — 공고명 183,240건, Nori 기본 vs 사용자 사전(loose, 실패 질의)', href: '/notes/korean-tokenizer/' },
+            { v: '실험 재현 저장소 공개', note: 'sizlon/nori-user-dictionary-eval', href: '/work/#nori-user-dictionary-eval' },
+            { v: '매체 7,000곳 · 일 20만 건 색인', note: '前 코리아뉴스와이어 수집·검색 인프라 구축·운영' },
           ],
           uses: [
             { key: 'search', situation: '검색이 못 찾을 때', name: '검색 품질 진단', terms: '2주 · 250만원', deliverable: '진단 보고서 + 즉시 적용 설정' },
@@ -130,8 +130,8 @@ export const content = {
           scan: { href: '/contact/?service=search&scan=1#form', label: '통화 전에 무료 스캔부터 받을 수 있습니다' },
         },
       ],
-      workLine: '서비스의 근거는 전부 시즐론 명의로 만들어 실제로 쓰이는 것과, 그 위에서 잰 수치입니다.',
-      workLink: '만든 것들 보기',
+      workLine: '누구나 열어 볼 수 있는 코드·명세·실험은 공개 작업에 따로 모았습니다.',
+      workLink: '공개 작업 보기',
       closingH2: '어느 쪽이든 먼저 20분 통화로 범위를 잡습니다.',
     },
 
@@ -363,6 +363,8 @@ export const content = {
           '수집→정규화→적재가 파이프라인 단위로 나뉘고, 대상 사이트가 바뀌면 실패를 격리해 두었다가 규칙을 고친 뒤 재처리합니다. 납품물에 갱신 로그와 실패·복구 이력이 붙는 이유입니다.',
           '적재는 고객이 쓰는 곳으로 — 관계형 DB, 클라우드 스토리지, 메시지 큐, 스프레드시트, 검색엔진, CSV·엑셀 파일, HTTP API.',
           '처음부터 설치형 납품을 전제로 만들어 운영 문서, 매주 자동으로 도는 납품 리허설, ' + proof.crawlerTests + '이 있습니다.',
+          // 09-14: /work 가 공개 작업으로 바뀌며 옮겨 온 개찰 파이프라인 기술 문단
+          proof.techExtract,
           '운영 실적이 쌓인 피드는 고객 서버로 이전해 드립니다 — 설치형, 별도 견적. 데이터도 시스템도 시즐론에 묶이지 않습니다.',
         ],
         deliverH: '결과물',
@@ -378,7 +380,7 @@ export const content = {
           '나라장터 개찰 데이터를 이 방식으로 수집·파싱·집계합니다 — 6개월분 집계에서 협상에 의한 계약 응찰 73,373건·업체 13,220곳, 2026-09-11 부터는 매일 어제까지 받습니다. HWP·PDF 첨부 표 보존율 99.4% (2026-09-08 하루치 첨부 500건, 선호 형식·파싱 오류 제외).',
           proof.careerShort + ' — 그 엔지니어가 이 시스템을 만들고 직접 운영합니다.',
         ],
-        heroProofLink: { label: '만든 것들', href: '/work/#pipeline' },
+        heroProofLink: { label: '2026 상반기 탈락 리포트', href: 'https://miriboa.sizlon.io/reports/2026-h1-disqualification/' },
         engineLink: { label: '요구사항 대조 엔진 보기', href: '/engine/' },
         notesH: '실측 노트',
         notes: [
@@ -463,43 +465,42 @@ export const content = {
       cta: '공고번호와 서류만 있으면 바로 시작할 수 있습니다.',
     },
 
-    // ── 만든 것들 (v3 §3.5) ────────────────────────────────────────────
+    // ── 공개 작업 (구 만든 것들, v3 §3.5 → 09-14) ────────────────────────────────────────────
     work: {
-      title: '만든 것들',
-      description: '시즐론 명의로 만들고 실제로 쓰이는 것 — 미리보아(입찰 서류 검증), 나라장터 개찰 데이터 파이프라인.',
-      eyebrow: '만든 것들',
-      h1: '시즐론 명의로 만들고, 실제로 쓰이는 것만.',
-      lede: '서비스 페이지의 근거는 전부 여기 있는 것들에서 나옵니다. 미리보아는 그 자체가 서비스이기도 합니다.',
+      // 09-14 오너 결정: '만든 것들' → '공개 작업'. 기준 = sizlon 조직이 공개한 저장소만(누구나 직접 확인 가능).
+      // 항목마다 상태를 적고, 비공개·공개 전(jeongsan·크롤러 플랫폼·표 추출 실험 10-06 전)과 대표 개인 계정 저장소는 넣지 않는다.
+      // 서비스·시스템 소개는 홈·서비스 페이지 몫이라 여기서 반복하지 않는다.
+      title: '공개 작업',
+      description: '시즐론 조직이 공개한 저장소 — 누구나 열어 볼 수 있는 코드·명세·실험. HWP 파서 pyhwp 포크, Boundary Protocol 명세, Nori 사용자 사전 실측.',
+      eyebrow: '공개 작업',
+      h1: '누구나 열어 볼 수 있는 시즐론의 공개 작업',
+      lede: '시즐론 조직(github.com/sizlon)이 공개한 것만 올립니다. 항목마다 지금 상태를 적고, 비공개이거나 공개 전인 작업은 넣지 않습니다. 서비스와 그 바탕의 시스템은 첫 페이지와 각 서비스 페이지에서 소개합니다.',
       items: [
         {
-          id: 'miriboa',
-          name: '미리보아',
-          tag: '입찰 서류 검증 · 서비스 · miriboa.sizlon.io',
-          body: '나라장터·미 연방조달 공고에서 요구조건을 전부 뽑아 응찰 서류가 각 항목에 응답했는지 대조하는 서비스입니다. HWP·PDF 문서 파이프라인, 요구조건 추출·대조 엔진, 항목마다 붙는 원문 근거, 공개 벤치마크로 이루어져 있습니다. 감리 대비표 사전 검토는 이 엔진으로 합니다.',
-          tech: proof.techJudge,
-          proves: ['문서 파이프라인', '요구조건 추출·대조', '근거 인용', '공개 벤치마크'],
-          links: [
-            { label: '미리보아 열기', href: 'https://miriboa.sizlon.io/' },
-            { label: '골든 벤치마크 — 측정 방법·실패 사례·한계', href: 'https://miriboa.sizlon.io/benchmark/' },
-          ],
-          evidenceFor: 'rtm',
+          id: 'pyhwp',
+          name: 'pyhwp 포크 — HWP 문서 파서',
+          tag: '운영 사용 중 · AGPL-3.0',
+          body: 'HWP 5.0 문서를 읽는 오픈소스 파서 pyhwp(0.1b15)를 포크해, 실제 공공 문서에서 파싱을 멈추게 하던 세 가지 — 짝 없는 UTF-16 서로게이트, XML 에 쓸 수 없는 문자, 깨진 문서 요약 정보 — 를 견디게 고쳤습니다. 수정 전에는 나라장터 하루치 첨부 500건 중 0.6%가 서로게이트 오류로 멈췄습니다(2026-09-09). 요구사항 대조 엔진과 개찰 데이터 파이프라인의 HWP 파싱이 이 포크를 씁니다.',
+          links: [{ label: 'github.com/sizlon/pyhwp', href: 'https://github.com/sizlon/pyhwp' }],
         },
         {
-          id: 'pipeline',
-          name: '나라장터 개찰 데이터 파이프라인',
-          tag: '공공 데이터 수집 · 첨부 파싱 · 집계',
-          body: 'API 수집, HWP/PDF 첨부 파싱(표 보존율 99.4% — 2026-09-08 나라장터 하루치 첨부 500건, 선호 형식·파싱 오류 제외), 정제·집계로 이루어진 파이프라인입니다. 6개월분 개찰 자료에서 협상에 의한 계약 응찰 73,373건·업체 13,220곳을 집계했고, 그 결과가 탈락 사유 리포트입니다. 데이터 피드는 이 파이프라인으로 합니다.',
-          tech: proof.techExtract,
-          proves: ['공공 데이터 지속 수집', '첨부 파싱', '집계'],
+          id: 'boundary-protocol',
+          name: 'Boundary Protocol — 자율 시스템 책임 추적 명세',
+          tag: '명세 v1.0.0 · Apache-2.0',
+          body: '자율 시스템이 경계를 넘나들며 한 일 — 의도, 행동, 관측, 평가, 이의 — 을 검증 가능한 기록으로 남기는 방식을 정한 프로토콜 명세입니다. 시스템을 통제하지 않고, 행동을 추적·검증할 수 있게 하는 구조만 정합니다. 문서·JSON 스키마·예제로 이루어져 있습니다.',
+          links: [{ label: 'github.com/sizlon/boundary-protocol', href: 'https://github.com/sizlon/boundary-protocol' }],
+        },
+        {
+          id: 'nori-user-dictionary-eval',
+          name: 'Nori 사용자 사전 실측',
+          tag: '실험 · 보관(2026-09 스냅숏)',
+          body: 'Elasticsearch 한국어 분석기(Nori) 기본 설정이 공고명에서 어떻게 틀리는지, 코퍼스에서 뽑은 사용자 사전이 얼마나 되돌리는지 잰 재현 실험입니다. 공고명 183,240건·질의 50개에서 P@10 0.906 → 0.986(loose 기준). 설정·코퍼스·결과가 모두 들어 있습니다.',
           links: [
-            { label: '2026 상반기 탈락 리포트', href: 'https://miriboa.sizlon.io/reports/2026-h1-disqualification/' },
+            { label: 'github.com/sizlon/nori-user-dictionary-eval', href: 'https://github.com/sizlon/nori-user-dictionary-eval' },
+            { label: '실측 노트', href: '/notes/korean-tokenizer/' },
           ],
-          evidenceFor: 'data',
         },
       ],
-      techLabel: '어떤 기술로',
-      provesLabel: '증명하는 것',
-      evidenceLabel: '근거가 되는 서비스',
     },
 
     // ── 회사 소개 (v3 §3.6) ────────────────────────────────────────────
@@ -553,7 +554,7 @@ export const content = {
         { name: '데이터 피드', href: '/services/data/', what: '이 엔진의 표 추출 층만 같이 씁니다 — 공공 공고의 HWP·PDF 첨부를 표째 읽는 부분. 수집은 자체 자동 복구 크롤러와 API 로 따로 하고, 요구조건 추출·판정 층은 쓰지 않습니다.', measured: '표 보존율 99.4% 가 그 층의 수치입니다. 판정 수치는 이 서비스와 무관합니다.' },
       ],
       goldenH: '도메인마다 골든셋을 새로 잡습니다',
-      golden: '추출과 판정의 정확도는 문서 종류에 따라 다릅니다. 입찰 공고에서 잰 87.4%·96.5% 는 감리 산출물이나 정산 서류의 수치가 아닙니다. 새 도메인은 실제 문서로 골든셋을 만들고 나서야 숫자를 말하고, 합성 문서로 만든 숫자는 어디에도 쓰지 않습니다.',
+      golden: '추출과 판정의 정확도는 문서 종류에 따라 다릅니다. 입찰 공고에서 잰 87.4%·96.5% 는 감리 산출물이나 정산 서류의 수치가 아닙니다. 새 도메인은 실제 문서로 골든셋을 만들고 나서야 숫자를 말하고, 합성 문서로 만든 숫자는 어디에도 쓰지 않습니다. 골든셋은 답안을 먼저 쓰고 동결한 뒤 엔진을 돌려, 사후에 답을 맞추지 않습니다. 한국어·영어 두 로케일이 같은 엔진입니다.',
       intakeH: '문서 검증 의뢰',
       intake: '세 서비스 어디에도 딱 맞지 않는 문서도 받습니다. 조건 문서(요구·규정·계약)와 응답 문서(제출물·산출물·증빙)의 종류를 알려 주시면 영업일 1일 안에 이 엔진으로 판정이 가능한지, 어떤 형태로 드릴 수 있는지 회신합니다. 접수는 무료이고, 결제는 범위와 형태를 확인한 뒤입니다.',
       intakeCta: '문서 검증 의뢰하기',
@@ -564,7 +565,7 @@ export const content = {
         { label: '미리보아 벤치마크 — 골든셋·측정 방법·범용 도구 비교', href: 'https://miriboa.sizlon.io/benchmark/' },
         { label: 'HWP·PDF 표 추출 실험', href: '/notes/korean-tables/' },
         { label: '정보시스템 감리에서 무엇이 지적되나', href: '/notes/audit-findings/' },
-        { label: '만든 것들 — 미리보아·개찰 데이터 파이프라인', href: '/work/' },
+        { label: 'pyhwp 포크 — HWP 파서(공개 작업)', href: '/work/#pyhwp' },
       ],
       cta: '20분 통화 예약',
     },
@@ -652,8 +653,8 @@ export const content = {
           list: [],
         },
       ],
-      workLine: '만든 것들은 따로 정리해 두었습니다.',
-      workLink: '만든 것들 보기',
+      workLine: '누구나 열어 볼 수 있는 코드·명세·실험은 공개 작업에 따로 모았습니다.',
+      workLink: '공개 작업 보기',
       cta: '20분 통화 예약',
     },
 
@@ -792,7 +793,7 @@ export const content = {
       vatNote: 'Prices exclude VAT.',
       fixedLine: 'Fixed price · deliverables named up front · built and run by the founder',
     },
-    nav: { engine: 'Requirements comparison engine', rtm: 'Audit RTM', miriboa: 'Bid document check', data: 'Data feeds', search: 'Search diagnostics', notes: 'Notes', work: 'Work', about: 'About', contact: 'Contact', founder: 'Founder' },
+    nav: { engine: 'Requirements comparison engine', rtm: 'Audit RTM', miriboa: 'Bid document check', data: 'Data feeds', search: 'Search diagnostics', notes: 'Notes', work: 'Open work', about: 'About', contact: 'Contact', founder: 'Founder' },
     navShort: {} as Partial<Record<string, string>>,
     footer: {
       tagline: 'Measured, not claimed.',
@@ -802,9 +803,9 @@ export const content = {
       legal: 'Legal',
       principles: 'Data collection principles',
       workItems: [
-        { href: '/work/#miriboa', label: 'Miriboa' },
-        { href: '/work/#pipeline', label: 'Bid-opening data pipeline' },
+        { href: 'https://miriboa.sizlon.io/en/', label: 'Miriboa' },
         { href: '/en/notes/', label: 'Notes' },
+        { href: '/work/', label: 'Open work' },
       ],
       baseline: 'Fixed price · deliverables named up front · built and run by the founder',
       business: 'Sizlon Inc. (주식회사 시즐론) · CEO Kwangyeon Lee · Biz. Reg. 420-86-03864 · Tel: +82-2-702-5795 · 302, 189-7 Wonhyo-ro, Yongsan-gu, Seoul, Republic of Korea · hello@sizlon.io',

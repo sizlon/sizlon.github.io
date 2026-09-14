@@ -10,8 +10,9 @@ root, one English page at `/en/`), deployed to GitHub Pages at
 with a little inline JS. See `README.md` for the file-tree overview.
 
 **Home since v5 (2026-09-14, plan `~/Projects/docs/plans/sizlon-site-restructure-plan-v5-draft.md`):**
-a software company — three systems it built (요구사항 대조 엔진 · 데이터 파이프라인 · 한국어 검색),
-each with its measured numbers and the services that run on it (`content.ko.home.systems`).
+a software company — two systems it built and runs (요구사항 대조 엔진 · 데이터 파이프라인) plus one
+thing it does (한국어 검색 품질 진단 — there is no Sizlon-run search system; Miriboa search is SQLite
+FTS5), each with measured numbers and the services on it (`content.ko.home.systems`).
 Service pages, URLs and prices are unchanged from v4.
 
 **What it sells (v4 reframe 2026-09-11, plan at
@@ -131,6 +132,13 @@ keep the long `nav` labels. Seven links wrap between 821 and ~900px, which is
 why 문의 became the button (2026-09-11) and `/work/` left the header
 (2026-09-07). Footer column, home cards, "이 다음에" blocks and the notes link
 what the header does not.
+
+**`/work/` is 공개 작업 (open work) since 2026-09-14** (was 만든 것들): only public
+repositories under the **sizlon** GitHub org, each with a one-word status (운영 사용 중 ·
+명세 · 실험/보관). Private or not-yet-launched work (jeongsan, the crawler platform, the
+table-extraction eval before its 10-06 gate) and the founder's personal-account repos
+(`ngenieer/*`) stay off. Services and the systems behind them are introduced on the home
+page and service pages — do not repeat them here.
 
 **Service page blocks (2026-09-07 improvement pass, plan in
 `~/Projects/docs/sizlon_io_개선_2단계_변경안.md`):** every service ends with an

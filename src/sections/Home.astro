@@ -54,7 +54,7 @@ const hrefOf = (key: string) => servicePages.find((s) => s.key === key)?.href ??
             ))}
           </dl>
           {'factsNote' in sys && <p class="facts-note">{sys.factsNote}</p>}
-          <span class="eyebrow uses-label">{c.usesLabel}</span>
+          <span class="eyebrow uses-label">{'usesLabel' in sys ? sys.usesLabel : c.usesLabel}</span>
           <div class="uses">
             {sys.uses.map((u) => (
               <a class="card" href={hrefOf(u.key)} {...ext(hrefOf(u.key))}>

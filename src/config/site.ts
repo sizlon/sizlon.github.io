@@ -55,7 +55,7 @@ export function bookingHref(service?: string): string {
 }
 
 // 내부 경로는 항상 `/…/` (astro.config trailingSlash 'always', 슬래시 없으면 GitHub Pages 가 301).
-// 전역 내비 — 서비스 셋이 먼저, 근거(만든 것들)·회사·문의 순. 라벨은 content[lang].nav.
+// 전역 내비 — 서비스 셋이 먼저, 근거(공개 작업)·회사·문의 순. 라벨은 content[lang].nav.
 // v4 헤더(2026-09-11 오너 결정): 링크 6 = 서비스 넷(심사 앞 둘 먼저) + 실측 노트 + 회사. '문의'는 링크가
 // 아니라 오른쪽 전화 자리의 버튼(Nav.astro utility, 문의 · 02-…)으로 합쳤다 — 그래서 검색 진단이 들어간다.
 // 라벨은 content.navShort(헤더 전용 짧은 말), 없으면 nav. 7항목이면 821~900px 에서 줄바꿈(09-07 실측).
