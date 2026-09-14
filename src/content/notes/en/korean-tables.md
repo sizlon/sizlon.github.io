@@ -1,6 +1,6 @@
 ---
 title: "When the table disappears, RAG states a wrong number with confidence — HWP and PDF table extraction measured on 214 Korean tender documents"
-description: "214 Korean public-tender attachments: generic HWP extraction either drops 85% of table cells (hwp5txt) or keeps the characters but only 4% of row structure. The PDF twin of the same document keeps 87% of cells at best. The measurement also found and fixed two defects in our own chain."
+description: "Tables in 214 Korean tender files: generic HWP extraction drops 85% of cells."
 date: "2026-09-06"
 service: data
 eyebrow: "Note"

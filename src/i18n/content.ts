@@ -78,7 +78,7 @@ export const content = {
       // v5(2026-09-14, docs/plans/sizlon-site-restructure-plan-v5-draft.md, 오너 승인 h1 1번·헤더 A안): 소프트웨어 회사 — 만든 시스템 셋과 그 쓰임새.
       // 서비스 페이지 URL·h1·가격은 v4 그대로. 수치는 proof·/engine/ 에 잣대와 함께 이미 실린 것만.
       title: '시즐론 | 요구사항 대조 엔진·데이터 파이프라인·한국어 검색',
-      description: '시즐론은 소프트웨어 회사입니다. 한국 공공 문서를 표째 읽어 요구사항마다 제출 문서와 맞춰 보는 요구사항 대조 엔진, 매일 도는 데이터 파이프라인을 만들고 직접 운영하며, 한국어 검색 시스템을 진단하고 고칩니다. 감리 대비표 사전 검토·입찰 서류 검증·데이터 피드·검색 품질 진단. 어떻게 재는지와 얼마나 틀리는지를 공개합니다.',
+      description: '요구사항 대조 엔진과 데이터 파이프라인을 만드는 소프트웨어 회사. 감리 대비표 검토·입찰 서류 검증·데이터 피드·검색 진단.',
       // 09-14 오너: 옛 h1("읽고·모으고·찾게 만드는")이 모호 → 동사를 시스템 셋과 1:1 로. 쉼표마다 한 줄(h1Lines 로 렌더).
       h1: '요구사항을 대조하는 엔진을 만들고, 공공 데이터를 수집·정제하고, 한국어 검색 시스템을 고칩니다.',
       h1Lines: ['요구사항을 대조하는 엔진을 만들고,', '공공 데이터를 수집·정제하고,', '한국어 검색 시스템을 고칩니다.'],
@@ -140,7 +140,7 @@ export const content = {
       search: {
         // <title> 은 접미 "— 시즐론" 이 붙으니 대시 없이 짧게(모바일 SERP ~30자). h1 은 별도.
         title: 'Elasticsearch·OpenSearch 검색·RAG 품질 진단',
-        description: 'Elasticsearch/OpenSearch·Nori 검색 품질 진단 — RAG 검색 포함, 2주, 250만원 고정가. 실패 쿼리 골든셋 100건으로 before/after 를 측정하고, 바로 적용 가능한 analyzer·사전·동의어·랭킹 설정을 드립니다.',
+        description: 'Elasticsearch·OpenSearch·Nori 검색·RAG 품질 진단. 실패 질의 골든셋으로 전후를 재고 2주 안에 설정을 고칩니다.',
         eyebrow: '서비스 · 검색 품질 진단',
         h1: '검색·RAG 품질 진단 — Elasticsearch · OpenSearch',
         sub: '"검색이 이상하다"를 수치로 바꾸고, 2주 안에 고친 설정을 드립니다.',
@@ -212,8 +212,8 @@ export const content = {
         // 짧은 판으로는 못 잰다. 전문은 PM 이 결제 전에 알아야 할 순서: 누구·언제 / 무엇을 주면 / 무엇을 받나 /
         // 어떻게 보나(감리원 세 겹) / 보지 않는 것 / 가격·조건 / FAQ. 시스템 범위는 docs/plans/rtm-system-dev-plan.md.
         brief: false,
-        title: '감리 대비표 사전 검토 — 요구사항추적표(RTM) 대조',
-        description: '공공 SI 감리 대비표 사전 검토 — RFP 요구사항을 설계 산출물과 대조해 감리 전에 빠진 것을 찾습니다. 감리원이 대비표로 보는 세 겹(형식 요건·추적성·설계 반영)을 문서만으로 먼저 보고, 대조 리포트·대비표 검토본·지적 예상 목록을 영업일 5일 안에 드립니다. 설계단계 감리 1회 120~300만원(요구사항 수 구간별), 고정가.',
+        title: '감리 대비표 사전 검토·요구사항추적표(RTM)',   // 09-14: 접미 '— 시즐론' 과 대시 두 번·36자 → 짧게(h1 은 그대로)
+        description: '공공 SI 설계단계 감리 전, 요구사항추적표를 RFP 요구사항·설계 산출물과 대조해 빈 칸을 찾습니다. 120~300만원 고정가.',
         eyebrow: '서비스 · 감리 앞',
         crumb: { href: '/engine/', label: '요구사항 대조 엔진', here: '감리 앞' },
         h1: '감리 대비표 사전 검토 — 요구사항추적표(RTM) 대조',
@@ -335,7 +335,7 @@ export const content = {
       },
       data: {
         title: '데이터 피드, 매달 정제해서 납품',
-        description: '공공 공고·HWP 첨부·PDF 표처럼 남들이 못 뽑는 한국어 데이터를 매달 정제해 CSV/JSON/API 로 납품합니다. 구축 100~300만원 + 월정액 30~80만원.',
+        description: '공공 공고·HWP 첨부·PDF 표 같은 한국어 데이터를 매달 정제해 CSV·JSON·API로 납품합니다. 월정액 데이터 피드.',
         eyebrow: '서비스 · 데이터 피드',
         h1: '데이터 피드 — 필요한 데이터를 매달 정제해서 납품합니다',
         sub: '판정과 분석의 근거가 되는 공공 데이터 — 공고·개찰·HWP 첨부·PDF 표 — 를 매달 정제해 납품합니다. 남들이 못 뽑는 한국어 데이터가 전문입니다.',
@@ -417,7 +417,7 @@ export const content = {
     // (AGENTS.md: 정본은 미리보아 /pricing). 수치는 proof 에서만.
     bidcheck: {
       title: '입찰 서류 검증 — 미리보아',
-      description: '나라장터·미 연방조달(SAM.gov) 공고의 요구조건 전부를 응찰 서류와 대조해, 제출 전에 빠진 항목과 어긋난 항목을 원문 근거와 함께 보여주는 셀프서비스. 골든셋 2,013항목 기준 추출 recall 87.4%, "확실" 판정 precision 96.5%. 미리보아에서 바로 시작합니다.',
+      description: '나라장터·미 연방조달 공고의 요구조건을 응찰 서류와 항목마다 대조해 원문 근거와 함께 보여 주는 셀프서비스, 미리보아.',
       eyebrow: '서비스 · 입찰 마감 앞',
       crumb: { href: '/engine/', label: '요구사항 대조 엔진', here: '입찰 마감 앞' },
       h1: '입찰 서류 검증 — 미리보아',
@@ -471,7 +471,7 @@ export const content = {
       // 항목마다 상태를 적고, 비공개·공개 전(jeongsan·크롤러 플랫폼·표 추출 실험 10-06 전)과 대표 개인 계정 저장소는 넣지 않는다.
       // 서비스·시스템 소개는 홈·서비스 페이지 몫이라 여기서 반복하지 않는다.
       title: '공개 작업',
-      description: '시즐론 조직이 공개한 저장소 — 누구나 열어 볼 수 있는 코드·명세·실험. HWP 파서 pyhwp 포크, Boundary Protocol 명세, Nori 사용자 사전 실측.',
+      description: '시즐론 조직이 공개한 저장소 — HWP 파서 pyhwp 포크, Boundary Protocol 명세, Nori 사용자 사전 실측.',
       eyebrow: '공개 작업',
       h1: '누구나 열어 볼 수 있는 시즐론의 공개 작업',
       lede: '시즐론 조직(github.com/sizlon)이 공개한 것만 올립니다. 항목마다 지금 상태를 적고, 비공개이거나 공개 전인 작업은 넣지 않습니다. 서비스와 그 바탕의 시스템은 첫 페이지와 각 서비스 페이지에서 소개합니다.',
@@ -508,8 +508,8 @@ export const content = {
     // 재료: 경쟁 관측 30곳(docs/market/document-verification-competitors-2026-09-11.md), 결정론 검증 조사(…survey-2026-09-11.md).
     // 규칙: 수치마다 잣대, 잰 적 없는 도메인은 "측정치 없음", 프롬프트·확신 규칙 수치·골든셋 원본은 공개 안 함(site-exposure-policy).
     engine: {
-      title: '시즐론의 요구사항 대조 엔진',
-      description: '요구 문서에서 요구조건을 원자 단위로 뽑아 응답 문서가 채웠는지 원문 인용으로 대조하는 엔진입니다. 미리보아 입찰 검증과 감리 대비표 사전 검토가 이 엔진 위에 있고, 데이터 피드는 표 추출 층만 같이 씁니다. 잰 수치는 잣대와 함께, 잰 적 없는 도메인은 측정치 없음으로 적습니다.',
+      title: '요구사항 대조 엔진',   // 09-14: 접미 '— 시즐론' 과 겹쳐 '시즐론의' 삭제(h1 은 그대로)
+      description: '요구 문서의 요구사항을 제출 문서와 항목마다 원문 인용으로 대조하는 엔진. 잰 수치는 잣대와 함께, 없으면 없다고 씁니다.',
       eyebrow: '회사 · 엔진',
       h1: '시즐론의 요구사항 대조 엔진',
       lede: '요구 문서에서 요구조건을 원자 단위로 뽑고, 응답 문서가 그것을 채웠는지 원문 인용으로 대조합니다. 미리보아와 감리 대비표 사전 검토가 이 엔진 위에 있고, 데이터 피드는 HWP·PDF 표 추출 층만 같이 씁니다(수집은 자체 크롤러와 API 로 따로, 판정 층은 쓰지 않습니다). 한 사람이 만들고 운영합니다. 수치는 잣대와 함께 공개하고, 잰 적 없는 도메인은 없다고 씁니다.',
@@ -571,7 +571,7 @@ export const content = {
     },
     about: {
       title: '회사 소개',
-      description: '주식회사 시즐론 — 대표 이광연. 감리 대비표 사전 검토, 입찰 서류 검증(미리보아), 데이터 피드, 검색 품질 진단. 판정은 시즐론이 만든 요구사항 대조 엔진이 하고, 매체 7,000곳·일 20만 건 수집·색인 인프라를 구축·운영한 엔지니어가 그 엔진을 만들고 직접 운영합니다.',
+      description: '서울 용산의 1인 소프트웨어 회사 시즐론. 요구사항 대조 엔진과 데이터 파이프라인을 만들고 직접 운영합니다.',
       eyebrow: '회사 소개',
       // h1 은 사실 선언이 아니라 그 사실이 고객에게 주는 것으로(2026-09-08 오너 결정, 후보 1). 1인은 lede 로.
       h1: '견적을 낸 사람이 코드를 쓰고 결과물을 넘깁니다.',
@@ -604,7 +604,7 @@ export const content = {
     //    출처는 이력서(2026-09-03 판)만. 개인 연락처·월 단위 재직기간·입학연도는 쓰지 않는다.
     founder: {
       title: '이광연 — 시즐론 대표',
-      description: '시즐론 대표 이광연. 소프트웨어 엔지니어 20년. 코리아뉴스와이어 수석 엔지니어(2013~2025)로 매체 7,000곳·일 20만 건 수집·색인 인프라를 구축·운영. Elasticsearch 아키텍처, Nori·Mecab 커스터마이징, 자동 사전 갱신, 크롤링 플랫폼.',
+      description: '시즐론 대표 이광연. 소프트웨어 엔지니어 20년, 前 코리아뉴스와이어 수석 엔지니어로 매체 7,000곳 수집·색인 인프라 운영.',
       eyebrow: '대표 소개',
       h1: '이광연',
       lede: '소프트웨어 엔지니어 20년. 대규모 뉴스·미디어 데이터의 수집, 검색엔진 색인, 검색 품질 개선, 운영까지 한 파이프라인을 처음부터 끝까지 설계하고 굴려 왔습니다. 지금은 그 일을 시즐론에서 서비스로 합니다.',
@@ -668,7 +668,7 @@ export const content = {
     // ── 노트 목록 /notes/ (2026-09-07, 개선 작업 C) — 컬렉션에서 자동 생성 ──
     notesIndex: {
       title: '실측 노트·제도 정리 — 한국어 검색·표 추출·공공 SI 감리',
-      description: '한국어 검색·RAG·HWP·PDF 표 추출을 실제 코퍼스로 잰 기록과, 공공 SI 감리 산출물처럼 예상 고객이 찾는 제도를 1차 자료 원문으로 정리한 글. 재현 파일·양식 공개.',
+      description: '한국어 검색·HWP·PDF 표 추출을 실제 코퍼스로 잰 기록과 공공 SI 감리 제도를 1차 자료로 정리한 글.',
       eyebrow: '노트',
       h1: '실측 노트',
       lede: '둘만 씁니다. 우리가 직접 잰 것, 그리고 고객이 찾는 제도를 1차 자료 원문으로 정리한 것. 숫자는 재현 파일과, 양식은 파일과 함께 공개합니다.',
@@ -677,7 +677,7 @@ export const content = {
     // ── 문의 (v3 §3.7) ─────────────────────────────────────────────────
     contact: {
       title: '문의',
-      description: '시즐론 문의 — 전화 02-702-5795(평일 09–18), 20분 통화 예약, 또는 아래 폼. 감리 대비표 사전 검토·입찰 서류 검증·데이터 피드·검색 진단.',
+      description: '시즐론 문의 — 전화 02-702-5795(평일 09–18), 20분 통화 예약, 문의 폼.',
       eyebrow: '문의',
       h1: '전화가 가장 빠릅니다.',
       phoneLabel: '평일 09:00–18:00',
@@ -818,7 +818,7 @@ export const content = {
     },
     notesIndex: {
       title: 'Notes on Korean search, RAG & table extraction',
-      description: 'Measurements on real Korean corpora: Nori user dictionaries, golden-set before/after numbers, HWP/PDF table extraction — with the files to reproduce them.',
+      description: 'Measured on real Korean corpora: Nori dictionaries and HWP/PDF table extraction.',
       eyebrow: 'Notes',
       h1: 'Notes',
       lede: 'Written only when there is a measurement to publish. Numbers ship with the files to reproduce them.',
@@ -835,7 +835,7 @@ export const content = {
     },
     page: {
       title: 'Korean search, RAG retrieval & data extraction',
-      description: 'Korean search, RAG retrieval and data extraction — from someone who ran it in production: 7,000 news sources, ~200K new articles a day. Nori, CJK tokenizers, user dictionaries, hybrid BM25 + kNN, HWP/PDF extraction, self-healing crawlers.',
+      description: 'Korean search, RAG retrieval and HWP/PDF extraction, by an engineer who ran it.',
       eyebrow: 'Sizlon · Seoul',
       h1: 'Korean search, RAG retrieval & data extraction — from someone who ran it in production',
       lede: proof.en + '.',

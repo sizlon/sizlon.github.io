@@ -1,6 +1,6 @@
 ---
 title: "If retrieval misses, RAG can't answer — in Korean, start with the tokenizer"
-description: "Measured on 183,240 Korean public-tender titles: with Nori's defaults, 16.8% of frequent words segment differently by context and 맨홀 (manhole) becomes 홀 (hole). A corpus-derived dictionary plus separate index/search analyzers took P@10 from 0.906 to 0.986."
+description: "Nori on 183,240 Korean tender titles: a corpus dictionary took P@10 to 0.986."
 date: "2026-09-06"
 service: search
 eyebrow: "Note"
