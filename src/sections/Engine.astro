@@ -18,6 +18,20 @@ const c = content.ko.engine;
     </div>
   </section>
 
+  {/* v5(2026-09-14): 허브 — 이 엔진으로 하는 일을 단계 설명보다 먼저 */}
+  <section class="section wrap block">
+    <h2>{c.servicesH}</h2>
+    <div class="cards">
+      {c.services.map((s) => (
+        <a class="card" href={s.href} {...ext(s.href)}>
+          <span class="name">{s.name}</span>
+          <p>{s.what}</p>
+          <p class="measured">{s.measured}</p>
+        </a>
+      ))}
+    </div>
+  </section>
+
   <section class="section wrap block">
     <h2>{c.stepsH}</h2>
     <ol class="steps">
@@ -29,6 +43,7 @@ const c = content.ko.engine;
         </li>
       ))}
     </ol>
+    {'layers' in c && <ul class="plain layers">{c.layers.map((l) => <li>{l}</li>)}</ul>}
   </section>
 
   <section class="section wrap block">
@@ -47,17 +62,7 @@ const c = content.ko.engine;
   </section>
 
   <section class="section wrap block">
-    <h2>{c.servicesH}</h2>
-    <div class="cards">
-      {c.services.map((s) => (
-        <a class="card" href={s.href} {...ext(s.href)}>
-          <span class="name">{s.name}</span>
-          <p>{s.what}</p>
-          <p class="measured">{s.measured}</p>
-        </a>
-      ))}
-    </div>
-    <h3>{c.goldenH}</h3>
+    <h2>{c.goldenH}</h2>
     <p class="golden">{c.golden}</p>
   </section>
 
@@ -92,6 +97,7 @@ const c = content.ko.engine;
   .card .name { font-weight: 600; color: var(--color-ink); }
   .card .measured { font-family: var(--font-mono); font-size: var(--step--1); color: var(--color-ink); }
   .golden { color: var(--color-slate); line-height: 1.7; }
+  .layers { margin-top: 0.25rem; }
   .intake .btn { align-self: flex-start; }
   .sources { margin: 0; padding-left: 1.2rem; display: grid; gap: 0.4rem; }
   .cta { align-self: flex-start; margin-top: 0.5rem; }

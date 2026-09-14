@@ -9,6 +9,11 @@ root, one English page at `/en/`), deployed to GitHub Pages at
 [sizlon.io](https://sizlon.io). No SSR, no database — output is plain HTML/CSS
 with a little inline JS. See `README.md` for the file-tree overview.
 
+**Home since v5 (2026-09-14, plan `~/Projects/docs/plans/sizlon-site-restructure-plan-v5-draft.md`):**
+a software company — three systems it built (문서 검증 엔진 · 데이터 파이프라인 · 한국어 검색),
+each with its measured numbers and the services that run on it (`content.ko.home.systems`).
+Service pages, URLs and prices are unchanged from v4.
+
 **What it sells (v4 reframe 2026-09-11, plan at
 `~/Projects/docs/plans/sizlon-site-restructure-plan-v4.md`; v3 of 2026-09-05 underneath):**
 the frame is *pre-check for the party being audited* — find what the auditor or
@@ -106,17 +111,20 @@ URL 301 with the expected `Location` (those 301s come from Cloudflare, see
   the `schema` prop — `/founder` passes `Person` + `ProfilePage` (`FOUNDER_ID`),
   the service pages pass `Service` + `Offer` whose numbers come from
   `content.ko.services.*.offer` (keep them equal to the displayed `price` line).
-- **OG image is `public/og-v4.png`** (1200×630, Korean v4 hero line, 2026-09-11;
-  `og-v3.png` kept for rollback). The old `og.png` carried the pre-v3 English
+- **OG image is `public/og-v5.png`** (1200×630, Korean v5 hero line, 2026-09-14; rendered with
+  `google-chrome --headless --window-size=1200,630 --screenshot` from an HTML mock, Noto Sans CJK KR;
+  `og-v4.png`·`og-v3.png` kept for rollback). The old `og.png` carried the pre-v3 English
   "AI proposes… human-in-the-loop" card and was removed 2026-09-06; a new
   filename is chosen on purpose each time the hero line changes so KakaoTalk/Slack
   scrapers don't keep serving the cached old card. Source: an HTML mock rendered
   in Chrome at 1200×630 — redo the same way if the hero line changes.
 
 **Adding a page:** section + one route file; copy in `content.ko`; nav entry in
-`site.ts` if it belongs in the nav. The header holds six links on purpose —
-감리 대비표 검토, 입찰 서류 검증 (`/services/miriboa/` gateway), 데이터 피드,
-검색 진단, 실측 노트, 회사 — plus the right-hand **문의 · 02-702-5795 button**
+`site.ts` if it belongs in the nav. The header holds five links on purpose (v5,
+2026-09-14) — 문서 검증 엔진 (`/engine/` hub; also marked current on `/services/rtm/`
+and `/services/miriboa/` via the nav item's `also` list, and those two pages show a
+"문서 검증 엔진 › …" crumb), 데이터 피드, 검색 진단, 실측 노트, 회사 — plus the
+right-hand **문의 · 02-702-5795 button**
 (`/contact/`; the English chrome keeps a `tel:` link there). Header labels come
 from `content.navShort` (short forms) falling back to `nav`; footer/notes/work
 keep the long `nav` labels. Seven links wrap between 821 and ~900px, which is

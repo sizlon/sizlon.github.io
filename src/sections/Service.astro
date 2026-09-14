@@ -77,7 +77,7 @@ const serviceSchema = {
 <Base title={c.title} description={c.description} lang="ko" schema={[serviceSchema, ...faqSchema]}>
   <section class="hero band-ink">
     <div class="wrap head">
-      <span class="eyebrow">{c.eyebrow}</span>
+      {'crumb' in c ? <nav class="crumb eyebrow" aria-label="위치"><a href={c.crumb.href}>{c.crumb.label}</a> <span aria-hidden="true">›</span> {c.crumb.here}</nav> : <span class="eyebrow">{c.eyebrow}</span>}
       <h1>{c.h1}</h1>
       <p class="lede">{c.sub}</p>
       <p class="price">{c.price}</p>
@@ -263,6 +263,7 @@ const serviceSchema = {
 </Base>
 
 <style>
+  .crumb a { color: var(--color-mist); text-decoration: none; border-bottom: 1px solid var(--color-recovered); }
   .hero { padding-block: clamp(3rem, 2rem + 5vw, 5.5rem); }
   .head { display: flex; flex-direction: column; gap: 1rem; max-width: var(--measure); align-items: flex-start; }
   .price { font-family: var(--font-mono); font-size: var(--step-1); color: var(--color-recovered); }

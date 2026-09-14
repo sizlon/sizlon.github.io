@@ -18,6 +18,8 @@ const phoneLabel = lang === 'en' ? site.contactPhoneIntl : site.contactPhone;
 const navItems = lang === 'en' ? [] : nav;
 // 헤더 라벨은 짧은 말(navShort) 우선 — 6항목이 821px 에서 접히지 않게(2026-09-11).
 const label = (key: string) => tr.navShort[key] ?? tr.nav[key as keyof typeof tr.nav];
+// 허브 항목은 그 아래 페이지에서도 현재 위치(v5, 문서 검증 엔진 › 감리 앞·입찰 마감 앞).
+const isCurrent = (item: { href: string; also?: readonly string[] }) => logical === item.href || (item.also ?? []).includes(logical);
 // 문의는 링크 대신 오른쪽 전화 자리의 버튼으로 합쳤다(2026-09-11): 한국어는 /contact/ 로, 영어는 종전대로 tel:.
 const utilityHref = lang === 'en' ? telHref : '/contact/';
 const langLabel = lang === 'en' ? tr.common.koreanSite : tr.common.langSwitch;
@@ -35,7 +37,7 @@ const langLabel = lang === 'en' ? tr.common.koreanSite : tr.common.langSwitch;
           href={localizePath(item.href, lang)}
           {...ext(item.href)}
           class="link"
-          aria-current={logical === item.href ? 'page' : undefined}
+          aria-current={isCurrent(item) ? 'page' : undefined}
         >
           {label(item.key)}
         </a>
@@ -64,7 +66,7 @@ const langLabel = lang === 'en' ? tr.common.koreanSite : tr.common.langSwitch;
               href={localizePath(item.href, lang)}
               {...ext(item.href)}
               class="m-link"
-              aria-current={logical === item.href ? 'page' : undefined}
+              aria-current={isCurrent(item) ? 'page' : undefined}
             >
               {label(item.key)}
             </a>

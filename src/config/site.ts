@@ -61,8 +61,8 @@ export function bookingHref(service?: string): string {
 // 라벨은 content.navShort(헤더 전용 짧은 말), 없으면 nav. 7항목이면 821~900px 에서 줄바꿈(09-07 실측).
 // '만든 것들'·엔진·대표 소개는 근거 페이지라 헤더에 안 둔다(푸터·홈·서비스 페이지에서 간다).
 export const nav = [
-  { href: '/services/rtm/', key: 'rtm' },
-  { href: '/services/miriboa/', key: 'miriboa' },   // 관문 페이지(회사 사이트 안), 제품 사이트는 거기 버튼
+  // v5(2026-09-14, 헤더 A안): 감리 대비표 검토·미리보아 관문은 문서 검증 엔진 허브 아래로. 두 페이지에서도 이 항목이 현재 위치로 표시된다.
+  { href: '/engine/', key: 'engine', also: ['/services/rtm/', '/services/miriboa/'] },
   { href: '/services/data/', key: 'data' },
   { href: '/services/search/', key: 'search' },
   { href: '/notes/', key: 'notes' },
