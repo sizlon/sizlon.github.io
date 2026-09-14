@@ -10,7 +10,7 @@ root, one English page at `/en/`), deployed to GitHub Pages at
 with a little inline JS. See `README.md` for the file-tree overview.
 
 **Home since v5 (2026-09-14, plan `~/Projects/docs/plans/sizlon-site-restructure-plan-v5-draft.md`):**
-a software company — three systems it built (문서 검증 엔진 · 데이터 파이프라인 · 한국어 검색),
+a software company — three systems it built (요구사항 대조 엔진 · 데이터 파이프라인 · 한국어 검색),
 each with its measured numbers and the services that run on it (`content.ko.home.systems`).
 Service pages, URLs and prices are unchanged from v4.
 
@@ -111,9 +111,9 @@ URL 301 with the expected `Location` (those 301s come from Cloudflare, see
   the `schema` prop — `/founder` passes `Person` + `ProfilePage` (`FOUNDER_ID`),
   the service pages pass `Service` + `Offer` whose numbers come from
   `content.ko.services.*.offer` (keep them equal to the displayed `price` line).
-- **OG image is `public/og-v6.png`** (1200×630, Korean hero line "문서를 대조하는 엔진을 만들고, …", 2026-09-14; rendered with
+- **OG image is `public/og-v7.png`** (1200×630, Korean hero line "요구사항을 대조하는 엔진을 만들고, …", 2026-09-14; rendered with
   `google-chrome --headless --window-size=1200,630 --screenshot` from an HTML mock, Noto Sans CJK KR;
-  `og-v5.png`·`og-v4.png`·`og-v3.png` kept for rollback). The old `og.png` carried the pre-v3 English
+  `og-v6.png`·`og-v5.png`·`og-v4.png`·`og-v3.png` kept for rollback). The old `og.png` carried the pre-v3 English
   "AI proposes… human-in-the-loop" card and was removed 2026-09-06; a new
   filename is chosen on purpose each time the hero line changes so KakaoTalk/Slack
   scrapers don't keep serving the cached old card. Source: an HTML mock rendered
@@ -121,9 +121,9 @@ URL 301 with the expected `Location` (those 301s come from Cloudflare, see
 
 **Adding a page:** section + one route file; copy in `content.ko`; nav entry in
 `site.ts` if it belongs in the nav. The header holds five links on purpose (v5,
-2026-09-14) — 문서 검증 엔진 (`/engine/` hub; also marked current on `/services/rtm/`
+2026-09-14) — 요구사항 대조 엔진 (`/engine/` hub; also marked current on `/services/rtm/`
 and `/services/miriboa/` via the nav item's `also` list, and those two pages show a
-"문서 검증 엔진 › …" crumb), 데이터 피드, 검색 진단, 실측 노트, 회사 — plus the
+"요구사항 대조 엔진 › …" crumb), 데이터 피드, 검색 진단, 실측 노트, 회사 — plus the
 right-hand **문의 · 02-702-5795 button**
 (`/contact/`; the English chrome keeps a `tel:` link there). Header labels come
 from `content.navShort` (short forms) falling back to `nav`; footer/notes/work

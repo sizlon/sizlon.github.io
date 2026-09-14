@@ -30,7 +30,7 @@ const hrefOf = (key: string) => servicePages.find((s) => s.key === key)?.href ??
     <p class="lede">{c.method}</p>
   </section>
 
-  {/* v5(2026-09-14): 만든 시스템 셋 — 첫 칸(문서 검증 엔진)을 넓게, 나머지 둘은 나란히. 칸마다 수치(잣대 병기)와 쓰임새 카드. */}
+  {/* v5(2026-09-14): 만든 시스템 셋 — 첫 칸(요구사항 대조 엔진)을 넓게, 나머지 둘은 나란히. 칸마다 수치(잣대 병기)와 쓰임새 카드. */}
   <section class="section wrap">
     <div class="head">
       <span class="eyebrow">{c.systemsEyebrow}</span>
@@ -93,8 +93,8 @@ const hrefOf = (key: string) => servicePages.find((s) => s.key === key)?.href ??
 <style>
   .hero { padding-block: clamp(3.5rem, 2rem + 8vw, 7rem); }
   .hero-copy { display: flex; flex-direction: column; gap: 1.25rem; align-items: flex-start; max-width: 60ch; }
-  /* 쉼표마다 한 줄(09-14) — 가장 긴 줄이 약 11.8em 이라 좁은 폰에서도 세 줄을 넘지 않게 폭에 맞춰 줄인다 */
-  .hero h1 { max-width: none; font-size: min(var(--step-4), calc((100vw - 2 * var(--gutter)) / 12.6)); }
+  /* 쉼표마다 한 줄(09-14) — 가장 긴 줄('요구사항을 대조하는 엔진을 만들고,')이 약 13.5em 이라 좁은 폰에서도 세 줄을 넘지 않게 폭에 맞춰 줄인다 */
+  .hero h1 { max-width: none; font-size: min(var(--step-4), calc((100vw - 2 * var(--gutter)) / 14.4)); }
   .h1-line { display: block; }
   .cta-row { display: flex; gap: 0.75rem; flex-wrap: wrap; margin-top: 0.5rem; }
   .fixed { margin-top: 0.5rem; }
