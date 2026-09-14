@@ -26,7 +26,7 @@ export const LASTMOD: Record<string, string> = {
   '/engine/': '2026-09-14',   // 09-14 감리 측정 문구(실제 감리 지적 대조) · 09-11 게재 + lede 잣대 문장
   '/founder/': '2026-09-11',   // 09-11 경력 첫 줄
   '/contact/': '2026-09-11',   // 09-11 상황 선택지
-  '/legal/terms/': '2026-09-06',
-  '/legal/privacy/': '2026-09-06',
-  '/legal/licenses/': '2026-09-06',
+  '/legal/terms/': '2026-09-14',
+  '/legal/privacy/': '2026-09-14',
+  '/legal/licenses/': '2026-09-14',
 };
