@@ -100,8 +100,9 @@ const hrefOf = (key: string) => servicePages.find((s) => s.key === key)?.href ??
   .fixed { margin-top: 0.5rem; }
   .head { display: flex; flex-direction: column; gap: 0.75rem; margin-bottom: 2rem; max-width: var(--measure); }
   .systems { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 30rem), 1fr)); gap: 1.25rem; }
-  .system { display: flex; flex-direction: column; gap: 1rem; padding: 1.6rem; border: 1px solid var(--hairline); border-radius: var(--radius); background: transparent; min-width: 0; }
-  .system.featured { grid-column: 1 / -1; background: var(--color-mist); }
+  .system { display: flex; flex-direction: column; gap: 1rem; padding: 1.6rem; border: 1px solid var(--hairline); border-radius: var(--radius); background: var(--color-mist); min-width: 0; }
+  /* 09-14: 세 칸 배경을 같게 — 엔진 칸 강조는 가로 전체 폭과 큰 제목으로만 */
+  .system.featured { grid-column: 1 / -1; }
   .sys-head { display: flex; flex-direction: column; gap: 0.6rem; max-width: var(--measure); }
   .no { color: var(--color-recovered); }
   .system h3 { font-size: var(--step-1); }
