@@ -276,7 +276,9 @@ export const content = {
           { label: '맡기면', big: '반나절', cost: '120만원', sub: 'PM 이 자료 전달·결과 확인(추정) · 영업일 5일 안에 납품 · 감리 결과 공유 시 실부담 80만원' },
         ],
         effortCaption: '요구사항 고유번호 40건(개발형 사업 중앙값) 기준, 직접 대조할 때 드는 일',
+        effortStepsHead: ['작업', '일수 · 추정'],
         effortSteps: proof.rtmEffort.steps,
+        effortStepsTotal: '합계 · 한 사람',
         effortTable: {
           caption: '구간별 비교 · 추정 · 부가세 별도',
           head: ['요구사항 고유번호', '직접 대조', '인건비', '맡기면', 'PM 투입'],
