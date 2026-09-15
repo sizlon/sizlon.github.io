@@ -32,6 +32,9 @@ const scope = 'scopeH' in c ? c : null;
 const priceTable = 'priceTableH' in c ? c : null;
 const priceLink = 'priceLink' in c ? c.priceLink : null;
 const nextH = 'nextH' in c ? c.nextH : '';
+// 직접 하면 vs 맡기면(2026-09-15, rtm) — 구입 가치를 히어로 바로 밑에. 수치는 content.ko.proof.rtmEffort(추정).
+const valueLine = 'valueLine' in c ? c.valueLine : null;
+const effort = 'effortH' in c ? c : null;
 
 // Service + Offer JSON-LD (2026-09-06). 숫자는 content 의 offer(표시 price 와 같은 값) 에서만.
 const url = new URL(Astro.url.pathname, Astro.site).href;
@@ -82,6 +85,14 @@ const serviceSchema = {
       <p class="lede">{c.sub}</p>
       <p class="price">{c.price}</p>
       {c.priceNote && <p class="price-note">{c.priceNote}{priceLink && <> <a class="price-link" href={priceLink.href}>{priceLink.label} &rarr;</a></>}</p>}
+      {valueLine && (
+        <a class="value" href={valueLine.href}>
+          <span class="value-side"><span class="value-k">{valueLine.direct}</span><span class="value-v">{valueLine.directVal}</span></span>
+          <span class="value-arrow" aria-hidden="true">&rarr;</span>
+          <span class="value-side"><span class="value-k">{valueLine.ours}</span><span class="value-v ours">{valueLine.oursVal}</span></span>
+          <span class="value-note">{valueLine.note} · {valueLine.label} &darr;</span>
+        </a>
+      )}
       {heroProof.length > 0 && (
         <div class="proof">
           {heroProof.map((l) => <p>{l}</p>)}
@@ -97,6 +108,39 @@ const serviceSchema = {
       {scan && <p class="scan-link"><a href="#scan">{scan.scanLink} &rarr;</a></p>}
     </div>
   </section>
+
+  {!brief && effort && (
+    <section class="section wrap block effort" id="effort">
+      <h2>{effort.effortH}</h2>
+      <p class="effort-lead">{effort.effortLead}</p>
+      <div class="effort-cards">
+        {effort.effortCards.map((k, i) => (
+          <div class:list={['effort-card', i === 1 && 'ours']}>
+            <span class="eyebrow">{k.label}</span>
+            <span class="effort-big">{k.big}</span>
+            <span class="effort-cost">{k.cost}</span>
+            <span class="effort-sub">{k.sub}</span>
+          </div>
+        ))}
+      </div>
+      <div class="effort-steps">
+        <span class="eyebrow">{effort.effortCaption}</span>
+        <ul class="plain">{effort.effortSteps.map(([what, days]) => <li><span>{what}</span> <span class="days">{days}</span></li>)}</ul>
+      </div>
+      <div class="table-scroll">
+        <table class="price-table">
+          <caption>{effort.effortTable.caption}</caption>
+          <thead><tr>{effort.effortTable.head.map((h) => <th scope="col">{h}</th>)}</tr></thead>
+          <tbody>
+            {effort.effortTable.rows.map((r) => (
+              <tr>{r.map((cell, i) => (i === 0 ? <th scope="row">{cell}</th> : <td class:list={[i === 3 && 'ours']}>{cell}</td>))}</tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+      <p class="effort-basis">{effort.effortBasis}</p>
+    </section>
+  )}
 
   {!brief && c.who.length > 0 && (
     <section class="section wrap block">
@@ -310,6 +354,27 @@ const serviceSchema = {
   .price-table th, .price-table td { text-align: left; padding: 0.6rem 0.75rem; border-bottom: 1px solid var(--hairline); white-space: nowrap; }
   .price-table thead th { font-weight: 600; color: var(--color-slate); }
   .price-table td { font-family: var(--font-mono); }
+  .value { display: grid; grid-template-columns: auto auto auto; align-items: end; gap: 0.4rem 1rem; margin-top: 0.5rem; padding: 1rem 1.25rem; border: 1px solid var(--color-recovered); border-radius: var(--radius); text-decoration: none; color: inherit; max-width: 100%; }
+  .value-side { display: flex; flex-direction: column; gap: 0.15rem; }
+  .value-k { font-size: var(--step--1); color: var(--slate-on-dark); }
+  .value-v { font-family: var(--font-mono); font-size: var(--step-1); color: var(--color-mist); }
+  .value-v.ours { color: var(--color-recovered); }
+  .value-arrow { color: var(--slate-on-dark); font-size: var(--step-1); padding-bottom: 0.1rem; }
+  .value-note { grid-column: 1 / -1; font-size: var(--step--1); color: var(--slate-on-dark); }
+  @media (max-width: 40rem) { .value { grid-template-columns: 1fr; } .value-arrow { transform: rotate(90deg); justify-self: start; } }
+  .effort-lead { color: color-mix(in srgb, var(--color-ink) 85%, var(--color-vellum)); }
+  .effort-cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 16rem), 1fr)); gap: 1px; background: var(--hairline); border: 1px solid var(--hairline); border-radius: var(--radius); overflow: hidden; }
+  .effort-card { background: var(--color-mist); padding: 1.25rem 1.5rem; display: flex; flex-direction: column; gap: 0.35rem; }
+  .effort-card.ours { background: color-mix(in srgb, var(--color-recovered) 14%, var(--color-mist)); }
+  .effort-big { font-family: var(--font-mono); font-size: var(--step-3, 2rem); line-height: 1.1; }
+  .effort-cost { font-family: var(--font-mono); font-size: var(--step-1); }
+  .effort-card.ours .effort-cost { font-weight: 600; }
+  .effort-sub { color: var(--color-slate); font-size: var(--step--1); }
+  .effort-steps { display: flex; flex-direction: column; gap: 0.6rem; }
+  .effort-steps li { display: flex; justify-content: space-between; gap: 1rem; }
+  .effort-steps .days { font-family: var(--font-mono); white-space: nowrap; }
+  .price-table td.ours { font-weight: 600; }
+  .effort-basis { color: var(--color-slate); font-size: var(--step--1); line-height: 1.6; }
   .notes { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 1rem; }
   .notes a { color: var(--color-ink); text-decoration: none; border-bottom: 1px solid var(--color-recovered); font-weight: 600; }
   .notes p { color: var(--color-slate); margin-top: 0.3rem; font-size: var(--step--1); }
