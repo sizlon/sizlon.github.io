@@ -70,6 +70,11 @@ URL 301 with the expected `Location` (those 301s come from Cloudflare, see
   (KONEPS bid-opening data: 73,373 negotiated-contract bids over six months),
   engine benchmark (recall 87.4% · precision 96.5%). Never invent crawler
   volumes, customer counts, or savings — there are none to cite.
+  One labeled exception (owner decision 2026-09-15): `proof.rtmEffort`, the
+  **estimate** of doing the RTM pre-review by hand (days · labor cost per
+  requirement-count band) on `/services/rtm/` — shown as "추정" with its basis
+  (measured requirement counts + assumed minutes per item + KOSA SW engineer
+  daily wage). Keep the word 추정 and the basis line wherever it appears.
 - **Forbidden words**: on `/services/search` — "AI", "LLM", "결정론적" (buyers'
   language only; the footer tagline is the one allowed exception). Site-wide —
   "크롤러 플랫폼", "에디션", "셀프호스팅/매니지드", "외주 없이" (the last one was
