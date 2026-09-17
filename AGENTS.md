@@ -102,6 +102,12 @@ URL 301 with the expected `Location` (those 301s come from Cloudflare, see
   copy was duplicated and drifted. Link to miriboa.sizlon.io instead.
 - **RTM page `brief` flag is off since 2026-09-11** (vocabulary confirmed from the
   MOIS audit-preparation guide); the flag still exists in content.ts.
+- **`/services/rtm/` has its own body since 2026-09-17: `src/sections/RtmPage.astro` + `content.ko.rtmPage`**
+  (question order: what → sample findings → auditor's three layers ↔ legal basis → fit checklist → inputs → outputs →
+  not done → price/refund → data handling → FAQ). It still reads `title`·`description`·`crumb`·`offer`·`priceTable`·`effort*`·`notes`·`toolLine`
+  from `services.rtm`; the other rtm keys (scope, who, how, deliverables, faq, valueLine) are no longer rendered.
+  Scope must match `~/Projects/docs/plans/rtm-intake/deliverable-coverage.md` (✅ rows). `public/samples/rtm-format-sample.xlsx`
+  comes from the engine's `tools/rtm_public_sample.py` — regenerate, don't hand-edit.
 
 ## Structure & where things go
 
