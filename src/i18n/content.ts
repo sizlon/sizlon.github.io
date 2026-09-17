@@ -317,13 +317,15 @@ export const content = {
         cta: '실패하는 검색어만 있으면 시작할 수 있습니다.',
       },
       rtm: {
+        // ⚠ 2026-09-17 부터 /services/rtm/ 본문은 RtmPage.astro + content.ko.rtmPage 가 그린다. 여기서는 title·description·crumb·offer·priceTable·effort*·notes·toolLine 만 쓰인다
+        // (Service.astro 의 scope·who·how·deliverables·faq·valueLine 은 이 페이지에 안 나온다 — 고칠 땐 rtmPage 를).
         // 2026-09-11 오너 결정으로 brief 해제(v3 §3.3 게이트 종료): 어휘 질문은 행안부 「SW 사업자를 위한
         // 정보시스템 감리 준비 및 대응 가이드」(2023.2)로 답이 나왔고(감리 준비·대응, 대비표), 돈을 낼지는
         // 짧은 판으로는 못 잰다. 전문은 PM 이 결제 전에 알아야 할 순서: 누구·언제 / 무엇을 주면 / 무엇을 받나 /
         // 어떻게 보나(감리원 세 겹) / 보지 않는 것 / 가격·조건 / FAQ. 시스템 범위는 docs/plans/rtm-system-dev-plan.md.
         brief: false,
         title: '감리 대비표 사전 검토·요구사항추적표(RTM)',   // 09-14: 접미 '— 시즐론' 과 대시 두 번·36자 → 짧게(h1 은 그대로)
-        description: '공공 SI 설계단계 감리 전, 요구사항추적표를 RFP 요구사항·설계 산출물과 대조해 빈 칸을 찾습니다. 120~300만원 고정가.',
+        description: '공공 SI 설계단계 감리 전, RFP 요구사항을 설계 산출물과 대조해 빠진 것을 찾습니다. 120~300만원 고정가.',
         eyebrow: '서비스 · 감리 앞',
         crumb: { href: '/engine/', label: '요구사항 대조 엔진', here: '감리 앞' },
         h1: '감리 대비표 사전 검토 — 요구사항추적표(RTM) 대조',
@@ -352,7 +354,7 @@ export const content = {
           '지적 예상 목록 — 감리 개선권고 문장 틀(현황 및 문제점 / 개선방향)로, 결함 유형별로 묶어 최대 6건. 감리 전에 무엇부터 보완할지 순서가 나옵니다.',
         ],
         // 결과물 형식 견본(2026-09-11 오너 결정): 값은 전부 가상. 09-12 부터 엔진 출력기(tools/rtm_public_sample.py)가 만든다 — 출력기가 바뀌면 재생성해 교체. 실제 RFP 로 만든 결과 샘플은 별도 페이지로(오너 결정 대기).
-        deliverLink: { href: '/samples/rtm-format-sample.xlsx', label: '결과물 형식 견본 xlsx 내려받기', line: '요약 · 추적표 검토본 · 세부 항목 판정 · 표에 없는 요구사항 · 지적 예상 목록 · 과업대비표 · 검사기준서 대응, 일곱 시트. 실제 납품물을 만드는 출력기로 뽑은 견본이며 사업명과 값은 전부 가상입니다.' },
+        deliverLink: { href: '/samples/rtm-format-sample.xlsx', label: '결과물 형식 견본 xlsx 내려받기', line: '요약 · 추적표 검토본 · 세부 항목 판정 · 표에 없는 요구사항 · 지적 예상 목록 · DB 정합, 여섯 시트. 실제 납품물을 만드는 출력기로 뽑은 견본이며 사업명과 값은 전부 가상입니다.' },
         // 2026-09-14 오너 결정: 사람 손작업 없음 — 추적표 새로 만들기 옵션 삭제(코드 경로 없음), 납품 전 검수·결과 통화도 없음.
         optionH: '',
         options: [],
