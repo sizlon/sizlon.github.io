@@ -355,7 +355,7 @@ export const content = {
           { label: 'SI 검색 모듈의 품질 이슈가 감리에서 지적되면', line: '골든셋 100건으로 전후를 재고, 2주 안에 고친 설정을 드립니다.', href: '/services/search/' },
           { label: '경쟁 입찰·낙찰 동향이 매달 필요하면', line: '나라장터 개찰 데이터를 정제해 CSV/JSON/API 로 납품합니다.', href: '/services/data/' },
         ],
-        cta: 'RFP 와 산출물 목록만 주시면 다음 날 안에 범위와 견적을 드립니다',
+        cta: 'RFP·추적표·설계서를 주시면 다음 날 안에 범위와 고정가를 드립니다',
       },
       data: {
         title: '데이터 피드, 매달 정제해서 납품',
