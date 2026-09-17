@@ -1,0 +1,260 @@
+---
+// 감리 대비표 사전 검토 페이지 재구성(2026-09-17 미리보기, 브랜치 rtm-page-v2).
+// 순서 = PM 이 읽으며 떠올리는 질문: 뭔데 → 뭘 찾아 주나 → 감리원과 같은가 → 내 사업에 맞나 → 뭘 주나 → 뭘 받나 → 안 하는 것 → 얼마 → 자료 → FAQ → 통화.
+// 범위의 정본은 docs/plans/rtm-intake/deliverable-coverage.md(✅ 줄 + DB 정합). 가격·환급 값과 JSON-LD offer 는 services.rtm 그대로 쓴다.
+import Base from '../layouts/Base.astro';
+import { site, bookingHref, ORG_ID } from '../config/site';
+import { content } from '../i18n/content';
+
+const tr = content.ko;
+const c = tr.services.rtm;
+const p = tr.rtmPage;
+const url = new URL(Astro.url.pathname, Astro.site).href;
+const offer = c.offer;
+const schema = [
+  {
+    '@type': 'Service', '@id': `${url}#service`, name: c.title, serviceType: c.title, description: c.description, url,
+    provider: { '@id': ORG_ID }, areaServed: 'KR',
+    offers: { '@type': 'Offer', url, priceCurrency: 'KRW', priceSpecification: { '@type': 'UnitPriceSpecification', priceCurrency: 'KRW', minPrice: offer.minPrice, maxPrice: offer.maxPrice, valueAddedTaxIncluded: false, unitText: offer.unitText } },
+  },
+  { '@type': 'FAQPage', '@id': `${url}#faq`, mainEntity: p.faq.map((f) => ({ '@type': 'Question', name: f.q, acceptedAnswer: { '@type': 'Answer', text: f.a } })) },
+];
+const book = bookingHref('rtm');
+---
+
+<Base title={c.title} description={c.description} lang="ko" schema={schema}>
+  <section class="hero band-ink">
+    <div class="wrap head">
+      <nav class="crumb eyebrow" aria-label="위치"><a href={c.crumb.href}>{c.crumb.label}</a> <span aria-hidden="true">›</span> 감리 대비표 사전 검토</nav>
+      <h1>{p.h1}</h1>
+      <p class="lede">{p.sub}</p>
+      <dl class="facts">
+        {p.facts.map((f) => (
+          <div class="fact"><dt class="eyebrow">{f.k}</dt><dd><span class="fact-v">{f.v}</span><span class="fact-n">{f.note}</span></dd></div>
+        ))}
+      </dl>
+      <div class="cta-row">
+        <a class="btn btn-primary" href={book}>{p.cta} <span class="arrow">&rarr;</span></a>
+        <a class="btn btn-ghost" href={`tel:${site.contactPhoneIntl}`}>{tr.common.call} {site.contactPhone}</a>
+      </div>
+      <p class="cta-note">{p.ctaNote}</p>
+    </div>
+  </section>
+
+  <section class="section wrap block wide" id="findings">
+    <h2>{p.findH}</h2>
+    <p class="lead">{p.findLead}</p>
+    <ol class="finds">
+      {p.findings.map((f) => (
+        <li class="find">
+          <div class="find-top"><span class="find-code">{f.code}</span><span class:list={['tag', f.kind.startsWith('언어') && 'tag-model']}>{f.kind}</span></div>
+          <p class="find-head">{f.head}</p>
+          <dl class="find-body">
+            <div><dt>현황 및 문제점</dt><dd>{f.status}</dd></div>
+            <div><dt>개선방향</dt><dd>{f.dir}</dd></div>
+          </dl>
+        </li>
+      ))}
+    </ol>
+    <p class="note"><a href={p.sampleLink.href}>{p.sampleLink.label} &rarr;</a> {p.sampleLink.line}</p>
+  </section>
+
+  <section class="section wrap block wide" id="checks">
+    <h2>{p.checkH}</h2>
+    <p class="lead">{p.checkLead}</p>
+    <div class="table-scroll">
+      <table class="grid-table">
+        <thead><tr>{p.checkHead.map((h) => <th scope="col">{h}</th>)}</tr></thead>
+        <tbody>
+          {p.checks.map(([who, what, how, basis]) => (
+            <tr>
+              <th scope="row">{who}</th>
+              <td class="what">{what}</td>
+              <td><span class:list={['tag', how.startsWith('언어') && 'tag-model']}>{how}</span></td>
+              <td class="basis">{basis}</td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    </div>
+    <p class="callout">{p.checkNote}</p>
+  </section>
+
+  <section class="section wrap block" id="fit">
+    <h2>{p.fitH}</h2>
+    <ul class="checklist">{p.fit.map((f) => <li>{f}</li>)}</ul>
+    <p class="muted">{p.fitNote}</p>
+  </section>
+
+  <section class="section wrap block wide" id="input">
+    <h2>{p.inputH}</h2>
+    <div class="two">
+      <div class="panel strong"><h3>{p.inputMust.h}</h3><ol class="plain">{p.inputMust.items.map((i) => <li>{i}</li>)}</ol></div>
+      <div class="panel"><h3>{p.inputMay.h}</h3><ul class="plain">{p.inputMay.items.map((i) => <li>{i}</li>)}</ul></div>
+    </div>
+    <p class="muted">{p.inputNote} {c.toolLine}</p>
+  </section>
+
+  <section class="section wrap block wide" id="output">
+    <h2>{p.outH}</h2>
+    <div class="outs">
+      {p.outs.map((o) => <div class="out"><h3>{o.name}</h3><p>{o.line}</p></div>)}
+    </div>
+  </section>
+
+  <section class="section wrap block" id="dont">
+    <h2>{p.dontH}</h2>
+    <ul class="plain dont">{p.dont.map((d) => <li>{d}</li>)}</ul>
+  </section>
+
+  <section class="section wrap block wide" id="price">
+    <h2>{p.priceH}</h2>
+    <p class="lead">{p.priceLead}</p>
+    <div class="table-scroll">
+      <table class="grid-table mono">
+        <caption>{c.priceTable.caption}</caption>
+        <thead><tr>{c.priceTable.head.map((h) => <th scope="col">{h}</th>)}</tr></thead>
+        <tbody>{c.priceTable.rows.map((r) => <tr>{r.map((cell, i) => (i === 0 ? <th scope="row">{cell}</th> : <td>{cell}</td>))}</tr>)}</tbody>
+      </table>
+    </div>
+    <div class="measure">
+      <h3>{p.measureH}</h3>
+      <p>{p.measure}</p>
+    </div>
+    <ul class="plain small">{c.priceTable.notes.filter((n) => !n.startsWith('환급')).map((n) => <li>{n}</li>)}</ul>
+    <details class="effort">
+      <summary>{p.effortSummary}</summary>
+      <p>{c.effortLead}</p>
+      <div class="table-scroll">
+        <table class="grid-table">
+          <caption>{c.effortCaption}</caption>
+          <thead><tr>{c.effortStepsHead.map((h) => <th scope="col">{h}</th>)}</tr></thead>
+          <tbody>{c.effortSteps.map(([w, d]) => <tr><td class="what">{w}</td><td>{d}</td></tr>)}</tbody>
+        </table>
+      </div>
+      <div class="table-scroll">
+        <table class="grid-table mono">
+          <caption>{c.effortTable.caption}</caption>
+          <thead><tr>{c.effortTable.head.map((h) => <th scope="col">{h}</th>)}</tr></thead>
+          <tbody>{c.effortTable.rows.map((r) => <tr>{r.map((cell, i) => (i === 0 ? <th scope="row">{cell}</th> : <td>{cell}</td>))}</tr>)}</tbody>
+        </table>
+      </div>
+      <p class="muted small">{c.effortBasis}</p>
+    </details>
+  </section>
+
+  <section class="section wrap block" id="data">
+    <h2>{p.dataH}</h2>
+    <ul class="plain">{p.data.map((d) => <li>{d}</li>)}</ul>
+  </section>
+
+  <section class="section wrap block" id="faq">
+    <h2>{p.faqH}</h2>
+    <dl class="faq">{p.faq.map((f) => <div class="qa"><dt>{f.q}</dt><dd>{f.a}</dd></div>)}</dl>
+  </section>
+
+  <section class="section wrap block">
+    <h2>{c.notesH}</h2>
+    <ul class="notes">{c.notes.map((n) => <li><a href={n.href}>{n.label} &rarr;</a><p>{n.line}</p></li>)}</ul>
+  </section>
+
+  <section class="cta-band band-ink">
+    <div class="wrap cta-inner">
+      <h2>{p.h1}</h2>
+      <p class="cta-note">{p.ctaNote}</p>
+      <div class="cta-row">
+        <a class="btn btn-primary" href={book}>{p.cta} <span class="arrow">&rarr;</span></a>
+        <a class="btn btn-ghost" href={`tel:${site.contactPhoneIntl}`}>{site.contactPhone}</a>
+      </div>
+    </div>
+  </section>
+</Base>
+
+<style>
+  .crumb a { color: var(--color-mist); text-decoration: none; border-bottom: 1px solid var(--color-recovered); }
+  .hero { padding-block: clamp(3rem, 2rem + 5vw, 5.5rem); }
+  .head { display: flex; flex-direction: column; gap: 1.1rem; max-width: 62rem; align-items: flex-start; }
+  .head h1 { max-width: 30ch; }
+  .lede { max-width: 60ch; }
+  .facts { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 12rem), 1fr)); gap: 1px; margin: 0.5rem 0 0; width: 100%; max-width: 48rem;
+    background: color-mix(in srgb, var(--color-mist) 18%, transparent); border: 1px solid color-mix(in srgb, var(--color-mist) 18%, transparent); border-radius: var(--radius); overflow: hidden; }
+  @media (max-width: 40rem) { .facts { grid-template-columns: 1fr; } }
+  .fact { background: var(--color-ink); padding: 0.9rem 1.1rem; display: flex; flex-direction: column; gap: 0.3rem; }
+  .fact dd { margin: 0; display: flex; flex-direction: column; gap: 0.15rem; }
+  .fact-v { font-family: var(--font-mono); font-size: var(--step-1); color: var(--color-recovered); }
+  .fact-n { font-size: var(--step--1); color: var(--slate-on-dark); }
+  .cta-row { display: flex; gap: 0.75rem; flex-wrap: wrap; margin-top: 0.25rem; }
+  .cta-note { color: var(--slate-on-dark); font-size: var(--step--1); max-width: 60ch; }
+
+  /* 모든 절이 같은 왼쪽 선에서 시작하게 폭은 하나(62rem), 글줄 길이는 요소별 68ch 로 묶는다 */
+  .block { display: flex; flex-direction: column; gap: 1rem; max-width: 62rem; padding-block: clamp(2.5rem, 2rem + 2vw, 4rem); }
+  .block > p, .block > ul, .block > ol.plain, .block > dl.faq, .checklist, .notes { max-width: 68ch; }
+  .block h2 { font-size: var(--step-2); }
+  .block h3 { font-size: var(--step-0); font-weight: 600; }
+  .lead { color: color-mix(in srgb, var(--color-ink) 85%, var(--color-vellum)); max-width: 68ch; }
+  .muted { color: var(--color-slate); }
+  .small { font-size: var(--step--1); }
+  .plain { margin: 0; padding-left: 1.2em; display: flex; flex-direction: column; gap: 0.5rem; }
+  .plain li { color: color-mix(in srgb, var(--color-ink) 85%, var(--color-vellum)); }
+  .note a, .notes a { color: var(--color-ink); text-decoration: none; border-bottom: 1px solid var(--color-recovered); font-weight: 600; }
+  .note { color: var(--color-slate); font-size: var(--step--1); }
+
+  .tag { display: inline-block; font-size: var(--step--1); padding: 0.1rem 0.5rem; border-radius: 999px; white-space: nowrap;
+    border: 1px solid var(--hairline); color: var(--color-slate); }
+  .tag-model { border-color: var(--color-recovered); color: var(--color-ink); background: color-mix(in srgb, var(--color-recovered) 14%, var(--color-mist)); }
+
+  .finds { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 26rem), 1fr)); gap: 1px;
+    background: var(--hairline); border: 1px solid var(--hairline); border-radius: var(--radius); overflow: hidden; }
+  .find { background: var(--color-mist); padding: 1.1rem 1.3rem; display: flex; flex-direction: column; gap: 0.6rem; }
+  .find-top { display: flex; justify-content: space-between; gap: 0.75rem; align-items: baseline; flex-wrap: wrap; }
+  .find-code { font-family: var(--font-mono); font-size: var(--step--1); font-weight: 600; }
+  .find-head { font-size: var(--step--1); color: color-mix(in srgb, var(--color-ink) 85%, var(--color-vellum)); }
+  .find-body { margin: 0; display: flex; flex-direction: column; gap: 0.45rem; }
+  .find-body div { display: grid; grid-template-columns: 7.5rem 1fr; gap: 0.75rem; }
+  .find-body dt { font-size: var(--step--1); color: var(--color-slate); }
+  .find-body dd { margin: 0; font-size: var(--step--1); line-height: 1.55; }
+  @media (max-width: 36rem) { .find-body div { grid-template-columns: 1fr; gap: 0.1rem; } }
+
+  .table-scroll { overflow-x: auto; max-width: 100%; }
+  .grid-table { border-collapse: separate; border-spacing: 0; width: 100%; min-width: 40rem; font-size: var(--step--1); border: 1px solid var(--hairline); border-radius: var(--radius); overflow: hidden; }
+  .grid-table caption { text-align: left; color: var(--color-slate); padding-bottom: 0.5rem; }
+  .grid-table th, .grid-table td { text-align: left; vertical-align: top; padding: 0.65rem 0.8rem; border-bottom: 1px solid var(--hairline); border-right: 1px solid var(--hairline); background: var(--color-mist); }
+  .grid-table tr > :last-child { border-right: 0; }
+  .grid-table tbody tr:last-child > * { border-bottom: 0; }
+  .grid-table thead th { font-weight: 600; color: var(--color-slate); background: color-mix(in srgb, var(--color-ink) 5%, var(--color-mist)); white-space: nowrap; }
+  .grid-table tbody th { font-weight: 600; white-space: nowrap; }
+  .grid-table td.basis { color: var(--color-slate); min-width: 12rem; }
+  .grid-table td.what { min-width: 18rem; line-height: 1.55; }
+  .grid-table.mono td { font-family: var(--font-mono); white-space: nowrap; }
+  .callout { border-left: 3px solid var(--color-recovered); padding: 0.6rem 0.9rem; background: color-mix(in srgb, var(--color-recovered) 8%, var(--color-mist)); }
+
+  .checklist { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 0.55rem; }
+  .checklist li { position: relative; padding-left: 1.9rem; }
+  .checklist li::before { content: ""; position: absolute; left: 0; top: 0.2em; width: 1.05rem; height: 1.05rem; border: 1.5px solid var(--color-ink); border-radius: 3px; }
+
+  .two { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 22rem), 1fr)); gap: 1px; background: var(--hairline); border: 1px solid var(--hairline); border-radius: var(--radius); overflow: hidden; }
+  .panel { background: var(--color-mist); padding: 1.2rem 1.4rem; display: flex; flex-direction: column; gap: 0.75rem; }
+  .panel.strong { background: color-mix(in srgb, var(--color-recovered) 10%, var(--color-mist)); }
+
+  .outs { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 13rem), 1fr)); gap: 1px; background: var(--hairline); border: 1px solid var(--hairline); border-radius: var(--radius); overflow: hidden; }
+  .out { background: var(--color-mist); padding: 1.1rem 1.2rem; display: flex; flex-direction: column; gap: 0.4rem; }
+  .out p { font-size: var(--step--1); color: color-mix(in srgb, var(--color-ink) 82%, var(--color-vellum)); }
+
+  .dont li::marker { content: "— "; }
+
+  .measure { border: 1px solid var(--color-recovered); border-radius: var(--radius); padding: 1rem 1.2rem; display: flex; flex-direction: column; gap: 0.4rem; }
+  .effort { border-top: 1px solid var(--hairline); padding-top: 0.75rem; display: flex; flex-direction: column; gap: 0.75rem; }
+  .effort summary { cursor: pointer; font-weight: 600; }
+  .effort[open] > * + * { margin-top: 0.75rem; }
+
+  .faq { margin: 0; display: flex; flex-direction: column; gap: 1rem; }
+  .qa { display: flex; flex-direction: column; gap: 0.3rem; padding-bottom: 1rem; border-bottom: 1px solid var(--hairline); }
+  dt { font-weight: 600; }
+  .qa dd { margin: 0; color: color-mix(in srgb, var(--color-ink) 82%, var(--color-vellum)); }
+  .notes { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 1rem; }
+  .notes p { color: var(--color-slate); margin-top: 0.3rem; font-size: var(--step--1); }
+
+  .cta-band { padding-block: var(--section-y); }
+  .cta-inner { display: flex; flex-direction: column; gap: 1rem; align-items: flex-start; }
+  .cta-inner h2 { font-size: var(--step-2); max-width: 30ch; }
+</style>
