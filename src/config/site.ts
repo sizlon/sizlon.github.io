@@ -1,7 +1,7 @@
 /*
  * 사이트 설정 — 내비, 서비스 목록, 연락 채널, 폼 엔드포인트. 카피는 content.ts.
  * 2026-09-05 개편 v3 → 2026-09-11 v4(~/Projects/docs/plans/sizlon-site-restructure-plan-v4.md):
- * "심사받는 쪽의 사전 점검" 프레임. 서비스는 감리 대비표 사전 검토·입찰 서류 검증(미리보아,
+ * "심사받는 쪽의 사전 점검" 프레임. 서비스는 요구사항 반영 사전 검토·입찰 서류 검증(미리보아,
  * 제품 사이트로 링크)·데이터 피드·검색 품질 진단. 크롤러는 도구 문장 한 줄.
  */
 // 환경별 호스트 재매핑 — miriboa-site와 동일 장치(그쪽 site.ts 주석 참조).
@@ -61,7 +61,7 @@ export function bookingHref(service?: string): string {
 // 라벨은 content.navShort(헤더 전용 짧은 말), 없으면 nav. 7항목이면 821~900px 에서 줄바꿈(09-07 실측).
 // '만든 것들'·엔진·대표 소개는 근거 페이지라 헤더에 안 둔다(푸터·홈·서비스 페이지에서 간다).
 export const nav = [
-  // v5(2026-09-14, 헤더 A안): 감리 대비표 검토·미리보아 관문은 요구사항 대조 엔진 허브 아래로. 두 페이지에서도 이 항목이 현재 위치로 표시된다.
+  // v5(2026-09-14, 헤더 A안): 요구사항 반영 검토·미리보아 관문은 요구사항 대조 엔진 허브 아래로. 두 페이지에서도 이 항목이 현재 위치로 표시된다.
   { href: '/engine/', key: 'engine', also: ['/services/rtm/', '/services/miriboa/'] },
   { href: '/services/data/', key: 'data' },
   { href: '/services/search/', key: 'search' },

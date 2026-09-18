@@ -1,5 +1,5 @@
 ---
-// 감리 대비표 사전 검토 페이지 재구성(2026-09-17 미리보기, 브랜치 rtm-page-v2).
+// 요구사항 반영 사전 검토 페이지 재구성(2026-09-17 미리보기, 브랜치 rtm-page-v2).
 // 순서 = PM 이 읽으며 떠올리는 질문: 뭔데 → 뭘 찾아 주나 → 감리원과 같은가 → 내 사업에 맞나 → 뭘 주나 → 뭘 받나 → 안 하는 것 → 얼마 → 자료 → FAQ → 통화.
 // 범위의 정본은 docs/plans/rtm-intake/deliverable-coverage.md(✅ 줄 + DB 정합). 가격·환급 값과 JSON-LD offer 는 services.rtm 그대로 쓴다.
 import Base from '../layouts/Base.astro';
@@ -25,7 +25,7 @@ const book = bookingHref('rtm');
 <Base title={c.title} description={c.description} lang="ko" schema={schema}>
   <section class="hero band-ink">
     <div class="wrap head">
-      <nav class="crumb eyebrow" aria-label="위치"><a href={c.crumb.href}>{c.crumb.label}</a> <span aria-hidden="true">›</span> 감리 대비표 사전 검토</nav>
+      <nav class="crumb eyebrow" aria-label="위치"><a href={c.crumb.href}>{c.crumb.label}</a> <span aria-hidden="true">›</span> 요구사항 반영 사전 검토</nav>
       <h1>{p.h1}</h1>
       <p class="lede">{p.sub}</p>
       <dl class="facts">
