@@ -14,7 +14,7 @@ a software company — two systems it built and runs (요구사항 대조 엔진
 thing it does (한국어 검색 품질 진단 — there is no Sizlon-run search system; Miriboa search is SQLite
 FTS5), each with measured numbers and the services on it (`content.ko.home.systems`).
 Service pages, URLs and prices are unchanged from v4. **2026-09-29 owner decision:** search diagnostics leads the home page
-(h1 first line, title, first full-width card, first nav item); the engine card moves last. OG image still shows the v5 hero line.
+(h1 first line, title, first full-width card, first nav item); the engine card moves last.
 
 **What it sells (v4 reframe 2026-09-11, plan at
 `~/Projects/docs/plans/sizlon-site-restructure-plan-v4.md`; v3 of 2026-09-05 underneath):**
@@ -124,9 +124,9 @@ URL 301 with the expected `Location` (those 301s come from Cloudflare, see
   the `schema` prop — `/founder` passes `Person` + `ProfilePage` (`FOUNDER_ID`),
   the service pages pass `Service` + `Offer` whose numbers come from
   `content.ko.services.*.offer` (keep them equal to the displayed `price` line).
-- **OG image is `public/og-v7.png`** (1200×630, Korean hero line "요구사항을 대조하는 엔진을 만들고, …", 2026-09-14; rendered with
+- **OG image is `public/og-v8.png`** (1200×630, Korean hero line "한국어 검색 시스템을 고치고, …", 2026-09-29; rendered with
   `google-chrome --headless --window-size=1200,630 --screenshot` from an HTML mock, Noto Sans CJK KR;
-  `og-v6.png`·`og-v5.png`·`og-v4.png`·`og-v3.png` kept for rollback). The old `og.png` carried the pre-v3 English
+  `og-v7.png`·`og-v6.png`·`og-v5.png`·`og-v4.png`·`og-v3.png` kept for rollback). The old `og.png` carried the pre-v3 English
   "AI proposes… human-in-the-loop" card and was removed 2026-09-06; a new
   filename is chosen on purpose each time the hero line changes so KakaoTalk/Slack
   scrapers don't keep serving the cached old card. Source: an HTML mock rendered
