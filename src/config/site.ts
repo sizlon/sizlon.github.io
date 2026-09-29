@@ -62,19 +62,20 @@ export function bookingHref(service?: string): string {
 // '만든 것들'·엔진·대표 소개는 근거 페이지라 헤더에 안 둔다(푸터·홈·서비스 페이지에서 간다).
 export const nav = [
   // v5(2026-09-14, 헤더 A안): 요구사항 반영 검토·미리보아 관문은 요구사항 대조 엔진 허브 아래로. 두 페이지에서도 이 항목이 현재 위치로 표시된다.
-  { href: '/engine/', key: 'engine', also: ['/services/rtm/', '/services/miriboa/'] },
-  { href: '/services/data/', key: 'data' },
+  // 09-29: 검색 진단을 맨 앞으로, 엔진 허브는 셋째로.
   { href: '/services/search/', key: 'search' },
+  { href: '/services/data/', key: 'data' },
+  { href: '/engine/', key: 'engine', also: ['/services/rtm/', '/services/miriboa/'] },
   { href: '/notes/', key: 'notes' },
   { href: '/about/', key: 'about' },
 ] as const;
 
 // 순서가 푸터 서비스 열 순서. 미리보아는 제품 사이트가 본체(topic 'pilot' 은 백엔드 TOPIC_LABELS 기존 키).
 export const servicePages = [
+  { href: '/services/search/', key: 'search', topic: 'search' },
+  { href: '/services/data/', key: 'data', topic: 'datafeed' },
   { href: '/services/rtm/', key: 'rtm', topic: 'rtm' },
   { href: '/services/miriboa/', key: 'miriboa', topic: 'pilot' },
-  { href: '/services/data/', key: 'data', topic: 'datafeed' },
-  { href: '/services/search/', key: 'search', topic: 'search' },
 ] as const;
 
 export const legalLinks = [

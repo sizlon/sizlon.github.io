@@ -13,7 +13,8 @@ with a little inline JS. See `README.md` for the file-tree overview.
 a software company — two systems it built and runs (요구사항 대조 엔진 · 데이터 파이프라인) plus one
 thing it does (한국어 검색 품질 진단 — there is no Sizlon-run search system; Miriboa search is SQLite
 FTS5), each with measured numbers and the services on it (`content.ko.home.systems`).
-Service pages, URLs and prices are unchanged from v4.
+Service pages, URLs and prices are unchanged from v4. **2026-09-29 owner decision:** search diagnostics leads the home page
+(h1 first line, title, first full-width card, first nav item); the engine card moves last. OG image still shows the v5 hero line.
 
 **What it sells (v4 reframe 2026-09-11, plan at
 `~/Projects/docs/plans/sizlon-site-restructure-plan-v4.md`; v3 of 2026-09-05 underneath):**
@@ -133,9 +134,9 @@ URL 301 with the expected `Location` (those 301s come from Cloudflare, see
 
 **Adding a page:** section + one route file; copy in `content.ko`; nav entry in
 `site.ts` if it belongs in the nav. The header holds five links on purpose (v5,
-2026-09-14) — 요구사항 대조 엔진 (`/engine/` hub; also marked current on `/services/rtm/`
+2026-09-14; reordered 2026-09-29 so 검색 진단 leads) — 검색 진단, 데이터 피드, 요구사항 대조 엔진 (`/engine/` hub; also marked current on `/services/rtm/`
 and `/services/miriboa/` via the nav item's `also` list, and those two pages show a
-"요구사항 대조 엔진 › …" crumb), 데이터 피드, 검색 진단, 실측 노트, 회사 — plus the
+"요구사항 대조 엔진 › …" crumb), 실측 노트, 회사 — plus the
 right-hand **문의 · 02-702-5795 button**
 (`/contact/`; the English chrome keeps a `tel:` link there). Header labels come
 from `content.navShort` (short forms) falling back to `nav`; footer/notes/work
