@@ -34,11 +34,11 @@
 "n_rows": 51,
 "n_kv": 1,
 "chars": 10795,
-"seconds": 1.3,
+"seconds": 0.0,
 "meta_status": "ok",
 "meta_extractor": "hwp5html",
 "meta_table_loss": false,
-"meta_note": ""
+"meta_note": null
 }
 }
 },
@@ -77,11 +77,11 @@
 "n_rows": 0,
 "n_kv": 0,
 "chars": 10578,
-"seconds": 0.5,
+"seconds": 0.0,
 "meta_status": "ok",
 "meta_extractor": "hwp5html",
 "meta_table_loss": false,
-"meta_note": ""
+"meta_note": null
 }
 }
 },
@@ -89,72 +89,72 @@
 "doc": "입찰공고문(양산우체국 아파트전담 소포우편물 위탁배달 용역).pdf",
 "format": "pdf",
 "declared_ext": "pdf",
-"truth_from": "과업지시서(양산우체국 아파트전담 소포우편물 위탁배달 용역).hwp",
-"n_tables": 15,
+"truth_from": "입찰공고문(양산우체국 아파트전담 소포우편물 위탁배달 용역).hwp",
+"n_tables": 6,
 "scores": {
 "pdftotext": {
-"cell_retention": 0.046875,
-"row_integrity": 0.0,
-"kv_association": 0.0,
-"n_cells": 64,
-"n_rows": 32,
-"n_kv": 9,
+"cell_retention": 0.6666666666666666,
+"row_integrity": null,
+"kv_association": null,
+"n_cells": 9,
+"n_rows": 0,
+"n_kv": 0,
 "chars": 8531,
 "seconds": 0.1
 },
 "pdftotext_layout": {
-"cell_retention": 0.046875,
-"row_integrity": 0.0,
-"kv_association": 0.0,
-"n_cells": 64,
-"n_rows": 32,
-"n_kv": 9,
+"cell_retention": 0.3333333333333333,
+"row_integrity": null,
+"kv_association": null,
+"n_cells": 9,
+"n_rows": 0,
+"n_kv": 0,
 "chars": 13340,
 "seconds": 0.1
 },
 "pymupdf": {
-"cell_retention": 0.046875,
-"row_integrity": 0.0,
-"kv_association": 0.0,
-"n_cells": 64,
-"n_rows": 32,
-"n_kv": 9,
+"cell_retention": 0.7777777777777778,
+"row_integrity": null,
+"kv_association": null,
+"n_cells": 9,
+"n_rows": 0,
+"n_kv": 0,
 "chars": 8727,
 "seconds": 0.0
 },
 "pdfplumber": {
-"cell_retention": 0.046875,
-"row_integrity": 0.0,
-"kv_association": 0.0,
-"n_cells": 64,
-"n_rows": 32,
-"n_kv": 9,
+"cell_retention": 0.2222222222222222,
+"row_integrity": null,
+"kv_association": null,
+"n_cells": 9,
+"n_rows": 0,
+"n_kv": 0,
 "chars": 8402,
 "seconds": 0.8
 },
 "pdfplumber_tables": {
-"cell_retention": 0.046875,
-"row_integrity": 0.0,
-"kv_association": 0.0,
-"n_cells": 64,
-"n_rows": 32,
-"n_kv": 9,
+"cell_retention": 0.2222222222222222,
+"row_integrity": null,
+"kv_association": null,
+"n_cells": 9,
+"n_rows": 0,
+"n_kv": 0,
 "chars": 8402,
 "seconds": 0.8
 },
 "dpurix": {
-"cell_retention": 0.046875,
-"row_integrity": 0.0,
-"kv_association": 0.0,
-"n_cells": 64,
-"n_rows": 32,
-"n_kv": 9,
+"cell_retention": 0.8888888888888888,
+"row_integrity": null,
+"kv_association": null,
+"n_cells": 9,
+"n_rows": 0,
+"n_kv": 0,
 "chars": 8405,
-"seconds": 0.8,
+"seconds": 0.0,
 "meta_status": "ok",
 "meta_extractor": "pdfplumber-read",
 "meta_table_loss": false,
-"meta_note": ""
+"meta_note": null
 }
 }
 },
@@ -193,11 +193,11 @@
 "n_rows": 91,
 "n_kv": 49,
 "chars": 26946,
-"seconds": 3.6,
+"seconds": 0.0,
 "meta_status": "ok",
 "meta_extractor": "hwp5html",
 "meta_table_loss": false,
-"meta_note": ""
+"meta_note": null
 }
 }
 },
@@ -236,11 +236,11 @@
 "n_rows": 32,
 "n_kv": 9,
 "chars": 25107,
-"seconds": 1.6,
+"seconds": 0.0,
 "meta_status": "ok",
 "meta_extractor": "hwp5html",
 "meta_table_loss": false,
-"meta_note": ""
+"meta_note": null
 }
 }
 },
@@ -279,11 +279,11 @@
 "n_rows": 7,
 "n_kv": 1,
 "chars": 17866,
-"seconds": 0.7,
+"seconds": 0.0,
 "meta_status": "ok",
 "meta_extractor": "hwp5html",
 "meta_table_loss": false,
-"meta_note": ""
+"meta_note": null
 }
 }
 },
@@ -302,7 +302,7 @@
 "n_rows": 7,
 "n_kv": 1,
 "chars": 15383,
-"seconds": 0.1
+"seconds": 0.2
 },
 "pdftotext_layout": {
 "cell_retention": 0.5714285714285714,
@@ -352,11 +352,11 @@
 "n_rows": 7,
 "n_kv": 1,
 "chars": 15134,
-"seconds": 0.8,
+"seconds": 0.0,
 "meta_status": "ok",
 "meta_extractor": "pdfplumber-read",
 "meta_table_loss": false,
-"meta_note": ""
+"meta_note": null
 }
 }
 },
@@ -375,7 +375,7 @@
 "n_rows": 680,
 "n_kv": 48,
 "chars": 20906,
-"seconds": 1.9
+"seconds": 2.0
 },
 "hwp_naive": {
 "cell_retention": 0.9951314508276533,
@@ -385,7 +385,7 @@
 "n_rows": 680,
 "n_kv": 48,
 "chars": 96224,
-"seconds": 0.4
+"seconds": 0.3
 },
 "dpurix": {
 "cell_retention": 1.0,
@@ -395,11 +395,11 @@
 "n_rows": 680,
 "n_kv": 48,
 "chars": 145224,
-"seconds": 46.6,
+"seconds": 0.1,
 "meta_status": "ok",
 "meta_extractor": "hwp5html",
 "meta_table_loss": false,
-"meta_note": ""
+"meta_note": null
 }
 }
 },
@@ -438,11 +438,11 @@
 "n_rows": 0,
 "n_kv": 0,
 "chars": 6049,
-"seconds": 0.2,
+"seconds": 0.0,
 "meta_status": "ok",
 "meta_extractor": "hwp5html",
 "meta_table_loss": false,
-"meta_note": ""
+"meta_note": null
 }
 }
 },
@@ -481,11 +481,11 @@
 "n_rows": 11,
 "n_kv": 0,
 "chars": 7112,
-"seconds": 0.3,
+"seconds": 0.0,
 "meta_status": "ok",
 "meta_extractor": "hwp5html",
 "meta_table_loss": false,
-"meta_note": ""
+"meta_note": null
 }
 }
 },
@@ -554,11 +554,11 @@
 "n_rows": 11,
 "n_kv": 0,
 "chars": 5185,
-"seconds": 0.4,
+"seconds": 0.0,
 "meta_status": "ok",
 "meta_extractor": "pdfplumber-read",
 "meta_table_loss": false,
-"meta_note": ""
+"meta_note": null
 }
 }
 },
@@ -577,7 +577,7 @@
 "n_rows": 78,
 "n_kv": 38,
 "chars": 11532,
-"seconds": 0.4
+"seconds": 0.5
 },
 "hwp_naive": {
 "cell_retention": 0.9954128440366973,
@@ -597,11 +597,11 @@
 "n_rows": 78,
 "n_kv": 38,
 "chars": 21883,
-"seconds": 2.0,
+"seconds": 0.0,
 "meta_status": "ok",
 "meta_extractor": "hwp5html",
 "meta_table_loss": false,
-"meta_note": ""
+"meta_note": null
 }
 }
 },
@@ -640,11 +640,11 @@
 "n_rows": 61,
 "n_kv": 4,
 "chars": 26106,
-"seconds": 3.7,
+"seconds": 0.0,
 "meta_status": "ok",
 "meta_extractor": "hwp5html",
 "meta_table_loss": false,
-"meta_note": ""
+"meta_note": null
 }
 }
 },
@@ -683,11 +683,11 @@
 "n_rows": 35,
 "n_kv": 5,
 "chars": 22051,
-"seconds": 1.0,
+"seconds": 0.0,
 "meta_status": "ok",
 "meta_extractor": "hwp5html",
 "meta_table_loss": false,
-"meta_note": ""
+"meta_note": null
 }
 }
 },
@@ -746,7 +746,7 @@
 "n_rows": 35,
 "n_kv": 5,
 "chars": 24914,
-"seconds": 1.2
+"seconds": 1.3
 },
 "dpurix": {
 "cell_retention": 0.9814814814814815,
@@ -756,11 +756,11 @@
 "n_rows": 35,
 "n_kv": 5,
 "chars": 21769,
-"seconds": 1.2,
+"seconds": 0.0,
 "meta_status": "ok",
 "meta_extractor": "pdfplumber-read",
 "meta_table_loss": false,
-"meta_note": ""
+"meta_note": null
 }
 }
 },
@@ -799,11 +799,11 @@
 "n_rows": 0,
 "n_kv": 0,
 "chars": 7288,
-"seconds": 0.3,
+"seconds": 0.0,
 "meta_status": "ok",
 "meta_extractor": "hwp5html",
 "meta_table_loss": false,
-"meta_note": ""
+"meta_note": null
 }
 }
 },
@@ -872,11 +872,11 @@
 "n_rows": 0,
 "n_kv": 0,
 "chars": 6133,
-"seconds": 0.5,
+"seconds": 0.0,
 "meta_status": "ok",
 "meta_extractor": "pdfplumber-read",
 "meta_table_loss": false,
-"meta_note": ""
+"meta_note": null
 }
 }
 },
@@ -909,7 +909,7 @@
 "meta_status": "ok",
 "meta_extractor": "hwpx",
 "meta_table_loss": false,
-"meta_note": ""
+"meta_note": null
 }
 }
 },
@@ -938,11 +938,11 @@
 "n_rows": 142,
 "n_kv": 20,
 "chars": 27962,
-"seconds": 0.1,
+"seconds": 0.0,
 "meta_status": "ok",
 "meta_extractor": "hwpx",
 "meta_table_loss": false,
-"meta_note": ""
+"meta_note": null
 }
 }
 },
@@ -975,7 +975,7 @@
 "meta_status": "ok",
 "meta_extractor": "hwpx",
 "meta_table_loss": false,
-"meta_note": ""
+"meta_note": null
 }
 }
 },
@@ -994,7 +994,7 @@
 "n_rows": 532,
 "n_kv": 272,
 "chars": 129698,
-"seconds": 0.3
+"seconds": 0.2
 },
 "dpurix": {
 "cell_retention": 1.0,
@@ -1004,11 +1004,11 @@
 "n_rows": 532,
 "n_kv": 272,
 "chars": 66579,
-"seconds": 0.2,
+"seconds": 0.1,
 "meta_status": "ok",
 "meta_extractor": "hwpx",
 "meta_table_loss": false,
-"meta_note": ""
+"meta_note": null
 }
 }
 },
@@ -1047,11 +1047,11 @@
 "n_rows": 45,
 "n_kv": 0,
 "chars": 16423,
-"seconds": 1.0,
+"seconds": 0.0,
 "meta_status": "ok",
 "meta_extractor": "hwp5html",
 "meta_table_loss": false,
-"meta_note": ""
+"meta_note": null
 }
 }
 },
@@ -1090,11 +1090,11 @@
 "n_rows": 160,
 "n_kv": 60,
 "chars": 45710,
-"seconds": 12.7,
+"seconds": 0.0,
 "meta_status": "ok",
 "meta_extractor": "hwp5html",
 "meta_table_loss": false,
-"meta_note": ""
+"meta_note": null
 }
 }
 },
@@ -1133,11 +1133,11 @@
 "n_rows": 53,
 "n_kv": 51,
 "chars": 30200,
-"seconds": 1.8,
+"seconds": 0.0,
 "meta_status": "ok",
 "meta_extractor": "hwp5html",
 "meta_table_loss": false,
-"meta_note": ""
+"meta_note": null
 }
 }
 },
@@ -1176,11 +1176,11 @@
 "n_rows": 170,
 "n_kv": 84,
 "chars": 40149,
-"seconds": 5.6,
+"seconds": 0.0,
 "meta_status": "ok",
 "meta_extractor": "hwp5html",
 "meta_table_loss": false,
-"meta_note": ""
+"meta_note": null
 }
 }
 },
@@ -1219,11 +1219,11 @@
 "n_rows": 26,
 "n_kv": 0,
 "chars": 2457,
-"seconds": 0.2,
+"seconds": 0.0,
 "meta_status": "ok",
 "meta_extractor": "hwp5html",
 "meta_table_loss": false,
-"meta_note": ""
+"meta_note": null
 }
 }
 },
@@ -1262,11 +1262,11 @@
 "n_rows": 2,
 "n_kv": 0,
 "chars": 3644,
-"seconds": 0.2,
+"seconds": 0.0,
 "meta_status": "ok",
 "meta_extractor": "hwp5html",
 "meta_table_loss": false,
-"meta_note": ""
+"meta_note": null
 }
 }
 },
@@ -1325,7 +1325,7 @@
 "n_rows": 2,
 "n_kv": 0,
 "chars": 3404,
-"seconds": 0.2
+"seconds": 0.3
 },
 "dpurix": {
 "cell_retention": 1.0,
@@ -1335,11 +1335,11 @@
 "n_rows": 2,
 "n_kv": 0,
 "chars": 3330,
-"seconds": 0.3,
+"seconds": 0.0,
 "meta_status": "ok",
 "meta_extractor": "pdfplumber-read",
 "meta_table_loss": false,
-"meta_note": ""
+"meta_note": null
 }
 }
 },
@@ -1378,11 +1378,11 @@
 "n_rows": 465,
 "n_kv": 80,
 "chars": 65916,
-"seconds": 10.4,
+"seconds": 0.0,
 "meta_status": "ok",
 "meta_extractor": "hwp5html",
 "meta_table_loss": false,
-"meta_note": ""
+"meta_note": null
 }
 }
 },
@@ -1415,7 +1415,7 @@
 "meta_status": "ok",
 "meta_extractor": "hwpx",
 "meta_table_loss": false,
-"meta_note": ""
+"meta_note": null
 }
 }
 },
@@ -1464,7 +1464,7 @@
 "n_rows": 0,
 "n_kv": 0,
 "chars": 5515,
-"seconds": 0.5
+"seconds": 0.6
 },
 "pdfplumber_tables": {
 "cell_retention": 1.0,
@@ -1484,11 +1484,11 @@
 "n_rows": 0,
 "n_kv": 0,
 "chars": 5520,
-"seconds": 0.6,
+"seconds": 0.0,
 "meta_status": "ok",
 "meta_extractor": "pdfplumber-read",
 "meta_table_loss": false,
-"meta_note": ""
+"meta_note": null
 }
 }
 },
@@ -1527,11 +1527,11 @@
 "n_rows": 0,
 "n_kv": 0,
 "chars": 5730,
-"seconds": 0.3,
+"seconds": 0.0,
 "meta_status": "ok",
 "meta_extractor": "hwp5html",
 "meta_table_loss": false,
-"meta_note": ""
+"meta_note": null
 }
 }
 },
@@ -1550,7 +1550,7 @@
 "n_rows": 131,
 "n_kv": 28,
 "chars": 13029,
-"seconds": 0.6
+"seconds": 0.7
 },
 "hwp_naive": {
 "cell_retention": 0.9584664536741214,
@@ -1570,11 +1570,11 @@
 "n_rows": 131,
 "n_kv": 28,
 "chars": 31146,
-"seconds": 4.2,
+"seconds": 0.0,
 "meta_status": "ok",
 "meta_extractor": "hwp5html",
 "meta_table_loss": false,
-"meta_note": ""
+"meta_note": null
 }
 }
 },
@@ -1607,7 +1607,7 @@
 "meta_status": "ok",
 "meta_extractor": "hwpx",
 "meta_table_loss": false,
-"meta_note": ""
+"meta_note": null
 }
 }
 },
@@ -1666,7 +1666,7 @@
 "n_rows": 0,
 "n_kv": 0,
 "chars": 12405,
-"seconds": 1.1
+"seconds": 1.2
 },
 "dpurix": {
 "cell_retention": 0.9642857142857143,
@@ -1676,11 +1676,11 @@
 "n_rows": 0,
 "n_kv": 0,
 "chars": 11779,
-"seconds": 1.1,
+"seconds": 0.0,
 "meta_status": "ok",
 "meta_extractor": "pdfplumber-read",
 "meta_table_loss": false,
-"meta_note": ""
+"meta_note": null
 }
 }
 },
@@ -1713,7 +1713,7 @@
 "meta_status": "ok",
 "meta_extractor": "hwpx",
 "meta_table_loss": false,
-"meta_note": ""
+"meta_note": null
 }
 }
 },
@@ -1746,7 +1746,7 @@
 "meta_status": "ok",
 "meta_extractor": "hwpx",
 "meta_table_loss": false,
-"meta_note": ""
+"meta_note": null
 }
 }
 },
@@ -1815,11 +1815,11 @@
 "n_rows": 27,
 "n_kv": 0,
 "chars": 5594,
-"seconds": 0.6,
+"seconds": 0.0,
 "meta_status": "ok",
 "meta_extractor": "pdfplumber-read",
 "meta_table_loss": false,
-"meta_note": ""
+"meta_note": null
 }
 }
 },
@@ -1858,11 +1858,11 @@
 "n_rows": 43,
 "n_kv": 0,
 "chars": 19583,
-"seconds": 1.6,
+"seconds": 0.0,
 "meta_status": "ok",
 "meta_extractor": "hwp5html",
 "meta_table_loss": false,
-"meta_note": ""
+"meta_note": null
 }
 }
 },
@@ -1895,7 +1895,7 @@
 "meta_status": "ok",
 "meta_extractor": "hwpx",
 "meta_table_loss": false,
-"meta_note": ""
+"meta_note": null
 }
 }
 },
@@ -1914,7 +1914,7 @@
 "n_rows": 0,
 "n_kv": 0,
 "chars": 5452,
-"seconds": 0.1
+"seconds": 0.0
 },
 "pdftotext_layout": {
 "cell_retention": 0.0,
@@ -1924,7 +1924,7 @@
 "n_rows": 0,
 "n_kv": 0,
 "chars": 7896,
-"seconds": 0.1
+"seconds": 0.0
 },
 "pymupdf": {
 "cell_retention": 0.5,
@@ -1944,7 +1944,7 @@
 "n_rows": 0,
 "n_kv": 0,
 "chars": 5410,
-"seconds": 0.3
+"seconds": 0.4
 },
 "pdfplumber_tables": {
 "cell_retention": 0.0,
@@ -1964,11 +1964,11 @@
 "n_rows": 0,
 "n_kv": 0,
 "chars": 5413,
-"seconds": 0.4,
+"seconds": 0.0,
 "meta_status": "ok",
 "meta_extractor": "pdfplumber-read",
 "meta_table_loss": false,
-"meta_note": ""
+"meta_note": null
 }
 }
 },
@@ -1987,7 +1987,7 @@
 "n_rows": 814,
 "n_kv": 68,
 "chars": 220600,
-"seconds": 0.6
+"seconds": 0.5
 },
 "dpurix": {
 "cell_retention": 1.0,
@@ -1997,11 +1997,11 @@
 "n_rows": 814,
 "n_kv": 68,
 "chars": 121472,
-"seconds": 0.3,
+"seconds": 0.1,
 "meta_status": "ok",
 "meta_extractor": "hwpx",
 "meta_table_loss": false,
-"meta_note": ""
+"meta_note": null
 }
 }
 },
@@ -2040,11 +2040,11 @@
 "n_rows": 7,
 "n_kv": 0,
 "chars": 5541,
-"seconds": 0.3,
+"seconds": 0.0,
 "meta_status": "ok",
 "meta_extractor": "hwp5html",
 "meta_table_loss": false,
-"meta_note": ""
+"meta_note": null
 }
 }
 },
@@ -2083,11 +2083,11 @@
 "n_rows": 5,
 "n_kv": 6,
 "chars": 17383,
-"seconds": 0.6,
+"seconds": 0.0,
 "meta_status": "ok",
 "meta_extractor": "hwp5html",
 "meta_table_loss": false,
-"meta_note": ""
+"meta_note": null
 }
 }
 },
@@ -2126,11 +2126,11 @@
 "n_rows": 109,
 "n_kv": 35,
 "chars": 27226,
-"seconds": 1.7,
+"seconds": 0.0,
 "meta_status": "ok",
 "meta_extractor": "hwp5html",
 "meta_table_loss": false,
-"meta_note": ""
+"meta_note": null
 }
 }
 },
@@ -2169,11 +2169,11 @@
 "n_rows": 11,
 "n_kv": 0,
 "chars": 9206,
-"seconds": 0.3,
+"seconds": 0.0,
 "meta_status": "ok",
 "meta_extractor": "hwp5html",
 "meta_table_loss": false,
-"meta_note": ""
+"meta_note": null
 }
 }
 },
@@ -2212,11 +2212,11 @@
 "n_rows": 0,
 "n_kv": 0,
 "chars": 635,
-"seconds": 0.1,
+"seconds": 0.0,
 "meta_status": "ok",
 "meta_extractor": "hwp5html",
 "meta_table_loss": false,
-"meta_note": ""
+"meta_note": null
 }
 }
 },
@@ -2255,11 +2255,11 @@
 "n_rows": 12,
 "n_kv": 0,
 "chars": 2372,
-"seconds": 0.2,
+"seconds": 0.0,
 "meta_status": "ok",
 "meta_extractor": "hwp5html",
 "meta_table_loss": false,
-"meta_note": ""
+"meta_note": null
 }
 }
 },
@@ -2298,84 +2298,11 @@
 "n_rows": 11,
 "n_kv": 0,
 "chars": 10697,
-"seconds": 0.4,
+"seconds": 0.0,
 "meta_status": "ok",
 "meta_extractor": "hwp5html",
 "meta_table_loss": false,
-"meta_note": ""
-}
-}
-},
-{
-"doc": "[붙임2]입찰공고문.pdf",
-"format": "pdf",
-"declared_ext": "pdf",
-"truth_from": "[붙임1]입찰공고문.hwp",
-"n_tables": 7,
-"scores": {
-"pdftotext": {
-"cell_retention": 0.7777777777777778,
-"row_integrity": 0.0,
-"kv_association": null,
-"n_cells": 27,
-"n_rows": 11,
-"n_kv": 0,
-"chars": 9564,
-"seconds": 0.1
-},
-"pdftotext_layout": {
-"cell_retention": 0.8148148148148148,
-"row_integrity": 0.8181818181818182,
-"kv_association": null,
-"n_cells": 27,
-"n_rows": 11,
-"n_kv": 0,
-"chars": 10621,
-"seconds": 0.1
-},
-"pymupdf": {
-"cell_retention": 0.8888888888888888,
-"row_integrity": 0.0,
-"kv_association": null,
-"n_cells": 27,
-"n_rows": 11,
-"n_kv": 0,
-"chars": 9712,
-"seconds": 0.0
-},
-"pdfplumber": {
-"cell_retention": 0.8148148148148148,
-"row_integrity": 0.8181818181818182,
-"kv_association": null,
-"n_cells": 27,
-"n_rows": 11,
-"n_kv": 0,
-"chars": 9482,
-"seconds": 1.3
-},
-"pdfplumber_tables": {
-"cell_retention": 0.8148148148148148,
-"row_integrity": 0.8181818181818182,
-"kv_association": null,
-"n_cells": 27,
-"n_rows": 11,
-"n_kv": 0,
-"chars": 9498,
-"seconds": 1.3
-},
-"dpurix": {
-"cell_retention": 0.8888888888888888,
-"row_integrity": 0.36363636363636365,
-"kv_association": null,
-"n_cells": 27,
-"n_rows": 11,
-"n_kv": 0,
-"chars": 9520,
-"seconds": 1.3,
-"meta_status": "ok",
-"meta_extractor": "pdfplumber-read",
-"meta_table_loss": false,
-"meta_note": ""
+"meta_note": null
 }
 }
 },
@@ -2414,11 +2341,11 @@
 "n_rows": 9,
 "n_kv": 0,
 "chars": 6434,
-"seconds": 0.5,
+"seconds": 0.0,
 "meta_status": "ok",
 "meta_extractor": "hwp5html",
 "meta_table_loss": false,
-"meta_note": ""
+"meta_note": null
 }
 }
 },
@@ -2457,11 +2384,11 @@
 "n_rows": 73,
 "n_kv": 6,
 "chars": 27214,
-"seconds": 4.1,
+"seconds": 0.0,
 "meta_status": "ok",
 "meta_extractor": "hwp5html",
 "meta_table_loss": false,
-"meta_note": ""
+"meta_note": null
 }
 }
 },
@@ -2500,11 +2427,11 @@
 "n_rows": 25,
 "n_kv": 1,
 "chars": 2381,
-"seconds": 0.2,
+"seconds": 0.0,
 "meta_status": "ok",
 "meta_extractor": "hwp5html",
 "meta_table_loss": false,
-"meta_note": ""
+"meta_note": null
 }
 }
 },
@@ -2537,7 +2464,7 @@
 "meta_status": "ok",
 "meta_extractor": "hwpx",
 "meta_table_loss": false,
-"meta_note": ""
+"meta_note": null
 }
 }
 },
@@ -2596,7 +2523,7 @@
 "n_rows": 76,
 "n_kv": 6,
 "chars": 27057,
-"seconds": 1.1
+"seconds": 1.2
 },
 "dpurix": {
 "cell_retention": 0.8925081433224755,
@@ -2606,11 +2533,11 @@
 "n_rows": 76,
 "n_kv": 6,
 "chars": 23242,
-"seconds": 1.1,
+"seconds": 0.0,
 "meta_status": "ok",
 "meta_extractor": "pdfplumber-read",
 "meta_table_loss": false,
-"meta_note": ""
+"meta_note": null
 }
 }
 },
@@ -2649,11 +2576,11 @@
 "n_rows": 62,
 "n_kv": 7,
 "chars": 16538,
-"seconds": 0.6,
+"seconds": 0.0,
 "meta_status": "ok",
 "meta_extractor": "hwp5html",
 "meta_table_loss": false,
-"meta_note": ""
+"meta_note": null
 }
 }
 },
@@ -2722,11 +2649,11 @@
 "n_rows": 62,
 "n_kv": 7,
 "chars": 16599,
-"seconds": 0.9,
+"seconds": 0.0,
 "meta_status": "ok",
 "meta_extractor": "pdfplumber-read",
 "meta_table_loss": false,
-"meta_note": ""
+"meta_note": null
 }
 }
 },
@@ -2759,7 +2686,7 @@
 "meta_status": "ok",
 "meta_extractor": "hwpx",
 "meta_table_loss": false,
-"meta_note": ""
+"meta_note": null
 }
 }
 },
@@ -2798,11 +2725,11 @@
 "n_rows": 0,
 "n_kv": 0,
 "chars": 1915,
-"seconds": 0.1,
+"seconds": 0.0,
 "meta_status": "ok",
 "meta_extractor": "hwp5html",
 "meta_table_loss": false,
-"meta_note": ""
+"meta_note": null
 }
 }
 },
@@ -2841,11 +2768,11 @@
 "n_rows": 10,
 "n_kv": 0,
 "chars": 10485,
-"seconds": 0.4,
+"seconds": 0.0,
 "meta_status": "ok",
 "meta_extractor": "hwp5html",
 "meta_table_loss": false,
-"meta_note": ""
+"meta_note": null
 }
 }
 },
@@ -2904,7 +2831,7 @@
 "n_rows": 10,
 "n_kv": 0,
 "chars": 9348,
-"seconds": 0.3
+"seconds": 0.4
 },
 "dpurix": {
 "cell_retention": 0.8620689655172413,
@@ -2914,11 +2841,11 @@
 "n_rows": 10,
 "n_kv": 0,
 "chars": 8596,
-"seconds": 0.4,
+"seconds": 0.0,
 "meta_status": "ok",
 "meta_extractor": "pdfplumber-read",
 "meta_table_loss": false,
-"meta_note": ""
+"meta_note": null
 }
 }
 },
@@ -2957,11 +2884,11 @@
 "n_rows": 50,
 "n_kv": 6,
 "chars": 16347,
-"seconds": 0.6,
+"seconds": 0.0,
 "meta_status": "ok",
 "meta_extractor": "hwp5html",
 "meta_table_loss": false,
-"meta_note": ""
+"meta_note": null
 }
 }
 },
@@ -3000,11 +2927,11 @@
 "n_rows": 11,
 "n_kv": 1,
 "chars": 8414,
-"seconds": 0.4,
+"seconds": 0.0,
 "meta_status": "ok",
 "meta_extractor": "hwp5html",
 "meta_table_loss": false,
-"meta_note": ""
+"meta_note": null
 }
 }
 },
@@ -3043,11 +2970,11 @@
 "n_rows": 61,
 "n_kv": 12,
 "chars": 26965,
-"seconds": 1.8,
+"seconds": 0.0,
 "meta_status": "ok",
 "meta_extractor": "hwp5html",
 "meta_table_loss": false,
-"meta_note": ""
+"meta_note": null
 }
 }
 },
@@ -3086,11 +3013,11 @@
 "n_rows": 13,
 "n_kv": 10,
 "chars": 6829,
-"seconds": 0.3,
+"seconds": 0.0,
 "meta_status": "ok",
 "meta_extractor": "hwp5html",
 "meta_table_loss": false,
-"meta_note": ""
+"meta_note": null
 }
 }
 },
@@ -3129,11 +3056,11 @@
 "n_rows": 61,
 "n_kv": 12,
 "chars": 22156,
-"seconds": 1.6,
+"seconds": 0.0,
 "meta_status": "ok",
 "meta_extractor": "hwp5html",
 "meta_table_loss": false,
-"meta_note": ""
+"meta_note": null
 }
 }
 },
@@ -3166,7 +3093,7 @@
 "meta_status": "ok",
 "meta_extractor": "hwpx",
 "meta_table_loss": false,
-"meta_note": ""
+"meta_note": null
 }
 }
 },
@@ -3195,11 +3122,11 @@
 "n_rows": 91,
 "n_kv": 47,
 "chars": 21060,
-"seconds": 0.1,
+"seconds": 0.0,
 "meta_status": "ok",
 "meta_extractor": "hwpx",
 "meta_table_loss": false,
-"meta_note": ""
+"meta_note": null
 }
 }
 },
@@ -3232,7 +3159,7 @@
 "meta_status": "ok",
 "meta_extractor": "hwpx",
 "meta_table_loss": false,
-"meta_note": ""
+"meta_note": null
 }
 }
 },
@@ -3301,11 +3228,11 @@
 "n_rows": 0,
 "n_kv": 0,
 "chars": 5018,
-"seconds": 0.5,
+"seconds": 0.0,
 "meta_status": "ok",
 "meta_extractor": "pdfplumber-read",
 "meta_table_loss": false,
-"meta_note": ""
+"meta_note": null
 }
 }
 },
@@ -3344,11 +3271,11 @@
 "n_rows": 16,
 "n_kv": 19,
 "chars": 7596,
-"seconds": 0.4,
+"seconds": 0.0,
 "meta_status": "ok",
 "meta_extractor": "hwp5html",
 "meta_table_loss": false,
-"meta_note": ""
+"meta_note": null
 }
 }
 },
@@ -3417,11 +3344,11 @@
 "n_rows": 16,
 "n_kv": 19,
 "chars": 5889,
-"seconds": 0.9,
+"seconds": 0.0,
 "meta_status": "ok",
 "meta_extractor": "pdfplumber-read",
 "meta_table_loss": false,
-"meta_note": ""
+"meta_note": null
 }
 }
 },
@@ -3460,11 +3387,11 @@
 "n_rows": 1,
 "n_kv": 0,
 "chars": 560,
-"seconds": 0.1,
+"seconds": 0.0,
 "meta_status": "ok",
 "meta_extractor": "hwp5html",
 "meta_table_loss": false,
-"meta_note": ""
+"meta_note": null
 }
 }
 },
@@ -3503,11 +3430,11 @@
 "n_rows": 0,
 "n_kv": 0,
 "chars": 332,
-"seconds": 0.1,
+"seconds": 0.0,
 "meta_status": "ok",
 "meta_extractor": "hwp5html",
 "meta_table_loss": false,
-"meta_note": ""
+"meta_note": null
 }
 }
 },
@@ -3546,11 +3473,11 @@
 "n_rows": 0,
 "n_kv": 0,
 "chars": 2899,
-"seconds": 0.1,
+"seconds": 0.0,
 "meta_status": "ok",
 "meta_extractor": "hwp5html",
 "meta_table_loss": false,
-"meta_note": ""
+"meta_note": null
 }
 }
 },
@@ -3589,11 +3516,11 @@
 "n_rows": 0,
 "n_kv": 0,
 "chars": 5655,
-"seconds": 0.2,
+"seconds": 0.0,
 "meta_status": "ok",
 "meta_extractor": "hwp5html",
 "meta_table_loss": false,
-"meta_note": ""
+"meta_note": null
 }
 }
 },
@@ -3632,11 +3559,11 @@
 "n_rows": 14,
 "n_kv": 0,
 "chars": 10681,
-"seconds": 0.3,
+"seconds": 0.0,
 "meta_status": "ok",
 "meta_extractor": "hwp5html",
 "meta_table_loss": false,
-"meta_note": ""
+"meta_note": null
 }
 }
 },
@@ -3655,7 +3582,7 @@
 "n_rows": 14,
 "n_kv": 0,
 "chars": 7959,
-"seconds": 0.0
+"seconds": 0.1
 },
 "pdftotext_layout": {
 "cell_retention": 0.9318181818181818,
@@ -3705,11 +3632,11 @@
 "n_rows": 14,
 "n_kv": 0,
 "chars": 8037,
-"seconds": 0.3,
+"seconds": 0.0,
 "meta_status": "ok",
 "meta_extractor": "pdfplumber-read",
 "meta_table_loss": false,
-"meta_note": ""
+"meta_note": null
 }
 }
 },
@@ -3748,11 +3675,11 @@
 "n_rows": 54,
 "n_kv": 34,
 "chars": 15197,
-"seconds": 0.8,
+"seconds": 0.0,
 "meta_status": "ok",
 "meta_extractor": "hwp5html",
 "meta_table_loss": false,
-"meta_note": ""
+"meta_note": null
 }
 }
 },
@@ -3791,11 +3718,11 @@
 "n_rows": 3,
 "n_kv": 0,
 "chars": 6669,
-"seconds": 0.3,
+"seconds": 0.0,
 "meta_status": "ok",
 "meta_extractor": "hwp5html",
 "meta_table_loss": false,
-"meta_note": ""
+"meta_note": null
 }
 }
 },
@@ -3828,7 +3755,7 @@
 "meta_status": "ok",
 "meta_extractor": "hwpx",
 "meta_table_loss": false,
-"meta_note": ""
+"meta_note": null
 }
 }
 },
@@ -3897,11 +3824,11 @@
 "n_rows": 1,
 "n_kv": 9,
 "chars": 2926,
-"seconds": 0.1,
+"seconds": 0.0,
 "meta_status": "ok",
 "meta_extractor": "pdfplumber-read",
 "meta_table_loss": false,
-"meta_note": ""
+"meta_note": null
 }
 }
 },
@@ -3940,11 +3867,11 @@
 "n_rows": 0,
 "n_kv": 0,
 "chars": 4844,
-"seconds": 0.3,
+"seconds": 0.0,
 "meta_status": "ok",
 "meta_extractor": "hwp5html",
 "meta_table_loss": false,
-"meta_note": ""
+"meta_note": null
 }
 }
 },
@@ -3983,11 +3910,11 @@
 "n_rows": 12,
 "n_kv": 5,
 "chars": 32707,
-"seconds": 0.6,
+"seconds": 0.0,
 "meta_status": "ok",
 "meta_extractor": "hwp5html",
 "meta_table_loss": false,
-"meta_note": ""
+"meta_note": null
 }
 }
 },
@@ -4006,7 +3933,7 @@
 "n_rows": 698,
 "n_kv": 66,
 "chars": 24986,
-"seconds": 1.7
+"seconds": 1.8
 },
 "hwp_naive": {
 "cell_retention": 0.9799789251844047,
@@ -4026,11 +3953,11 @@
 "n_rows": 698,
 "n_kv": 66,
 "chars": 105730,
-"seconds": 34.0,
+"seconds": 0.1,
 "meta_status": "ok",
 "meta_extractor": "hwp5html",
 "meta_table_loss": false,
-"meta_note": ""
+"meta_note": null
 }
 }
 },
@@ -4069,11 +3996,11 @@
 "n_rows": 0,
 "n_kv": 0,
 "chars": 18868,
-"seconds": 0.9,
+"seconds": 0.0,
 "meta_status": "ok",
 "meta_extractor": "hwp5html",
 "meta_table_loss": false,
-"meta_note": ""
+"meta_note": null
 }
 }
 },
@@ -4102,7 +4029,7 @@
 "n_rows": 0,
 "n_kv": 0,
 "chars": 21965,
-"seconds": 0.2
+"seconds": 0.1
 },
 "pymupdf": {
 "cell_retention": 1.0,
@@ -4132,7 +4059,7 @@
 "n_rows": 0,
 "n_kv": 0,
 "chars": 15311,
-"seconds": 1.5
+"seconds": 1.6
 },
 "dpurix": {
 "cell_retention": 0.4,
@@ -4142,11 +4069,11 @@
 "n_rows": 0,
 "n_kv": 0,
 "chars": 14825,
-"seconds": 1.6,
+"seconds": 0.0,
 "meta_status": "ok",
 "meta_extractor": "pdfplumber-read",
 "meta_table_loss": false,
-"meta_note": ""
+"meta_note": null
 }
 }
 },
@@ -4185,11 +4112,11 @@
 "n_rows": 7,
 "n_kv": 4,
 "chars": 3053,
-"seconds": 0.2,
+"seconds": 0.0,
 "meta_status": "ok",
 "meta_extractor": "hwp5html",
 "meta_table_loss": false,
-"meta_note": ""
+"meta_note": null
 }
 }
 },
@@ -4228,11 +4155,11 @@
 "n_rows": 53,
 "n_kv": 18,
 "chars": 14574,
-"seconds": 0.9,
+"seconds": 0.0,
 "meta_status": "ok",
 "meta_extractor": "hwp5html",
 "meta_table_loss": false,
-"meta_note": ""
+"meta_note": null
 }
 }
 },
@@ -4265,7 +4192,7 @@
 "meta_status": "ok",
 "meta_extractor": "hwpx",
 "meta_table_loss": false,
-"meta_note": ""
+"meta_note": null
 }
 }
 },
@@ -4304,11 +4231,11 @@
 "n_rows": 54,
 "n_kv": 9,
 "chars": 20310,
-"seconds": 1.5,
+"seconds": 0.0,
 "meta_status": "ok",
 "meta_extractor": "hwp5html",
 "meta_table_loss": false,
-"meta_note": ""
+"meta_note": null
 }
 }
 },
@@ -4377,11 +4304,11 @@
 "n_rows": 54,
 "n_kv": 9,
 "chars": 15914,
-"seconds": 0.7,
+"seconds": 0.0,
 "meta_status": "ok",
 "meta_extractor": "pdfplumber-read",
 "meta_table_loss": false,
-"meta_note": ""
+"meta_note": null
 }
 }
 },
@@ -4420,11 +4347,11 @@
 "n_rows": 75,
 "n_kv": 20,
 "chars": 18417,
-"seconds": 1.7,
+"seconds": 0.0,
 "meta_status": "ok",
 "meta_extractor": "hwp5html",
 "meta_table_loss": false,
-"meta_note": ""
+"meta_note": null
 }
 }
 },
@@ -4457,7 +4384,7 @@
 "meta_status": "ok",
 "meta_extractor": "hwpx",
 "meta_table_loss": false,
-"meta_note": ""
+"meta_note": null
 }
 }
 },
@@ -4516,7 +4443,7 @@
 "n_rows": 70,
 "n_kv": 8,
 "chars": 19792,
-"seconds": 1.0
+"seconds": 1.1
 },
 "dpurix": {
 "cell_retention": 0.9453125,
@@ -4526,11 +4453,11 @@
 "n_rows": 70,
 "n_kv": 8,
 "chars": 17375,
-"seconds": 1.0,
+"seconds": 0.0,
 "meta_status": "ok",
 "meta_extractor": "pdfplumber-read",
 "meta_table_loss": false,
-"meta_note": ""
+"meta_note": null
 }
 }
 },
@@ -4569,11 +4496,11 @@
 "n_rows": 19,
 "n_kv": 7,
 "chars": 12449,
-"seconds": 0.6,
+"seconds": 0.0,
 "meta_status": "ok",
 "meta_extractor": "hwp5html",
 "meta_table_loss": false,
-"meta_note": ""
+"meta_note": null
 }
 }
 },
@@ -4642,11 +4569,11 @@
 "n_rows": 19,
 "n_kv": 7,
 "chars": 8503,
-"seconds": 0.6,
+"seconds": 0.0,
 "meta_status": "ok",
 "meta_extractor": "pdfplumber-read",
 "meta_table_loss": false,
-"meta_note": ""
+"meta_note": null
 }
 }
 },
@@ -4679,7 +4606,7 @@
 "meta_status": "ok",
 "meta_extractor": "hwpx",
 "meta_table_loss": false,
-"meta_note": ""
+"meta_note": null
 }
 }
 },
@@ -4718,11 +4645,11 @@
 "n_rows": 4,
 "n_kv": 3,
 "chars": 7493,
-"seconds": 0.4,
+"seconds": 0.0,
 "meta_status": "ok",
 "meta_extractor": "hwp5html",
 "meta_table_loss": false,
-"meta_note": ""
+"meta_note": null
 }
 }
 },
@@ -4791,11 +4718,11 @@
 "n_rows": 4,
 "n_kv": 3,
 "chars": 7210,
-"seconds": 0.3,
+"seconds": 0.0,
 "meta_status": "ok",
 "meta_extractor": "pdfplumber-read",
 "meta_table_loss": false,
-"meta_note": ""
+"meta_note": null
 }
 }
 },
@@ -4814,7 +4741,7 @@
 "n_rows": 65,
 "n_kv": 13,
 "chars": 14990,
-"seconds": 0.4
+"seconds": 0.5
 },
 "hwp_naive": {
 "cell_retention": 0.9850746268656716,
@@ -4834,11 +4761,11 @@
 "n_rows": 65,
 "n_kv": 13,
 "chars": 25183,
-"seconds": 2.0,
+"seconds": 0.0,
 "meta_status": "ok",
 "meta_extractor": "hwp5html",
 "meta_table_loss": false,
-"meta_note": ""
+"meta_note": null
 }
 }
 },
@@ -4877,11 +4804,11 @@
 "n_rows": 12,
 "n_kv": 0,
 "chars": 9255,
-"seconds": 0.6,
+"seconds": 0.0,
 "meta_status": "ok",
 "meta_extractor": "hwp5html",
 "meta_table_loss": false,
-"meta_note": ""
+"meta_note": null
 }
 }
 },
@@ -4920,11 +4847,11 @@
 "n_rows": 0,
 "n_kv": 0,
 "chars": 15814,
-"seconds": 0.6,
+"seconds": 0.0,
 "meta_status": "ok",
 "meta_extractor": "hwp5html",
 "meta_table_loss": false,
-"meta_note": ""
+"meta_note": null
 }
 }
 },
@@ -4983,7 +4910,7 @@
 "n_rows": 0,
 "n_kv": 0,
 "chars": 13417,
-"seconds": 1.5
+"seconds": 1.6
 },
 "dpurix": {
 "cell_retention": 1.0,
@@ -4993,11 +4920,11 @@
 "n_rows": 0,
 "n_kv": 0,
 "chars": 12717,
-"seconds": 1.5,
+"seconds": 0.0,
 "meta_status": "ok",
 "meta_extractor": "pdfplumber-read",
 "meta_table_loss": false,
-"meta_note": ""
+"meta_note": null
 }
 }
 },
@@ -5030,7 +4957,7 @@
 "meta_status": "ok",
 "meta_extractor": "hwpx",
 "meta_table_loss": false,
-"meta_note": ""
+"meta_note": null
 }
 }
 },
@@ -5038,72 +4965,72 @@
 "doc": "공고문.pdf",
 "format": "pdf",
 "declared_ext": "pdf",
-"truth_from": "과업지시서.hwpx",
-"n_tables": 6,
+"truth_from": "공고문.hwpx",
+"n_tables": 1,
 "scores": {
 "pdftotext": {
-"cell_retention": 0.21428571428571427,
-"row_integrity": 0.0,
+"cell_retention": 1.0,
+"row_integrity": null,
 "kv_association": null,
-"n_cells": 14,
-"n_rows": 2,
+"n_cells": 1,
+"n_rows": 0,
 "n_kv": 0,
 "chars": 3655,
 "seconds": 0.0
 },
 "pdftotext_layout": {
-"cell_retention": 0.21428571428571427,
-"row_integrity": 0.0,
+"cell_retention": 1.0,
+"row_integrity": null,
 "kv_association": null,
-"n_cells": 14,
-"n_rows": 2,
+"n_cells": 1,
+"n_rows": 0,
 "n_kv": 0,
 "chars": 3984,
 "seconds": 0.0
 },
 "pymupdf": {
-"cell_retention": 0.21428571428571427,
-"row_integrity": 0.0,
+"cell_retention": 1.0,
+"row_integrity": null,
 "kv_association": null,
-"n_cells": 14,
-"n_rows": 2,
+"n_cells": 1,
+"n_rows": 0,
 "n_kv": 0,
 "chars": 3778,
 "seconds": 0.0
 },
 "pdfplumber": {
-"cell_retention": 0.21428571428571427,
-"row_integrity": 0.0,
+"cell_retention": 1.0,
+"row_integrity": null,
 "kv_association": null,
-"n_cells": 14,
-"n_rows": 2,
+"n_cells": 1,
+"n_rows": 0,
 "n_kv": 0,
 "chars": 3627,
 "seconds": 0.3
 },
 "pdfplumber_tables": {
-"cell_retention": 0.21428571428571427,
-"row_integrity": 0.0,
+"cell_retention": 1.0,
+"row_integrity": null,
 "kv_association": null,
-"n_cells": 14,
-"n_rows": 2,
+"n_cells": 1,
+"n_rows": 0,
 "n_kv": 0,
 "chars": 3627,
 "seconds": 0.3
 },
 "dpurix": {
-"cell_retention": 0.21428571428571427,
-"row_integrity": 0.0,
+"cell_retention": 1.0,
+"row_integrity": null,
 "kv_association": null,
-"n_cells": 14,
-"n_rows": 2,
+"n_cells": 1,
+"n_rows": 0,
 "n_kv": 0,
 "chars": 3630,
-"seconds": 0.3,
+"seconds": 0.0,
 "meta_status": "ok",
 "meta_extractor": "pdfplumber-read",
 "meta_table_loss": false,
-"meta_note": ""
+"meta_note": null
 }
 }
 },
@@ -5136,7 +5063,7 @@
 "meta_status": "ok",
 "meta_extractor": "hwpx",
 "meta_table_loss": false,
-"meta_note": ""
+"meta_note": null
 }
 }
 },
@@ -5169,7 +5096,7 @@
 "meta_status": "ok",
 "meta_extractor": "hwpx",
 "meta_table_loss": false,
-"meta_note": ""
+"meta_note": null
 }
 }
 },
@@ -5198,7 +5125,7 @@
 "n_rows": 15,
 "n_kv": 1,
 "chars": 18687,
-"seconds": 0.1
+"seconds": 0.0
 },
 "pymupdf": {
 "cell_retention": 0.8958333333333334,
@@ -5238,11 +5165,11 @@
 "n_rows": 15,
 "n_kv": 1,
 "chars": 9254,
-"seconds": 0.7,
+"seconds": 0.0,
 "meta_status": "ok",
 "meta_extractor": "pdfplumber-read",
 "meta_table_loss": false,
-"meta_note": ""
+"meta_note": null
 }
 }
 },
@@ -5275,7 +5202,7 @@
 "meta_status": "ok",
 "meta_extractor": "hwpx",
 "meta_table_loss": false,
-"meta_note": ""
+"meta_note": null
 }
 }
 },
@@ -5308,7 +5235,7 @@
 "meta_status": "ok",
 "meta_extractor": "hwpx",
 "meta_table_loss": false,
-"meta_note": ""
+"meta_note": null
 }
 }
 },
@@ -5347,11 +5274,11 @@
 "n_rows": 20,
 "n_kv": 0,
 "chars": 6344,
-"seconds": 0.3,
+"seconds": 0.0,
 "meta_status": "ok",
 "meta_extractor": "hwp5html",
 "meta_table_loss": false,
-"meta_note": ""
+"meta_note": null
 }
 }
 },
@@ -5410,7 +5337,7 @@
 "n_rows": 20,
 "n_kv": 0,
 "chars": 7124,
-"seconds": 0.5
+"seconds": 0.6
 },
 "dpurix": {
 "cell_retention": 0.896551724137931,
@@ -5420,11 +5347,11 @@
 "n_rows": 20,
 "n_kv": 0,
 "chars": 5152,
-"seconds": 0.6,
+"seconds": 0.0,
 "meta_status": "ok",
 "meta_extractor": "pdfplumber-read",
 "meta_table_loss": false,
-"meta_note": ""
+"meta_note": null
 }
 }
 },
@@ -5463,11 +5390,11 @@
 "n_rows": 83,
 "n_kv": 9,
 "chars": 29190,
-"seconds": 5.3,
+"seconds": 0.0,
 "meta_status": "ok",
 "meta_extractor": "hwp5html",
 "meta_table_loss": false,
-"meta_note": ""
+"meta_note": null
 }
 }
 },
@@ -5500,7 +5427,7 @@
 "meta_status": "ok",
 "meta_extractor": "hwpx",
 "meta_table_loss": false,
-"meta_note": ""
+"meta_note": null
 }
 }
 },
@@ -5549,7 +5476,7 @@
 "n_rows": 18,
 "n_kv": 0,
 "chars": 8399,
-"seconds": 1.1
+"seconds": 1.2
 },
 "pdfplumber_tables": {
 "cell_retention": 0.8974358974358975,
@@ -5569,11 +5496,11 @@
 "n_rows": 18,
 "n_kv": 0,
 "chars": 8455,
-"seconds": 1.2,
+"seconds": 0.0,
 "meta_status": "ok",
 "meta_extractor": "pdfplumber-read",
 "meta_table_loss": false,
-"meta_note": ""
+"meta_note": null
 }
 }
 },
@@ -5606,7 +5533,7 @@
 "meta_status": "ok",
 "meta_extractor": "hwpx",
 "meta_table_loss": false,
-"meta_note": ""
+"meta_note": null
 }
 }
 },
@@ -5639,7 +5566,7 @@
 "meta_status": "ok",
 "meta_extractor": "hwpx",
 "meta_table_loss": false,
-"meta_note": ""
+"meta_note": null
 }
 }
 },
@@ -5678,11 +5605,11 @@
 "n_rows": 0,
 "n_kv": 0,
 "chars": 6223,
-"seconds": 0.2,
+"seconds": 0.0,
 "meta_status": "ok",
 "meta_extractor": "hwp5html",
 "meta_table_loss": false,
-"meta_note": ""
+"meta_note": null
 }
 }
 },
@@ -5690,36 +5617,36 @@
 "doc": "공고문.pdf",
 "format": "pdf",
 "declared_ext": "pdf",
-"truth_from": "제안요청서.hwp",
-"n_tables": 61,
+"truth_from": "공고문.hwp",
+"n_tables": 1,
 "scores": {
 "pdftotext": {
-"cell_retention": 0.08113207547169811,
-"row_integrity": 0.037383177570093455,
-"kv_association": 0.02857142857142857,
-"n_cells": 530,
-"n_rows": 214,
-"n_kv": 35,
+"cell_retention": 1.0,
+"row_integrity": null,
+"kv_association": null,
+"n_cells": 2,
+"n_rows": 0,
+"n_kv": 0,
 "chars": 5741,
 "seconds": 0.0
 },
 "pdftotext_layout": {
-"cell_retention": 0.08113207547169811,
-"row_integrity": 0.037383177570093455,
-"kv_association": 0.05714285714285714,
-"n_cells": 530,
-"n_rows": 214,
-"n_kv": 35,
+"cell_retention": 1.0,
+"row_integrity": null,
+"kv_association": null,
+"n_cells": 2,
+"n_rows": 0,
+"n_kv": 0,
 "chars": 8711,
-"seconds": 0.1
+"seconds": 0.0
 },
 "pymupdf": {
-"cell_retention": 0.08113207547169811,
-"row_integrity": 0.037383177570093455,
-"kv_association": 0.02857142857142857,
-"n_cells": 530,
-"n_rows": 214,
-"n_kv": 35,
+"cell_retention": 0.0,
+"row_integrity": null,
+"kv_association": null,
+"n_cells": 2,
+"n_rows": 0,
+"n_kv": 0,
 "chars": 6414,
 "seconds": 0.0
 },
@@ -5730,18 +5657,18 @@
 "error": "Invalid dictionary construct: [/'Type', /'Font', /'Subtype', /'Type0', /'Name', /'F2', /'BaseFont', /b'\\xb3\\xaa\\xb4\\xae\\"
 },
 "dpurix": {
-"cell_retention": 0.08113207547169811,
-"row_integrity": 0.037383177570093455,
-"kv_association": 0.05714285714285714,
-"n_cells": 530,
-"n_rows": 214,
-"n_kv": 35,
+"cell_retention": 1.0,
+"row_integrity": null,
+"kv_association": null,
+"n_cells": 2,
+"n_rows": 0,
+"n_kv": 0,
 "chars": 8711,
-"seconds": 0.1,
+"seconds": 0.0,
 "meta_status": "ok",
 "meta_extractor": "pdftotext",
 "meta_table_loss": true,
-"meta_note": "표 내용이 유실된 추출 경로입니다 (fast 모드 또는 폴백 추출기)"
+"meta_note": null
 }
 }
 },
@@ -5780,11 +5707,11 @@
 "n_rows": 214,
 "n_kv": 35,
 "chars": 59029,
-"seconds": 10.8,
+"seconds": 0.0,
 "meta_status": "ok",
 "meta_extractor": "hwp5html",
 "meta_table_loss": false,
-"meta_note": ""
+"meta_note": null
 }
 }
 },
@@ -5817,7 +5744,7 @@
 "meta_status": "ok",
 "meta_extractor": "hwpx",
 "meta_table_loss": false,
-"meta_note": ""
+"meta_note": null
 }
 }
 },
@@ -5846,11 +5773,11 @@
 "n_rows": 648,
 "n_kv": 78,
 "chars": 91504,
-"seconds": 0.2,
+"seconds": 0.1,
 "meta_status": "ok",
 "meta_extractor": "hwpx",
 "meta_table_loss": false,
-"meta_note": ""
+"meta_note": null
 }
 }
 },
@@ -5889,11 +5816,11 @@
 "n_rows": 16,
 "n_kv": 14,
 "chars": 13713,
-"seconds": 0.6,
+"seconds": 0.0,
 "meta_status": "ok",
 "meta_extractor": "hwp5html",
 "meta_table_loss": false,
-"meta_note": ""
+"meta_note": null
 }
 }
 },
@@ -5952,7 +5879,7 @@
 "n_rows": 16,
 "n_kv": 14,
 "chars": 9943,
-"seconds": 0.6
+"seconds": 0.7
 },
 "dpurix": {
 "cell_retention": 0.9622641509433962,
@@ -5962,11 +5889,11 @@
 "n_rows": 16,
 "n_kv": 14,
 "chars": 9938,
-"seconds": 0.6,
+"seconds": 0.0,
 "meta_status": "ok",
 "meta_extractor": "pdfplumber-read",
 "meta_table_loss": false,
-"meta_note": ""
+"meta_note": null
 }
 }
 },
@@ -6005,11 +5932,11 @@
 "n_rows": 49,
 "n_kv": 31,
 "chars": 21761,
-"seconds": 1.0,
+"seconds": 0.0,
 "meta_status": "ok",
 "meta_extractor": "hwp5html",
 "meta_table_loss": false,
-"meta_note": ""
+"meta_note": null
 }
 }
 },
@@ -6042,7 +5969,7 @@
 "meta_status": "ok",
 "meta_extractor": "hwpx",
 "meta_table_loss": false,
-"meta_note": ""
+"meta_note": null
 }
 }
 },
@@ -6081,11 +6008,11 @@
 "n_rows": 14,
 "n_kv": 1,
 "chars": 21160,
-"seconds": 0.9,
+"seconds": 0.0,
 "meta_status": "ok",
 "meta_extractor": "hwp5html",
 "meta_table_loss": false,
-"meta_note": ""
+"meta_note": null
 }
 }
 },
@@ -6104,7 +6031,7 @@
 "n_rows": 14,
 "n_kv": 1,
 "chars": 13951,
-"seconds": 0.1
+"seconds": 0.2
 },
 "pdftotext_layout": {
 "cell_retention": 0.9333333333333333,
@@ -6134,7 +6061,7 @@
 "n_rows": 14,
 "n_kv": 1,
 "chars": 13885,
-"seconds": 1.9
+"seconds": 2.0
 },
 "pdfplumber_tables": {
 "cell_retention": 0.9555555555555556,
@@ -6144,7 +6071,7 @@
 "n_rows": 14,
 "n_kv": 1,
 "chars": 15440,
-"seconds": 2.0
+"seconds": 2.1
 },
 "dpurix": {
 "cell_retention": 0.9111111111111111,
@@ -6154,11 +6081,11 @@
 "n_rows": 14,
 "n_kv": 1,
 "chars": 14156,
-"seconds": 2.0,
+"seconds": 0.0,
 "meta_status": "ok",
 "meta_extractor": "pdfplumber-read",
 "meta_table_loss": false,
-"meta_note": ""
+"meta_note": null
 }
 }
 },
@@ -6197,11 +6124,11 @@
 "n_rows": 11,
 "n_kv": 0,
 "chars": 7144,
-"seconds": 0.3,
+"seconds": 0.0,
 "meta_status": "ok",
 "meta_extractor": "hwp5html",
 "meta_table_loss": false,
-"meta_note": ""
+"meta_note": null
 }
 }
 },
@@ -6230,7 +6157,7 @@
 "n_rows": 11,
 "n_kv": 0,
 "chars": 5968,
-"seconds": 0.0
+"seconds": 0.1
 },
 "pymupdf": {
 "cell_retention": 0.9615384615384616,
@@ -6260,7 +6187,7 @@
 "n_rows": 11,
 "n_kv": 0,
 "chars": 5672,
-"seconds": 0.4
+"seconds": 0.5
 },
 "dpurix": {
 "cell_retention": 0.9615384615384616,
@@ -6270,11 +6197,11 @@
 "n_rows": 11,
 "n_kv": 0,
 "chars": 5198,
-"seconds": 0.5,
+"seconds": 0.0,
 "meta_status": "ok",
 "meta_extractor": "pdfplumber-read",
 "meta_table_loss": false,
-"meta_note": ""
+"meta_note": null
 }
 }
 },
@@ -6313,11 +6240,11 @@
 "n_rows": 75,
 "n_kv": 35,
 "chars": 22237,
-"seconds": 2.1,
+"seconds": 0.0,
 "meta_status": "ok",
 "meta_extractor": "hwp5html",
 "meta_table_loss": false,
-"meta_note": ""
+"meta_note": null
 }
 }
 },
@@ -6350,7 +6277,7 @@
 "meta_status": "ok",
 "meta_extractor": "hwpx",
 "meta_table_loss": false,
-"meta_note": ""
+"meta_note": null
 }
 }
 },
@@ -6419,11 +6346,11 @@
 "n_rows": 67,
 "n_kv": 8,
 "chars": 19443,
-"seconds": 0.7,
+"seconds": 0.0,
 "meta_status": "ok",
 "meta_extractor": "pdfplumber-read",
 "meta_table_loss": false,
-"meta_note": ""
+"meta_note": null
 }
 }
 },
@@ -6456,7 +6383,7 @@
 "meta_status": "ok",
 "meta_extractor": "hwpx",
 "meta_table_loss": false,
-"meta_note": ""
+"meta_note": null
 }
 }
 },
@@ -6489,7 +6416,7 @@
 "meta_status": "ok",
 "meta_extractor": "hwpx",
 "meta_table_loss": false,
-"meta_note": ""
+"meta_note": null
 }
 }
 },
@@ -6522,7 +6449,7 @@
 "meta_status": "ok",
 "meta_extractor": "hwpx",
 "meta_table_loss": false,
-"meta_note": ""
+"meta_note": null
 }
 }
 },
@@ -6581,7 +6508,7 @@
 "n_rows": 8,
 "n_kv": 6,
 "chars": 9539,
-"seconds": 0.6
+"seconds": 0.7
 },
 "dpurix": {
 "cell_retention": 0.9615384615384616,
@@ -6591,11 +6518,11 @@
 "n_rows": 8,
 "n_kv": 6,
 "chars": 9324,
-"seconds": 0.7,
+"seconds": 0.0,
 "meta_status": "ok",
 "meta_extractor": "pdfplumber-read",
 "meta_table_loss": false,
-"meta_note": ""
+"meta_note": null
 }
 }
 },
@@ -6634,11 +6561,11 @@
 "n_rows": 11,
 "n_kv": 0,
 "chars": 15759,
-"seconds": 0.7,
+"seconds": 0.0,
 "meta_status": "ok",
 "meta_extractor": "hwp5html",
 "meta_table_loss": false,
-"meta_note": ""
+"meta_note": null
 }
 }
 },
@@ -6697,7 +6624,7 @@
 "n_rows": 11,
 "n_kv": 0,
 "chars": 12262,
-"seconds": 1.1
+"seconds": 1.2
 },
 "dpurix": {
 "cell_retention": 0.95,
@@ -6707,11 +6634,11 @@
 "n_rows": 11,
 "n_kv": 0,
 "chars": 12085,
-"seconds": 1.2,
+"seconds": 0.0,
 "meta_status": "ok",
 "meta_extractor": "pdfplumber-read",
 "meta_table_loss": false,
-"meta_note": ""
+"meta_note": null
 }
 }
 },
@@ -6750,11 +6677,11 @@
 "n_rows": 3,
 "n_kv": 0,
 "chars": 11682,
-"seconds": 0.4,
+"seconds": 0.0,
 "meta_status": "ok",
 "meta_extractor": "hwp5html",
 "meta_table_loss": false,
-"meta_note": ""
+"meta_note": null
 }
 }
 },
@@ -6823,11 +6750,11 @@
 "n_rows": 3,
 "n_kv": 0,
 "chars": 8922,
-"seconds": 0.8,
+"seconds": 0.0,
 "meta_status": "ok",
 "meta_extractor": "pdfplumber-read",
 "meta_table_loss": false,
-"meta_note": ""
+"meta_note": null
 }
 }
 },
@@ -6866,11 +6793,11 @@
 "n_rows": 15,
 "n_kv": 0,
 "chars": 7122,
-"seconds": 0.3,
+"seconds": 0.0,
 "meta_status": "ok",
 "meta_extractor": "hwp5html",
 "meta_table_loss": false,
-"meta_note": ""
+"meta_note": null
 }
 }
 },
@@ -6889,7 +6816,7 @@
 "n_rows": 15,
 "n_kv": 0,
 "chars": 6234,
-"seconds": 0.1
+"seconds": 0.0
 },
 "pdftotext_layout": {
 "cell_retention": 0.8936170212765957,
@@ -6939,11 +6866,11 @@
 "n_rows": 15,
 "n_kv": 0,
 "chars": 6236,
-"seconds": 0.3,
+"seconds": 0.0,
 "meta_status": "ok",
 "meta_extractor": "pdfplumber-read",
 "meta_table_loss": false,
-"meta_note": ""
+"meta_note": null
 }
 }
 },
@@ -6982,11 +6909,11 @@
 "n_rows": 0,
 "n_kv": 0,
 "chars": 2385,
-"seconds": 0.2,
+"seconds": 0.0,
 "meta_status": "ok",
 "meta_extractor": "hwp5html",
 "meta_table_loss": false,
-"meta_note": ""
+"meta_note": null
 }
 }
 },
@@ -7025,11 +6952,11 @@
 "n_rows": 38,
 "n_kv": 26,
 "chars": 5191,
-"seconds": 0.4,
+"seconds": 0.0,
 "meta_status": "ok",
 "meta_extractor": "hwp5html",
 "meta_table_loss": false,
-"meta_note": ""
+"meta_note": null
 }
 }
 },
@@ -7068,11 +6995,11 @@
 "n_rows": 23,
 "n_kv": 6,
 "chars": 10016,
-"seconds": 0.5,
+"seconds": 0.0,
 "meta_status": "ok",
 "meta_extractor": "hwp5html",
 "meta_table_loss": false,
-"meta_note": ""
+"meta_note": null
 }
 }
 },
@@ -7111,11 +7038,11 @@
 "n_rows": 3,
 "n_kv": 0,
 "chars": 4769,
-"seconds": 0.2,
+"seconds": 0.0,
 "meta_status": "ok",
 "meta_extractor": "hwp5html",
 "meta_table_loss": false,
-"meta_note": ""
+"meta_note": null
 }
 }
 },
@@ -7148,7 +7075,7 @@
 "meta_status": "ok",
 "meta_extractor": "hwpx",
 "meta_table_loss": false,
-"meta_note": ""
+"meta_note": null
 }
 }
 },
@@ -7217,11 +7144,11 @@
 "n_rows": 6,
 "n_kv": 3,
 "chars": 9036,
-"seconds": 0.5,
+"seconds": 0.0,
 "meta_status": "ok",
 "meta_extractor": "pdfplumber-read",
 "meta_table_loss": false,
-"meta_note": ""
+"meta_note": null
 }
 }
 },
@@ -7254,7 +7181,7 @@
 "meta_status": "ok",
 "meta_extractor": "hwpx",
 "meta_table_loss": false,
-"meta_note": ""
+"meta_note": null
 }
 }
 },
@@ -7287,7 +7214,7 @@
 "meta_status": "ok",
 "meta_extractor": "hwpx",
 "meta_table_loss": false,
-"meta_note": ""
+"meta_note": null
 }
 }
 },
@@ -7346,7 +7273,7 @@
 "n_rows": 66,
 "n_kv": 8,
 "chars": 23439,
-"seconds": 1.0
+"seconds": 1.1
 },
 "dpurix": {
 "cell_retention": 0.9608540925266904,
@@ -7356,11 +7283,11 @@
 "n_rows": 66,
 "n_kv": 8,
 "chars": 20314,
-"seconds": 1.1,
+"seconds": 0.0,
 "meta_status": "ok",
 "meta_extractor": "pdfplumber-read",
 "meta_table_loss": false,
-"meta_note": ""
+"meta_note": null
 }
 }
 },
@@ -7399,11 +7326,11 @@
 "n_rows": 16,
 "n_kv": 14,
 "chars": 15243,
-"seconds": 0.7,
+"seconds": 0.0,
 "meta_status": "ok",
 "meta_extractor": "hwp5html",
 "meta_table_loss": false,
-"meta_note": ""
+"meta_note": null
 }
 }
 },
@@ -7462,7 +7389,7 @@
 "n_rows": 16,
 "n_kv": 14,
 "chars": 11513,
-"seconds": 1.1
+"seconds": 1.2
 },
 "dpurix": {
 "cell_retention": 0.9272727272727272,
@@ -7472,11 +7399,11 @@
 "n_rows": 16,
 "n_kv": 14,
 "chars": 11510,
-"seconds": 1.1,
+"seconds": 0.0,
 "meta_status": "ok",
 "meta_extractor": "pdfplumber-read",
 "meta_table_loss": false,
-"meta_note": ""
+"meta_note": null
 }
 }
 },
@@ -7515,11 +7442,11 @@
 "n_rows": 64,
 "n_kv": 24,
 "chars": 20136,
-"seconds": 1.1,
+"seconds": 0.0,
 "meta_status": "ok",
 "meta_extractor": "hwp5html",
 "meta_table_loss": false,
-"meta_note": ""
+"meta_note": null
 }
 }
 },
@@ -7548,11 +7475,11 @@
 "n_rows": 2,
 "n_kv": 1,
 "chars": 6419,
-"seconds": 0.1,
+"seconds": 0.0,
 "meta_status": "ok",
 "meta_extractor": "hwpx",
 "meta_table_loss": false,
-"meta_note": ""
+"meta_note": null
 }
 }
 },
@@ -7601,7 +7528,7 @@
 "n_rows": 2,
 "n_kv": 1,
 "chars": 6334,
-"seconds": 0.3
+"seconds": 0.2
 },
 "pdfplumber_tables": {
 "cell_retention": 1.0,
@@ -7611,7 +7538,7 @@
 "n_rows": 2,
 "n_kv": 1,
 "chars": 6408,
-"seconds": 0.2
+"seconds": 0.3
 },
 "dpurix": {
 "cell_retention": 1.0,
@@ -7621,11 +7548,11 @@
 "n_rows": 2,
 "n_kv": 1,
 "chars": 6377,
-"seconds": 0.2,
+"seconds": 0.0,
 "meta_status": "ok",
 "meta_extractor": "pdfplumber-read",
 "meta_table_loss": false,
-"meta_note": ""
+"meta_note": null
 }
 }
 },
@@ -7658,7 +7585,7 @@
 "meta_status": "ok",
 "meta_extractor": "hwpx",
 "meta_table_loss": false,
-"meta_note": ""
+"meta_note": null
 }
 }
 },
@@ -7691,7 +7618,7 @@
 "meta_status": "ok",
 "meta_extractor": "hwpx",
 "meta_table_loss": false,
-"meta_note": ""
+"meta_note": null
 }
 }
 },
@@ -7760,11 +7687,11 @@
 "n_rows": 14,
 "n_kv": 0,
 "chars": 7423,
-"seconds": 0.7,
+"seconds": 0.0,
 "meta_status": "ok",
 "meta_extractor": "pdfplumber-read",
 "meta_table_loss": false,
-"meta_note": ""
+"meta_note": null
 }
 }
 },
@@ -7793,11 +7720,11 @@
 "n_rows": 107,
 "n_kv": 29,
 "chars": 17636,
-"seconds": 0.1,
+"seconds": 0.0,
 "meta_status": "ok",
 "meta_extractor": "hwpx",
 "meta_table_loss": false,
-"meta_note": ""
+"meta_note": null
 }
 }
 },
@@ -7866,11 +7793,11 @@
 "n_rows": 0,
 "n_kv": 0,
 "chars": 7955,
-"seconds": 0.7,
+"seconds": 0.0,
 "meta_status": "ok",
 "meta_extractor": "pdfplumber-read",
 "meta_table_loss": false,
-"meta_note": ""
+"meta_note": null
 }
 }
 },
@@ -7909,11 +7836,11 @@
 "n_rows": 0,
 "n_kv": 0,
 "chars": 8653,
-"seconds": 0.3,
+"seconds": 0.0,
 "meta_status": "ok",
 "meta_extractor": "hwp5html",
 "meta_table_loss": false,
-"meta_note": ""
+"meta_note": null
 }
 }
 },
@@ -7932,7 +7859,7 @@
 "n_rows": 27,
 "n_kv": 10,
 "chars": 9368,
-"seconds": 0.2
+"seconds": 0.3
 },
 "hwp_naive": {
 "cell_retention": 1.0,
@@ -7952,11 +7879,11 @@
 "n_rows": 27,
 "n_kv": 10,
 "chars": 12577,
-"seconds": 0.5,
+"seconds": 0.0,
 "meta_status": "ok",
 "meta_extractor": "hwp5html",
 "meta_table_loss": false,
-"meta_note": ""
+"meta_note": null
 }
 }
 },
@@ -7989,7 +7916,7 @@
 "meta_status": "ok",
 "meta_extractor": "hwpx",
 "meta_table_loss": false,
-"meta_note": ""
+"meta_note": null
 }
 }
 },
@@ -8008,7 +7935,7 @@
 "n_rows": 5,
 "n_kv": 0,
 "chars": 4397,
-"seconds": 0.1
+"seconds": 0.0
 },
 "pdftotext_layout": {
 "cell_retention": 0.5714285714285714,
@@ -8058,11 +7985,11 @@
 "n_rows": 5,
 "n_kv": 0,
 "chars": 4466,
-"seconds": 0.2,
+"seconds": 0.0,
 "meta_status": "ok",
 "meta_extractor": "pdfplumber-read",
 "meta_table_loss": false,
-"meta_note": ""
+"meta_note": null
 }
 }
 },
@@ -8095,7 +8022,7 @@
 "meta_status": "ok",
 "meta_extractor": "hwpx",
 "meta_table_loss": false,
-"meta_note": ""
+"meta_note": null
 }
 }
 },
@@ -8128,7 +8055,7 @@
 "meta_status": "ok",
 "meta_extractor": "hwpx",
 "meta_table_loss": false,
-"meta_note": ""
+"meta_note": null
 }
 }
 },
@@ -8167,11 +8094,11 @@
 "n_rows": 0,
 "n_kv": 0,
 "chars": 606,
-"seconds": 0.1,
+"seconds": 0.0,
 "meta_status": "ok",
 "meta_extractor": "hwp5html",
 "meta_table_loss": false,
-"meta_note": ""
+"meta_note": null
 }
 }
 },
@@ -8230,7 +8157,7 @@
 "n_rows": 68,
 "n_kv": 13,
 "chars": 13574,
-"seconds": 1.1
+"seconds": 1.2
 },
 "dpurix": {
 "cell_retention": 0.9783783783783784,
@@ -8240,11 +8167,11 @@
 "n_rows": 68,
 "n_kv": 13,
 "chars": 13287,
-"seconds": 1.2,
+"seconds": 0.0,
 "meta_status": "ok",
 "meta_extractor": "pdfplumber-read",
 "meta_table_loss": false,
-"meta_note": ""
+"meta_note": null
 }
 }
 },
@@ -8283,11 +8210,11 @@
 "n_rows": 68,
 "n_kv": 13,
 "chars": 14905,
-"seconds": 0.5,
+"seconds": 0.0,
 "meta_status": "ok",
 "meta_extractor": "hwp5html",
 "meta_table_loss": false,
-"meta_note": ""
+"meta_note": null
 }
 }
 },
@@ -8326,11 +8253,11 @@
 "n_rows": 10,
 "n_kv": 4,
 "chars": 19407,
-"seconds": 0.5,
+"seconds": 0.0,
 "meta_status": "ok",
 "meta_extractor": "hwp5html",
 "meta_table_loss": false,
-"meta_note": ""
+"meta_note": null
 }
 }
 },
@@ -8369,11 +8296,11 @@
 "n_rows": 43,
 "n_kv": 11,
 "chars": 13115,
-"seconds": 1.3,
+"seconds": 0.0,
 "meta_status": "ok",
 "meta_extractor": "hwp5html",
 "meta_table_loss": false,
-"meta_note": ""
+"meta_note": null
 }
 }
 },
@@ -8442,11 +8369,11 @@
 "n_rows": 43,
 "n_kv": 11,
 "chars": 17441,
-"seconds": 0.9,
+"seconds": 0.0,
 "meta_status": "ok",
 "meta_extractor": "pdfplumber-read",
 "meta_table_loss": false,
-"meta_note": ""
+"meta_note": null
 }
 }
 },
@@ -8465,7 +8392,7 @@
 "n_rows": 171,
 "n_kv": 26,
 "chars": 3496,
-"seconds": 0.7
+"seconds": 0.6
 },
 "hwp_naive": {
 "cell_retention": 0.9581151832460733,
@@ -8485,11 +8412,11 @@
 "n_rows": 171,
 "n_kv": 26,
 "chars": 36787,
-"seconds": 5.0,
+"seconds": 0.0,
 "meta_status": "ok",
 "meta_extractor": "hwp5html",
 "meta_table_loss": false,
-"meta_note": ""
+"meta_note": null
 }
 }
 },
@@ -8522,7 +8449,7 @@
 "meta_status": "ok",
 "meta_extractor": "hwpx",
 "meta_table_loss": false,
-"meta_note": ""
+"meta_note": null
 }
 }
 },
@@ -8530,72 +8457,72 @@
 "doc": "입찰공고문(제3차 경관정책기본계획 수립에 따른 제도개선안 도출).pdf",
 "format": "pdf",
 "declared_ext": "pdf",
-"truth_from": "제안요청서(제3차 경관정책기본계획 수립에 따른 제도개선안 도출).hwpx",
-"n_tables": 25,
+"truth_from": "입찰공고문(제3차 경관정책기본계획 수립에 따른 제도개선안 도출).hwpx",
+"n_tables": 3,
 "scores": {
 "pdftotext": {
-"cell_retention": 0.10833333333333334,
-"row_integrity": 0.0,
-"kv_association": 0.0,
-"n_cells": 120,
-"n_rows": 28,
-"n_kv": 7,
+"cell_retention": 0.7916666666666666,
+"row_integrity": 0.14285714285714285,
+"kv_association": null,
+"n_cells": 24,
+"n_rows": 7,
+"n_kv": 0,
 "chars": 6241,
 "seconds": 0.1
 },
 "pdftotext_layout": {
-"cell_retention": 0.10833333333333334,
-"row_integrity": 0.0,
-"kv_association": 0.0,
-"n_cells": 120,
-"n_rows": 28,
-"n_kv": 7,
+"cell_retention": 0.75,
+"row_integrity": 0.42857142857142855,
+"kv_association": null,
+"n_cells": 24,
+"n_rows": 7,
+"n_kv": 0,
 "chars": 11441,
 "seconds": 0.1
 },
 "pymupdf": {
-"cell_retention": 0.11666666666666667,
+"cell_retention": 1.0,
 "row_integrity": 0.0,
-"kv_association": 0.0,
-"n_cells": 120,
-"n_rows": 28,
-"n_kv": 7,
+"kv_association": null,
+"n_cells": 24,
+"n_rows": 7,
+"n_kv": 0,
 "chars": 4910,
 "seconds": 0.0
 },
 "pdfplumber": {
-"cell_retention": 0.11666666666666667,
-"row_integrity": 0.0,
-"kv_association": 0.0,
-"n_cells": 120,
-"n_rows": 28,
-"n_kv": 7,
+"cell_retention": 0.875,
+"row_integrity": 0.5714285714285714,
+"kv_association": null,
+"n_cells": 24,
+"n_rows": 7,
+"n_kv": 0,
 "chars": 5739,
 "seconds": 0.4
 },
 "pdfplumber_tables": {
-"cell_retention": 0.11666666666666667,
-"row_integrity": 0.0,
-"kv_association": 0.0,
-"n_cells": 120,
-"n_rows": 28,
-"n_kv": 7,
+"cell_retention": 0.9583333333333334,
+"row_integrity": 0.5714285714285714,
+"kv_association": null,
+"n_cells": 24,
+"n_rows": 7,
+"n_kv": 0,
 "chars": 5850,
-"seconds": 0.3
+"seconds": 0.4
 },
 "dpurix": {
-"cell_retention": 0.11666666666666667,
-"row_integrity": 0.0,
-"kv_association": 0.0,
-"n_cells": 120,
-"n_rows": 28,
-"n_kv": 7,
+"cell_retention": 0.9583333333333334,
+"row_integrity": 0.8571428571428571,
+"kv_association": null,
+"n_cells": 24,
+"n_rows": 7,
+"n_kv": 0,
 "chars": 5794,
-"seconds": 0.4,
+"seconds": 0.0,
 "meta_status": "ok",
 "meta_extractor": "pdfplumber-read",
 "meta_table_loss": false,
-"meta_note": ""
+"meta_note": null
 }
 }
 },
@@ -8628,7 +8555,7 @@
 "meta_status": "ok",
 "meta_extractor": "hwpx",
 "meta_table_loss": false,
-"meta_note": ""
+"meta_note": null
 }
 }
 },
@@ -8661,7 +8588,7 @@
 "meta_status": "ok",
 "meta_extractor": "hwpx",
 "meta_table_loss": false,
-"meta_note": ""
+"meta_note": null
 }
 }
 },
@@ -8694,7 +8621,7 @@
 "meta_status": "ok",
 "meta_extractor": "hwpx",
 "meta_table_loss": false,
-"meta_note": ""
+"meta_note": null
 }
 }
 },
@@ -8727,7 +8654,7 @@
 "meta_status": "ok",
 "meta_extractor": "hwpx",
 "meta_table_loss": false,
-"meta_note": ""
+"meta_note": null
 }
 }
 },
@@ -8760,7 +8687,7 @@
 "meta_status": "ok",
 "meta_extractor": "hwpx",
 "meta_table_loss": false,
-"meta_note": ""
+"meta_note": null
 }
 }
 },
@@ -8793,7 +8720,7 @@
 "meta_status": "ok",
 "meta_extractor": "hwpx",
 "meta_table_loss": false,
-"meta_note": ""
+"meta_note": null
 }
 }
 },
@@ -8826,7 +8753,7 @@
 "meta_status": "ok",
 "meta_extractor": "hwpx",
 "meta_table_loss": false,
-"meta_note": ""
+"meta_note": null
 }
 }
 },
@@ -8859,7 +8786,7 @@
 "meta_status": "ok",
 "meta_extractor": "hwpx",
 "meta_table_loss": false,
-"meta_note": ""
+"meta_note": null
 }
 }
 },
@@ -8892,7 +8819,7 @@
 "meta_status": "ok",
 "meta_extractor": "hwpx",
 "meta_table_loss": false,
-"meta_note": ""
+"meta_note": null
 }
 }
 },
@@ -8925,7 +8852,7 @@
 "meta_status": "ok",
 "meta_extractor": "hwpx",
 "meta_table_loss": false,
-"meta_note": ""
+"meta_note": null
 }
 }
 },
@@ -8958,7 +8885,7 @@
 "meta_status": "ok",
 "meta_extractor": "hwpx",
 "meta_table_loss": false,
-"meta_note": ""
+"meta_note": null
 }
 }
 },
@@ -8991,7 +8918,7 @@
 "meta_status": "ok",
 "meta_extractor": "hwpx",
 "meta_table_loss": false,
-"meta_note": ""
+"meta_note": null
 }
 }
 },
@@ -9024,7 +8951,7 @@
 "meta_status": "ok",
 "meta_extractor": "hwpx",
 "meta_table_loss": false,
-"meta_note": ""
+"meta_note": null
 }
 }
 },
@@ -9063,11 +8990,11 @@
 "n_rows": 13,
 "n_kv": 0,
 "chars": 12710,
-"seconds": 0.4,
+"seconds": 0.0,
 "meta_status": "ok",
 "meta_extractor": "hwp5html",
 "meta_table_loss": false,
-"meta_note": ""
+"meta_note": null
 }
 }
 },
@@ -9100,7 +9027,7 @@
 "meta_status": "ok",
 "meta_extractor": "hwpx",
 "meta_table_loss": false,
-"meta_note": ""
+"meta_note": null
 }
 }
 },
@@ -9139,11 +9066,11 @@
 "n_rows": 8,
 "n_kv": 0,
 "chars": 33265,
-"seconds": 1.3,
+"seconds": 0.0,
 "meta_status": "ok",
 "meta_extractor": "hwp5html",
 "meta_table_loss": false,
-"meta_note": ""
+"meta_note": null
 }
 }
 },
@@ -9182,11 +9109,11 @@
 "n_rows": 6,
 "n_kv": 0,
 "chars": 32344,
-"seconds": 1.2,
+"seconds": 0.0,
 "meta_status": "ok",
 "meta_extractor": "hwp5html",
 "meta_table_loss": false,
-"meta_note": ""
+"meta_note": null
 }
 }
 },
@@ -9225,11 +9152,11 @@
 "n_rows": 6,
 "n_kv": 0,
 "chars": 32344,
-"seconds": 1.2,
+"seconds": 0.0,
 "meta_status": "ok",
 "meta_extractor": "hwp5html",
 "meta_table_loss": false,
-"meta_note": ""
+"meta_note": null
 }
 }
 },
@@ -9268,11 +9195,11 @@
 "n_rows": 8,
 "n_kv": 0,
 "chars": 34399,
-"seconds": 1.4,
+"seconds": 0.0,
 "meta_status": "ok",
 "meta_extractor": "hwp5html",
 "meta_table_loss": false,
-"meta_note": ""
+"meta_note": null
 }
 }
 },
@@ -9311,11 +9238,11 @@
 "n_rows": 6,
 "n_kv": 0,
 "chars": 34325,
-"seconds": 1.4,
+"seconds": 0.0,
 "meta_status": "ok",
 "meta_extractor": "hwp5html",
 "meta_table_loss": false,
-"meta_note": ""
+"meta_note": null
 }
 }
 },
@@ -9354,11 +9281,11 @@
 "n_rows": 8,
 "n_kv": 0,
 "chars": 33265,
-"seconds": 1.3,
+"seconds": 0.0,
 "meta_status": "ok",
 "meta_extractor": "hwp5html",
 "meta_table_loss": false,
-"meta_note": ""
+"meta_note": null
 }
 }
 },
@@ -9397,11 +9324,11 @@
 "n_rows": 6,
 "n_kv": 0,
 "chars": 32344,
-"seconds": 1.2,
+"seconds": 0.0,
 "meta_status": "ok",
 "meta_extractor": "hwp5html",
 "meta_table_loss": false,
-"meta_note": ""
+"meta_note": null
 }
 }
 },
@@ -9440,11 +9367,11 @@
 "n_rows": 6,
 "n_kv": 0,
 "chars": 33491,
-"seconds": 1.3,
+"seconds": 0.0,
 "meta_status": "ok",
 "meta_extractor": "hwp5html",
 "meta_table_loss": false,
-"meta_note": ""
+"meta_note": null
 }
 }
 },
@@ -9483,11 +9410,11 @@
 "n_rows": 7,
 "n_kv": 0,
 "chars": 35042,
-"seconds": 1.1,
+"seconds": 0.0,
 "meta_status": "ok",
 "meta_extractor": "hwp5html",
 "meta_table_loss": false,
-"meta_note": ""
+"meta_note": null
 }
 }
 },
@@ -9526,11 +9453,11 @@
 "n_rows": 7,
 "n_kv": 0,
 "chars": 14149,
-"seconds": 0.4,
+"seconds": 0.0,
 "meta_status": "ok",
 "meta_extractor": "hwp5html",
 "meta_table_loss": false,
-"meta_note": ""
+"meta_note": null
 }
 }
 },
@@ -9569,11 +9496,11 @@
 "n_rows": 7,
 "n_kv": 0,
 "chars": 14310,
-"seconds": 0.4,
+"seconds": 0.0,
 "meta_status": "ok",
 "meta_extractor": "hwp5html",
 "meta_table_loss": false,
-"meta_note": ""
+"meta_note": null
 }
 }
 },
@@ -9612,11 +9539,11 @@
 "n_rows": 3,
 "n_kv": 0,
 "chars": 13548,
-"seconds": 0.5,
+"seconds": 0.0,
 "meta_status": "ok",
 "meta_extractor": "hwp5html",
 "meta_table_loss": false,
-"meta_note": ""
+"meta_note": null
 }
 }
 },
@@ -9655,11 +9582,11 @@
 "n_rows": 4,
 "n_kv": 0,
 "chars": 15681,
-"seconds": 0.5,
+"seconds": 0.0,
 "meta_status": "ok",
 "meta_extractor": "hwp5html",
 "meta_table_loss": false,
-"meta_note": ""
+"meta_note": null
 }
 }
 },
@@ -9698,11 +9625,11 @@
 "n_rows": 6,
 "n_kv": 0,
 "chars": 14696,
-"seconds": 0.5,
+"seconds": 0.0,
 "meta_status": "ok",
 "meta_extractor": "hwp5html",
 "meta_table_loss": false,
-"meta_note": ""
+"meta_note": null
 }
 }
 },
@@ -9741,11 +9668,11 @@
 "n_rows": 3,
 "n_kv": 0,
 "chars": 13649,
-"seconds": 0.4,
+"seconds": 0.0,
 "meta_status": "ok",
 "meta_extractor": "hwp5html",
 "meta_table_loss": false,
-"meta_note": ""
+"meta_note": null
 }
 }
 },
@@ -9784,11 +9711,11 @@
 "n_rows": 0,
 "n_kv": 0,
 "chars": 6497,
-"seconds": 0.2,
+"seconds": 0.0,
 "meta_status": "ok",
 "meta_extractor": "hwp5html",
 "meta_table_loss": false,
-"meta_note": ""
+"meta_note": null
 }
 }
 },
@@ -9827,11 +9754,11 @@
 "n_rows": 22,
 "n_kv": 2,
 "chars": 10924,
-"seconds": 0.4,
+"seconds": 0.0,
 "meta_status": "ok",
 "meta_extractor": "hwp5html",
 "meta_table_loss": false,
-"meta_note": ""
+"meta_note": null
 }
 }
 },
@@ -9870,11 +9797,11 @@
 "n_rows": 8,
 "n_kv": 0,
 "chars": 13210,
-"seconds": 0.3,
+"seconds": 0.0,
 "meta_status": "ok",
 "meta_extractor": "hwp5html",
 "meta_table_loss": false,
-"meta_note": ""
+"meta_note": null
 }
 }
 },
@@ -9913,11 +9840,11 @@
 "n_rows": 8,
 "n_kv": 0,
 "chars": 12737,
-"seconds": 0.3,
+"seconds": 0.0,
 "meta_status": "ok",
 "meta_extractor": "hwp5html",
 "meta_table_loss": false,
-"meta_note": ""
+"meta_note": null
 }
 }
 },
@@ -9956,11 +9883,11 @@
 "n_rows": 10,
 "n_kv": 0,
 "chars": 8911,
-"seconds": 0.3,
+"seconds": 0.0,
 "meta_status": "ok",
 "meta_extractor": "hwp5html",
 "meta_table_loss": false,
-"meta_note": ""
+"meta_note": null
 }
 }
 },
@@ -9999,11 +9926,11 @@
 "n_rows": 0,
 "n_kv": 0,
 "chars": 33754,
-"seconds": 0.7,
+"seconds": 0.0,
 "meta_status": "ok",
 "meta_extractor": "hwp5html",
 "meta_table_loss": false,
-"meta_note": ""
+"meta_note": null
 }
 }
 }

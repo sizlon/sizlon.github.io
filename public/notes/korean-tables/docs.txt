@@ -47,7 +47,6 @@ corpus_g2b/R26BK01650650/6. 경비용역 과업지시서.hwp
 corpus_g2b/R26BK01650650/7. 근로조건 이행확약서.hwp
 corpus_g2b/R26BK01650650/8. 입찰참가신청서 및 실적증명서.hwp
 corpus_g2b/R26BK01598390/[붙임1]입찰공고문.hwp
-corpus_g2b/R26BK01598390/[붙임2]입찰공고문.pdf
 corpus_g2b/R26BK01598390/[붙임3]과업지시서.hwp
 corpus_g2b/R26BK01598390/[붙임4]제안요청서.hwp
 corpus_g2b/R26BK01598390/[붙임5]산출내역서.hwp

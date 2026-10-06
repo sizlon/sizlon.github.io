@@ -9,7 +9,9 @@ from truth import sniff
 def stem(name):
     s = os.path.splitext(name)[0].lower()
     s = re.sub(r'[\s_\-()\[\]【】「」.,·]+', '', s)
-    s = re.sub(r'^(입찰공고문|공고문|제안요청서|과업지시서|과업내용서|붙임\d*|첨부\d*)', '', s)
+    # 2026-10-06: 앞머리(입찰공고문·제안요청서·과업지시서·붙임N…)를 지우던 줄을 뺐다 — 지우면 같은 사업명의
+    # 다른 문서가 짝이 된다('입찰공고문(X).pdf' ↔ '과업지시서(X).hwp', '[붙임2]입찰공고문' ↔ '[붙임1]입찰공고문').
+    # 47쌍 중 5쌍이 그렇게 틀린 정답으로 채점됐다.
     return s
 if __name__ == '__main__':
     ap = argparse.ArgumentParser(); ap.add_argument('corpus'); ap.add_argument('--local', default=None); ap.add_argument('--docs', default='docs.txt'); ap.add_argument('--pairs', default='pairs.json')
@@ -31,5 +33,7 @@ if __name__ == '__main__':
                 else: n_pdf_unpaired += 1
     if a.local: docs += [l.strip() for l in open(a.local) if l.strip()]
     open(a.docs, 'w').write('\n'.join(docs) + '\n'); json.dump(pairs, open(a.pairs, 'w'), ensure_ascii=False, indent=0)
-    kinds = [sniff(d) for d in docs]
+    # 'LOCAL:' 접두어 = 로컬 시험셋 루트(기본 corpus_local/, 환경변수 LOCAL_DOCS_ROOT 로 재지정) — 목록에는 접두어 그대로 남긴다
+    LOCAL = os.path.expanduser(os.environ.get('LOCAL_DOCS_ROOT', 'corpus_local/'))
+    kinds = [sniff(d.replace('LOCAL:', LOCAL) if d.startswith('LOCAL:') else d) for d in docs]
     print(f'docs: {len(docs)} (hwp {kinds.count("hwp")}, hwpx {kinds.count("hwpx")}, pdf paired {kinds.count("pdf")}; pdf without hwp twin skipped {n_pdf_unpaired})')

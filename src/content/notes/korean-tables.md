@@ -1,6 +1,6 @@
 ---
-title: "표가 사라지면 RAG 는 틀린 숫자를 자신 있게 말한다 — 공고문 214건으로 잰 HWP·PDF 표 추출"
-description: "나라장터 첨부 214문서로 잰 HWP·PDF 표 추출. 범용 추출은 표 셀 85%를 버리거나 행 구조를 4%만 남깁니다."
+title: "표가 사라지면 RAG 는 틀린 숫자를 자신 있게 말한다 — 공고문 213건으로 잰 HWP·PDF 표 추출"
+description: "나라장터 첨부 213문서로 잰 HWP·PDF 표 추출. 범용 추출은 표 셀 85%를 버리거나 행 구조를 4%만 남깁니다."
 date: "2026-09-06"
 service: data
 ---
@@ -8,9 +8,11 @@ service: data
 
 한국 공공 문서는 핵심을 표에 둡니다. 평가 배점, 제출서류 목록, 가격 내역, 과업 일정. 그래서 추출 단계에서 표가 어떻게 되는지가 검색 품질 전체를 좌우합니다. 말로만 하면 누구나 하는 얘기라, 숫자로 재 봤습니다.
 
+> **정정 (2026-10-06)** — PDF 짝을 고르는 규칙이 이름 앞머리(입찰공고문·제안요청서·과업지시서·붙임N)를 지운 뒤 비교해, 47쌍 중 5쌍이 다른 문서를 정답으로 썼습니다(예: 입찰공고문 PDF 의 정답이 같은 사업의 과업지시서 HWP). 규칙을 고쳐 1쌍은 짝이 없어 빼고 4쌍은 같은 이름의 원본으로 바로잡은 46쌍으로 다시 쟀습니다. 추출기는 9월과 같은 판입니다. PDF 수치가 모두 올랐고(예: 문서마다 가장 잘한 도구 셀 0.872 → 0.946), HWP·HWPX 수치와 결론 — 같은 문서면 PDF 보다 원본을 읽어야 한다 — 은 그대로입니다. 첨부한 `prepare_corpus.py`·`pairs.json`·`docs.txt`·`results*.json` 도 고친 판입니다.
+
 ## 무엇을 쟀나
 
-- 문서: 나라장터 공고 첨부 216파일(공고 62건, 2026년 5월 이후 용역·경쟁입찰에서 무작위) 과 공정위 표준계약서·제안요청서 35파일. 채점한 것은 214문서 — HWP 108, HWPX 59, PDF 47.
+- 문서: 나라장터 공고 첨부 216파일(공고 62건, 2026년 5월 이후 용역·경쟁입찰에서 무작위) 과 공정위 표준계약서·제안요청서 35파일. 채점한 것은 213문서 — HWP 108, HWPX 59, PDF 46.
 - 정답: 추출기와 독립된 경로로 표를 읽었습니다. HWPX 는 zip 안의 XML 에서 표 셀을 직접, HWP 는 제3자 구조 파서(pyhwp)의 HTML 변환에서 `<table>` 을. PDF 는 같은 공고에 같은 이름의 HWP 원본이 있을 때만 채점하고, 그 원본의 표를 정답으로 썼습니다. 즉 "같은 문서를 PDF 로 받으면 얼마나 잃는가"를 잰 것입니다.
 - 지표 셋, 전부 자동 판정: **셀 보존율**(정답 셀의 글자가 출력에 남았나), **행 무결성**(한 행의 셀들이 출력의 같은 줄에 있나), **라벨↔숫자 짝**(평가항목과 배점처럼 한글 라벨과 숫자가 같은 줄에 있나). 세 번째가 위의 증상에 직접 닿는 지표입니다.
 - 비교한 추출기: HWP 는 pyhwp 의 hwp5txt 와 GitHub 에 흔한 나이브 추출(olefile 로 본문 스트림을 열어 문단만 긁는 방식), HWPX 는 XML 태그 제거, PDF 는 pdftotext(기본·-layout)·PyMuPDF·pdfplumber(텍스트·표 인식). 그리고 미리보아가 쓰는 추출 체인.
@@ -33,27 +35,27 @@ service: data
 
 ## 같은 문서를 PDF 로 받으면
 
-공고는 흔히 같은 문서를 HWP 와 PDF 로 둘 다 붙입니다. 47쌍에서 원본과 PDF 를 비교했습니다(문서 평균).
+공고는 흔히 같은 문서를 HWP 와 PDF 로 둘 다 붙입니다. 46쌍에서 원본과 PDF 를 비교했습니다(문서 평균).
 
 | | 셀 보존 | 행 무결성 | 라벨↔숫자 짝 |
 |---|---|---|---|
-| HWP·HWPX 원본 | 1.000 | 0.998 | 0.995 |
-| PDF, 문서마다 가장 잘한 도구 | 0.872 | – | – |
-| PDF, 미리보아 체인 | 0.819 | 0.657 | 0.558 |
-| PDF, pdfplumber 표 인식 | 0.725 | 0.672 | 0.572 |
-| PDF, pdftotext -layout | 0.729 | 0.552 | 0.605 |
+| HWP·HWPX 원본 | 1.000 | 0.998 | 0.994 |
+| PDF, 문서마다 가장 잘한 도구 | 0.946 | – | – |
+| PDF, 미리보아 체인 | 0.891 | 0.745 | 0.635 |
+| PDF, pdfplumber 표 인식 | 0.763 | 0.723 | 0.626 |
+| PDF, pdftotext -layout | 0.784 | 0.602 | 0.689 |
 
-PDF 에서는 문서마다 가장 잘한 도구를 골라 써도 셀의 13% 가 없고, 행 구조는 최대 67%, 라벨↔숫자 짝은 최대 61% 입니다. 어느 도구를 쓰느냐보다 어느 형식을 읽느냐가 더 큰 차이를 냅니다. 공고가 둘 다 붙였으면 HWP 를 읽어야 합니다.
+PDF 에서는 문서마다 가장 잘한 도구를 골라 써도 셀의 5% 가 없고, 행 구조는 최대 75%, 라벨↔숫자 짝은 최대 69% 입니다. 어느 도구를 쓰느냐보다 어느 형식을 읽느냐가 더 큰 차이를 냅니다. 공고가 둘 다 붙였으면 HWP 를 읽어야 합니다.
 
 ## 측정이 우리 결함을 둘 찾았다
 
-미리보아 체인의 첫 결과는 HWP 셀 보존 0.952, PDF 0.498 이었습니다. 100% 와 0.742 가 아니라. 그 차이가 어디서 왔는지 파 보니 둘 다 우리 코드의 결함이었습니다.
+미리보아 체인의 첫 결과는 HWP 셀 보존 0.952, PDF 0.600 이었습니다. 100% 와 0.903 이 아니라. 그 차이가 어디서 왔는지 파 보니 둘 다 우리 코드의 결함이었습니다.
 
 첫째, 확장자를 믿었습니다. 나라장터 첨부 216파일 중 5건은 이름이 `.hwpx` 인데 내용은 HWP 바이너리였고, 3건은 이름이 `.hwp` 인데 내용은 XML 이었습니다. 우리 체인은 `.hwpx` 이름을 보고 zip 을 열려다 5건 전부 실패했습니다. 첫 바이트를 보고 형식을 정하도록 고쳤습니다.
 
 둘째, PDF 6건에서 셀의 80% 를 놓쳤습니다. 처음엔 pdfplumber 가 poppler 보다 못 읽는다고 봤습니다. 원인을 파 보니 한글 2024 가 내보낸 PDF 는 낱말 사이 공백을 NUL 문자로 쓰고, pdfplumber 는 그것을 그대로 넘기고 있었습니다. poppler 는 NUL 을 공백으로 읽어서 멀쩡해 보였을 뿐입니다. 처방은 도구 교체가 아니라 NUL 을 공백으로 바꾸는 한 줄이었습니다. 원인을 보지 않고 도구를 바꿨다면 다른 문서에서 다른 것을 잃었을 겁니다.
 
-고친 뒤 같은 214문서를 다시 쟀습니다. HWP 는 셀·행·짝 모두 1.000, PDF 는 셀 0.498 에서 0.742. 움직인 문서는 결함이 지목한 그 11건뿐이고 나머지는 소수 셋째 자리까지 그대로였습니다. 측정 없이는 몰랐을 결함이고, 골든셋을 동결해 두었기에 고친 게 다른 것을 건드리지 않았다는 것도 확인됩니다.
+고친 뒤 같은 213문서를 다시 쟀습니다. HWP 는 셀·행·짝 모두 1.000, PDF 는 셀 0.600 에서 0.903. 셀이 움직인 문서는 결함이 지목한 그 14건 — 이름이 거짓인 HWP 5건과 공백을 NUL 로 쓴 한글 PDF 9건 — 뿐이고 나머지는 소수 셋째 자리까지 그대로였습니다. 측정 없이는 몰랐을 결함이고, 골든셋을 동결해 두었기에 고친 게 다른 것을 건드리지 않았다는 것도 확인됩니다.
 
 ## 처방 다섯 줄
 
@@ -83,8 +85,8 @@ PDF 에서는 문서마다 가장 잘한 도구를 골라 써도 셀의 13% 가 
 - [truth.py](/notes/korean-tables/truth.py) — 정답 표 파서(HWPX 는 XML 직접, HWP 는 pyhwp HTML). 형식은 매직 바이트로
 - [extractors.py](/notes/korean-tables/extractors.py) — 비교 추출기 8종
 - [score.py](/notes/korean-tables/score.py) — 셀 보존·행 무결성·라벨↔숫자 짝
-- [report.py](/notes/korean-tables/report.py) · [paired_stats.py](/notes/korean-tables/paired_stats.py) · [compare_before_after.py](/notes/korean-tables/compare_before_after.py) — 집계·47쌍 비교·수선 전후
+- [report.py](/notes/korean-tables/report.py) · [paired_stats.py](/notes/korean-tables/paired_stats.py) · [compare_before_after.py](/notes/korean-tables/compare_before_after.py) — 집계·46쌍 비교·수선 전후
 - [fetch_g2b.py](/notes/korean-tables/fetch_g2b.py) · [merge_corpora.py](/notes/korean-tables/merge_corpora.py) · [prepare_corpus.py](/notes/korean-tables/prepare_corpus.py) — 수집·병합·채점 목록
-- [results.json](/notes/korean-tables/results.json) · [results_after.json](/notes/korean-tables/results_after.json) — 수선 전·후 214문서 채점
+- [results.json](/notes/korean-tables/results.json) · [results_after.json](/notes/korean-tables/results_after.json) — 수선 전·후 213문서 채점
 - [docs.txt](/notes/korean-tables/docs.txt) · [pairs.json](/notes/korean-tables/pairs.json) · [manifest.json](/notes/korean-tables/manifest.json) — 채점 목록·PDF 짝·공고별 첨부 목록
 - [requirements.txt](/notes/korean-tables/requirements.txt) — pymupdf·pyhwp·pdfplumber·olefile

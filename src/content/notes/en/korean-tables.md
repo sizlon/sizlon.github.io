@@ -1,6 +1,6 @@
 ---
-title: "When the table disappears, RAG states a wrong number with confidence — HWP and PDF table extraction measured on 214 Korean tender documents"
-description: "Tables in 214 Korean tender files: generic HWP extraction drops 85% of cells."
+title: "When the table disappears, RAG states a wrong number with confidence — HWP and PDF table extraction measured on 213 Korean tender documents"
+description: "Tables in 213 Korean tender files: generic HWP extraction drops 85% of cells."
 date: "2026-09-06"
 service: data
 eyebrow: "Note"
@@ -10,9 +10,11 @@ Ask a RAG system "what is the technical-evaluation score weight in this tender?"
 
 Korean public-sector documents put what matters in tables: score weights, required-document lists, price breakdowns, work schedules. So what happens to tables at the extraction step decides the retrieval quality of everything downstream. That is easy to assert and rarely measured, so I measured it.
 
+> **Correction (2026-10-06)** — The rule that paired each PDF with its original compared names after stripping the leading document-type word (notice, RFP, statement of work, attachment N), so 5 of the 47 pairs were scored against a different document (e.g. a notice PDF against the same project's statement-of-work HWP). With the rule fixed, one pair had no true original and was dropped and four were re-pointed to the same-named original; the 46 pairs were re-scored with the same extractor versions as in September. Every PDF figure went up (best tool per document, cells: 0.872 → 0.946); the HWP/HWPX figures and the conclusion — read the original, not its PDF — are unchanged. The attached `prepare_corpus.py`, `pairs.json`, `docs.txt` and `results*.json` are the corrected versions.
+
 ## What was measured
 
-- Documents: 216 attachments from 62 KONEPS (Korean national procurement) notices, sampled at random from service-contract competitive bids after May 2026, plus 35 local files (Fair Trade Commission standard contracts and RFPs). Scored: 214 documents — 108 HWP, 59 HWPX, 47 PDF.
+- Documents: 216 attachments from 62 KONEPS (Korean national procurement) notices, sampled at random from service-contract competitive bids after May 2026, plus 35 local files (Fair Trade Commission standard contracts and RFPs). Scored: 213 documents — 108 HWP, 59 HWPX, 46 PDF.
 - Ground truth came from a path independent of the extractors. For HWPX, table cells read straight from the XML inside the zip; for HWP, `<table>` elements from a third-party structural parser's (pyhwp) HTML conversion. A PDF was scored only when the same notice attached an HWP original with the same name, and that original's tables served as the PDF's truth — so the PDF number answers "how much do you lose by receiving the same document as PDF?"
 - Three metrics, all judged automatically: **cell retention** (did the cell's characters survive), **row integrity** (are a row's cells on the same output line), and **label–number pairing** (is a Korean label such as an evaluation item on the same line as its number). The third one is the metric behind the symptom above.
 - Extractors compared: for HWP, pyhwp's `hwp5txt` and the naive approach common on GitHub (open the body stream with olefile and scrape paragraph records); for HWPX, XML tag stripping; for PDF, pdftotext (plain and `-layout`), PyMuPDF, and pdfplumber (text and table detection). And the extraction chain that Miriboa runs.
@@ -35,27 +37,27 @@ The third row shows what happens when a table is carried as a table. Read the fo
 
 ## Receiving the same document as PDF
 
-Notices often attach the same document as both HWP and PDF. For 47 such pairs, the original against its PDF (per-document mean):
+Notices often attach the same document as both HWP and PDF. For 46 such pairs, the original against its PDF (per-document mean):
 
 | | Cell retention | Row integrity | Label–number pairing |
 |---|---|---|---|
-| HWP / HWPX original | 1.000 | 0.998 | 0.995 |
-| PDF, best tool per document | 0.872 | – | – |
-| PDF, Miriboa chain | 0.819 | 0.657 | 0.558 |
-| PDF, pdfplumber table detection | 0.725 | 0.672 | 0.572 |
-| PDF, pdftotext -layout | 0.729 | 0.552 | 0.605 |
+| HWP / HWPX original | 1.000 | 0.998 | 0.994 |
+| PDF, best tool per document | 0.946 | – | – |
+| PDF, Miriboa chain | 0.891 | 0.745 | 0.635 |
+| PDF, pdfplumber table detection | 0.763 | 0.723 | 0.626 |
+| PDF, pdftotext -layout | 0.784 | 0.602 | 0.689 |
 
-From the PDF, even choosing the best tool for each document leaves 13% of cells missing, row structure tops out at 67%, and label–number pairing at 61%. Which format you read matters more than which tool you use. When a notice attaches both, read the HWP.
+From the PDF, even choosing the best tool for each document leaves 5% of cells missing, row structure tops out at 75%, and label–number pairing at 69%. Which format you read matters more than which tool you use. When a notice attaches both, read the HWP.
 
 ## The measurement found two defects in our own chain
 
-Miriboa's first numbers were 0.952 cell retention on HWP and 0.498 on PDF — not 1.000 and 0.742. Tracing the gap showed both to be our own bugs.
+Miriboa's first numbers were 0.952 cell retention on HWP and 0.600 on PDF — not 1.000 and 0.903. Tracing the gap showed both to be our own bugs.
 
 First, the chain trusted file extensions. Of the 216 attachments, five were named `.hwpx` but were HWP binaries inside, and three were named `.hwp` but were XML. Our chain saw `.hwpx`, tried to open a zip, and failed on all five. It now decides the format from the first bytes.
 
 Second, it lost 80% of cells on six PDFs. My first reading was that pdfplumber reads worse than poppler. The actual cause: PDFs exported by Hangul 2024 encode the space between words as a NUL character, and pdfplumber passes it through untouched. Poppler maps NUL to a space, which is why it looked fine. The fix was not a tool swap but one line that turns NUL into a space. Swapping the tool without finding the cause would have lost something else on other documents.
 
-After the fix, the same 214 documents were scored again. HWP went to 1.000 on all three metrics; PDF cell retention from 0.498 to 0.742. The documents that moved were exactly the eleven the defects pointed at; everything else was unchanged to the third decimal. Without the measurement the defects would have stayed unknown, and because the golden set was frozen, it also shows the fix touched nothing else.
+After the fix, the same 213 documents were scored again. HWP went to 1.000 on all three metrics; PDF cell retention from 0.600 to 0.903. The documents whose cell retention moved were exactly the fourteen the defects pointed at — five mislabeled HWP files and nine Hangul-exported PDFs with NUL spaces; everything else was unchanged to the third decimal. Without the measurement the defects would have stayed unknown, and because the golden set was frozen, it also shows the fix touched nothing else.
 
 ## The fix, in five lines
 
@@ -85,8 +87,8 @@ Scripts, scoring results and the document list are published as used. The 216 KO
 - [truth.py](/notes/korean-tables/truth.py) — ground-truth table parser (HWPX from XML, HWP via pyhwp HTML); format by magic bytes
 - [extractors.py](/notes/korean-tables/extractors.py) — the eight extractors compared
 - [score.py](/notes/korean-tables/score.py) — cell retention · row integrity · label–number pairing
-- [report.py](/notes/korean-tables/report.py) · [paired_stats.py](/notes/korean-tables/paired_stats.py) · [compare_before_after.py](/notes/korean-tables/compare_before_after.py) — aggregation · 47-pair comparison · before/after
+- [report.py](/notes/korean-tables/report.py) · [paired_stats.py](/notes/korean-tables/paired_stats.py) · [compare_before_after.py](/notes/korean-tables/compare_before_after.py) — aggregation · 46-pair comparison · before/after
 - [fetch_g2b.py](/notes/korean-tables/fetch_g2b.py) · [merge_corpora.py](/notes/korean-tables/merge_corpora.py) · [prepare_corpus.py](/notes/korean-tables/prepare_corpus.py) — collection · merge · scoring list
-- [results.json](/notes/korean-tables/results.json) · [results_after.json](/notes/korean-tables/results_after.json) — 214 documents scored before and after the fix
+- [results.json](/notes/korean-tables/results.json) · [results_after.json](/notes/korean-tables/results_after.json) — 213 documents scored before and after the fix
 - [docs.txt](/notes/korean-tables/docs.txt) · [pairs.json](/notes/korean-tables/pairs.json) · [manifest.json](/notes/korean-tables/manifest.json) — scoring list · PDF pairs · per-notice attachment list
 - [requirements.txt](/notes/korean-tables/requirements.txt) — pymupdf · pyhwp · pdfplumber · olefile
