@@ -156,7 +156,8 @@ page and service pages — do not repeat them here.
 **Service page blocks (2026-09-07 improvement pass, plan in
 `~/Projects/docs/sizlon_io_개선_2단계_변경안.md`):** every service ends with an
 "이 다음에 보통 필요한 것" block (`content.ko.services.<key>.next`) linking the
-other two services — rendered even in RTM `brief` mode. "실측 노트" sits right
+other two services — rendered even in RTM `brief` mode. Exception: the data-feed
+page dropped it (and its "실측 노트" block) on 2026-10-07, owner decision. "실측 노트" sits right
 under "진행". The search page carries a **free-scan entry** (`scan*` keys) that
 reuses the contact form: `/contact/?service=search&scan=1#form` preselects the
 topic, prefills `contact.scanTemplate` in the message box and prefixes the
