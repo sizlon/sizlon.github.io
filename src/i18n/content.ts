@@ -528,13 +528,7 @@ export const content = {
         ],
         heroProofLink: { label: '2026 상반기 탈락 리포트', href: 'https://miriboa.sizlon.io/reports/2026-h1-disqualification/' },
         engineLink: { label: '요구사항 대조 엔진 보기', href: '/engine/' },
-        notesH: '실측 노트',
-        notes: [
-          { label: '표가 사라지면 RAG 는 틀린 숫자를 자신 있게 말한다 — 공고문 213건으로 잰 HWP·PDF 표 추출', href: '/notes/korean-tables/', line: '범용 추출은 셀 85% 를 버리거나 행 구조 4% 만 남긴다. 같은 문서의 PDF 는 행 구조가 최대 75%.' },
-          // 개찰 데이터 관측은 독자가 입찰 업체라 미리보아에 일회성 리포트로 올렸다(09-06 결정). 여기선 링크만 —
-          // 이 피드가 매달 내는 표의 실물(관측치 + 데이터의 사정)이라는 뜻에서.
-          { label: '이 피드가 낸 표의 실물 — 나라장터 개찰 데이터 6개월 관측 (미리보아 리포트)', href: 'https://miriboa.sizlon.io/reports/2026-h1-bid-opening/', line: '응찰 1,747만 행·공고 183,240건. 관측치 셋과, 숫자 옆에 같이 나가는 데이터의 사정 셋(빈 날·수집 시점·미확정).' },
-        ],
+        // 10-07 오너: 실측 노트 절 삭제(표 추출 노트·개찰 관측 리포트 링크).
         principlesH: '데이터 수집 원칙',
         principles: [
           '로그인 뒤의 데이터, 개인정보, 약관상 수집 금지 사이트, 저작권 있는 본문 전문은 금액과 무관하게 받지 않습니다.',
