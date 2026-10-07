@@ -42,7 +42,8 @@ const effort = 'effortH' in c ? c : null;
 
 // Service + Offer JSON-LD (2026-09-06). 숫자는 content 의 offer(표시 price 와 같은 값) 에서만.
 const url = new URL(Astro.url.pathname, Astro.site).href;
-const offer = c.offer;
+// 화면에 가격이 없는 페이지(2026-10-07, data)는 offer 키를 빼서 Offer 노드도 내지 않는다.
+const offer = 'offer' in c ? c.offer : null;
 // FAQPage(2026-09-07, 개선 작업 G) — 화면에 FAQ 가 있는 페이지만(brief 는 FAQ 를 안 그린다).
 const faqSchema = !brief && c.faq.length > 0
   ? [{
@@ -64,20 +65,22 @@ const serviceSchema = {
   url,
   provider: { '@id': ORG_ID },
   areaServed: 'KR',
-  offers: {
-    '@type': 'Offer',
-    url,
-    priceCurrency: 'KRW',
-    priceSpecification: {
-      '@type': 'UnitPriceSpecification',
+  ...(offer ? {
+    offers: {
+      '@type': 'Offer',
+      url,
       priceCurrency: 'KRW',
-      minPrice: offer.minPrice,
-      maxPrice: offer.maxPrice,
-      valueAddedTaxIncluded: false,
-      ...('unitCode' in offer ? { unitCode: offer.unitCode } : {}),
-      ...('unitText' in offer ? { unitText: offer.unitText } : {}),
+      priceSpecification: {
+        '@type': 'UnitPriceSpecification',
+        priceCurrency: 'KRW',
+        minPrice: offer.minPrice,
+        maxPrice: offer.maxPrice,
+        valueAddedTaxIncluded: false,
+        ...('unitCode' in offer ? { unitCode: offer.unitCode } : {}),
+        ...('unitText' in offer ? { unitText: offer.unitText } : {}),
+      },
     },
-  },
+  } : {}),
 };
 ---
 

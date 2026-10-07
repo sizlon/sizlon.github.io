@@ -125,6 +125,8 @@ URL 301 with the expected `Location` (those 301s come from Cloudflare, see
   the `schema` prop — `/founder` passes `Person` + `ProfilePage` (`FOUNDER_ID`),
   the service pages pass `Service` + `Offer` whose numbers come from
   `content.ko.services.*.offer` (keep them equal to the displayed `price` line).
+  A service with no `offer` key emits `Service` only — the data-feed page since
+  2026-10-07, when its prices left the page.
 - **OG image is `public/og-v10.png`** (1200×630, Korean hero line "검색 시스템을 고칩니다. …", 2026-10-07; rendered with
   `google-chrome --headless --window-size=1200,630 --screenshot` from an HTML mock, Noto Sans CJK KR;
   `og-v9.png`·`og-v8.png`·`og-v7.png`·`og-v6.png`·`og-v5.png`·`og-v4.png`·`og-v3.png` kept for rollback). The old `og.png` carried the pre-v3 English
