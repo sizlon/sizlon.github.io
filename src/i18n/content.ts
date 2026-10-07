@@ -206,18 +206,16 @@ export const content = {
       usesLabel: '이 시스템으로 하는 일',
       systems: [
         {
-          key: 'search', no: '하는 일', name: '한국어 검색 품질 진단', featured: true, usesLabel: '서비스',
+          // 10-07 오너: '서비스' 카드·무료 스캔 링크를 빼고 검색 진단 페이지 바로가기 하나만(이름이 이미 '한국어 검색 품질 진단').
+          key: 'search', no: '하는 일', name: '한국어 검색 품질 진단', featured: true,
+          sysLink: { href: '/services/search/', label: '검색 진단 바로가기' },
           text: '고객이 운영하는 Elasticsearch·OpenSearch 검색에서, 형태소 분석·사용자 사전·동의어 때문에 못 찾는 이유를 재고 고칩니다. 시즐론이 운영하는 검색 시스템이 아니라 고객의 검색을 진단하는 일입니다.',
           facts: [
             { v: 'P@10 0.906 → 0.986', note: '실측 실험 — 공고명 183,240건, Nori 기본 vs 사용자 사전(loose, 실패 질의)', href: '/notes/korean-tokenizer/' },
             { v: '실험 재현 저장소 공개', note: 'sizlon/nori-user-dictionary-eval', href: '/work/#nori-user-dictionary-eval' },
             { v: '매체 7,000곳 · 일 20만 건 색인', note: '前 코리아뉴스와이어 수집·검색 인프라 구축·운영' },
           ],
-          uses: [
-            { key: 'search', situation: '검색이 못 찾을 때', name: '검색 품질 진단', terms: '2주 · 250만원', deliverable: '진단 보고서 + 즉시 적용 설정' },
-          ],
-          // 통화 전 무료 스캔 진입점(2026-09-07, 개선 작업 B)
-          scan: { href: '/contact/?service=search&scan=1#form', label: '통화 전에 무료 스캔부터 받을 수 있습니다' },
+          uses: [],
         },
         {
           key: 'pipeline', no: '01', name: '데이터 파이프라인',
