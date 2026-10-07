@@ -60,7 +60,6 @@ const hrefOf = (key: string) => servicePages.find((s) => s.key === key)?.href ??
         </article>
       ))}
     </div>
-    <p class="vat eyebrow">{tr.common.vatNote}</p>
   </section>
 
   <section class="section wrap work tight">
@@ -112,7 +111,6 @@ const hrefOf = (key: string) => servicePages.find((s) => s.key === key)?.href ??
   .more .arrow { transition: transform 0.15s ease; display: inline-block; }
   .card:hover .more .arrow { transform: translateX(3px); }
   .scan a, .sys-link a { color: var(--color-ink); text-decoration: none; border-bottom: 1px solid var(--color-recovered); font-size: var(--step--1); }
-  .vat { margin-top: 1.25rem; }
   .work { display: flex; flex-direction: column; gap: 1rem; align-items: flex-start; }
   /* 근거·작업 방식·만든 것들은 짧은 절이라 기본 section 여백이 과하다 */
   .tight { padding-block: clamp(2rem, 1.5rem + 2vw, 3.25rem); }

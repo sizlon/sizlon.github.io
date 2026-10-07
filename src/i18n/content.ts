@@ -238,7 +238,7 @@ export const content = {
           ],
           factsNote: '감리 산출물 기준 정확도 측정치는 아직 없습니다.',
           uses: [
-            { key: 'rtm', situation: '감리 앞', name: '요구사항 반영 사전 검토', terms: '설계단계 감리 1회 120~300만원(요구사항 수 구간별)', deliverable: '추적표 검토본(행마다 판정·근거) + 지적 예상 목록' },
+            { key: 'rtm', situation: '감리 앞', name: '요구사항 반영 사전 검토', terms: '설계단계 감리 1회', deliverable: '추적표 검토본(행마다 판정·근거) + 지적 예상 목록' },
             { key: 'miriboa', situation: '입찰 마감 앞', name: '입찰 서류 검증 — 미리보아', terms: '셀프서비스 · 원문 근거를 붙인 기계 판정', deliverable: '공고 요구조건마다 응답 여부 판정 + 근거 인용 리포트' },
           ],
         },
