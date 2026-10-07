@@ -244,7 +244,7 @@ export const content = {
     services: {
       search: {
         // <title> 은 접미 "— 시즐론" 이 붙으니 대시 없이 짧게(모바일 SERP ~30자). h1 은 별도.
-        title: 'Elasticsearch·OpenSearch 검색·RAG 품질 진단',
+        title: 'Elasticsearch 한국어 검색·RAG 품질 진단',   // 10-07: 모바일 SERP 길이(OpenSearch 는 설명에)
         description: 'Elasticsearch·OpenSearch·Nori 검색·RAG 품질 진단. 실패 질의 골든셋으로 전후를 재고 2주 안에 설정을 고칩니다.',
         eyebrow: '서비스 · 검색 품질 진단',
         h1: '검색·RAG 품질 진단 — Elasticsearch · OpenSearch',
@@ -804,7 +804,7 @@ export const content = {
       updated: '2026-09-17',
       terms: {
         title: '이용약관',
-        description: 'Sizlon 웹사이트 이용에 관한 약관.',
+        description: '시즐론(Sizlon) 웹사이트 이용약관. 서비스 제공 방식, 제출 정보, 보증의 부인과 책임의 제한, 준거법과 관할.',
         lede: '본 약관은 본 웹사이트(sizlon.io) 이용과 이를 통한 정보 요청에 적용됩니다. 시즐론이 수행하는 서비스(검색 품질 진단·요구사항 반영 사전 검토·데이터 피드)는 견적서와 개별 계약이, Sizlon 제품의 사용은 각 납품 시 제공되는 별도 라이선스 계약이 규율합니다.',
         sections: [
           { h: '운영자', p: ['본 웹사이트는 주식회사 시즐론이 운영합니다 — 대표: 이광연 · 사업자등록번호 420-86-03864 · 전화 02-702-5795 · 서울특별시 용산구 원효로 189-7, 302호 · hello@sizlon.io.'] },
@@ -894,7 +894,7 @@ export const content = {
     },
     notesIndex: {
       title: 'Blog on Korean search, RAG and table extraction',
-      description: 'Sizlon blog: Nori dictionaries and HWP/PDF table extraction measured on real Korean corpora.',
+      description: 'Sizlon blog: Nori dictionaries and HWP/PDF table extraction on Korean corpora.',
       eyebrow: 'Blog',
       h1: 'Blog',
       lede: 'What we measure, document and think about while building Sizlon. Posts with numbers ship with the files to reproduce them.',
