@@ -218,14 +218,14 @@ export const content = {
           uses: [],
         },
         {
+          // 10-07 오너: 가격이 든 카드를 빼고 데이터 피드 페이지 바로가기 하나만(검색 칸과 같은 모양).
           key: 'pipeline', no: '01', name: '데이터 파이프라인',
+          sysLink: { href: '/services/data/', label: '데이터 피드 바로가기' },
           text: 'API가 있으면 API로, 없으면 자체 자동 복구 크롤러로 수집하고, HWP·PDF 첨부는 표째 풀어 매일 갱신합니다.',
           facts: [
             { v: '응찰 73,373건 · 업체 13,220곳', note: '나라장터 개찰 원자료 6개월분 수집·첨부 파싱·집계' },
           ],
-          uses: [
-            { key: 'data', situation: '데이터가 매달 필요할 때', name: '데이터 피드', terms: '구축 100~300만원 + 월 30~80만원', deliverable: '매달 오는 정제 데이터' },
-          ],
+          uses: [],
         },
         {
           key: 'engine', no: '02', name: '요구사항 대조 엔진', href: '/engine/', hrefLabel: '엔진이 하는 일과 하지 않는 일',
