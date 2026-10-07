@@ -114,7 +114,8 @@ URL 301 with the expected `Location` (those 301s come from Cloudflare, see
 ## Structure & where things go
 
 - `src/config/site.ts` — nav, `servicePages` (service → contact topic key),
-  phone/email, `bookingUrl` (empty → CTAs fall back to `/contact/#form`),
+  phone/email (the 20분 통화 예약 calendar link and `bookingHref()` were removed
+  site-wide 2026-10-07, owner decision — contact is phone, the form and the header button),
   `upworkUrl` (empty → hidden on `/en/`), contact endpoint + Turnstile key.
 - `src/pages/**` — thin route files (Korean at root, `en/index.astro`, and the
   redirect stubs). `src/sections/**` — page bodies. `src/components/**` — Nav,

@@ -3,7 +3,7 @@
 // 순서 = PM 이 읽으며 떠올리는 질문: 뭔데 → 뭘 찾아 주나 → 감리원과 같은가 → 내 사업에 맞나 → 뭘 주나 → 뭘 받나 → 안 하는 것 → 얼마 → 자료 → FAQ → 통화.
 // 범위의 정본은 docs/plans/rtm-intake/deliverable-coverage.md(✅ 줄 + DB 정합). 가격·환급 값과 JSON-LD offer 는 services.rtm 그대로 쓴다.
 import Base from '../layouts/Base.astro';
-import { site, bookingHref, ORG_ID } from '../config/site';
+import { site, ORG_ID } from '../config/site';
 import { content } from '../i18n/content';
 
 const tr = content.ko;
@@ -19,7 +19,6 @@ const schema = [
   },
   { '@type': 'FAQPage', '@id': `${url}#faq`, mainEntity: p.faq.map((f) => ({ '@type': 'Question', name: f.q, acceptedAnswer: { '@type': 'Answer', text: f.a } })) },
 ];
-const book = bookingHref('rtm');
 ---
 
 <Base title={c.title} description={c.description} lang="ko" schema={schema}>
@@ -34,7 +33,6 @@ const book = bookingHref('rtm');
         ))}
       </dl>
       <div class="cta-row">
-        <a class="btn btn-primary" href={book}>{p.cta} <span class="arrow">&rarr;</span></a>
         <a class="btn btn-ghost" href={`tel:${site.contactPhoneIntl}`}>{tr.common.call} {site.contactPhone}</a>
       </div>
       <p class="cta-note">{p.ctaNote}</p>
@@ -163,7 +161,6 @@ const book = bookingHref('rtm');
       <h2>{p.h1}</h2>
       <p class="cta-note">{p.ctaNote}</p>
       <div class="cta-row">
-        <a class="btn btn-primary" href={book}>{p.cta} <span class="arrow">&rarr;</span></a>
         <a class="btn btn-ghost" href={`tel:${site.contactPhoneIntl}`}>{site.contactPhone}</a>
       </div>
     </div>

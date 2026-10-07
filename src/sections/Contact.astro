@@ -20,10 +20,6 @@ const turnstileKey = site.turnstileSiteKey;
       <h1>{c.h1}</h1>
       <a class="phone" href={`tel:${site.contactPhoneIntl}`}>{site.contactPhone}</a>
       <p class="hours">{c.phoneLabel} · {c.phoneMissed}</p>
-      <p class="book">{c.bookLead} {site.bookingUrl
-        ? <a class="btn btn-primary" href={site.bookingUrl}>{c.book} <span class="arrow">&rarr;</span></a>
-        : <a class="btn btn-primary" href="#form">{c.book} <span class="arrow">&darr;</span></a>}
-      </p>
     </div>
   </section>
 
@@ -192,7 +188,6 @@ const turnstileKey = site.turnstileSiteKey;
   .head { display: flex; flex-direction: column; gap: 0.9rem; max-width: var(--measure); align-items: flex-start; }
   .phone { font-family: var(--font-display); font-size: var(--step-4); font-weight: 600; color: var(--color-recovered); text-decoration: none; letter-spacing: -0.02em; }
   .hours { color: var(--slate-on-dark); }
-  .book { display: flex; align-items: center; gap: 1rem; flex-wrap: wrap; margin-top: 0.75rem; color: var(--slate-on-dark); }
   .grid { display: grid; grid-template-columns: 1fr 1fr; gap: clamp(2rem, 1rem + 4vw, 4rem); align-items: start; }
   [hidden] { display: none !important; }
   .copy { display: flex; flex-direction: column; gap: 1rem; max-width: 46ch; }

@@ -65,7 +65,6 @@ export const content = {
         { k: '납기', v: '영업일 2일', note: '자료를 다 받은 날부터' },
         { k: 'PM 손', v: '반나절', note: '자료 전달과 결과 확인(추정)' },
       ],
-      cta: '5분 통화 — 도울 수 있는 건인지 먼저 확인',
       ctaNote: '추적표가 어느 열까지 채워졌는지, 감리까지 몇 주 남았는지 두 가지만 여쭙니다.',
 
       findH: '이런 문장이 나옵니다',
@@ -156,7 +155,6 @@ export const content = {
       menu: '메뉴',
       skip: '본문으로 건너뛰기',
       call: '전화',
-      book: '20분 통화 예약',
       hours: '평일 09–18',
       email: '이메일',
       langSwitch: 'EN',
@@ -656,7 +654,6 @@ export const content = {
         { label: '정보시스템 감리에서 무엇이 지적되나', href: '/notes/audit-findings/' },
         { label: 'pyhwp 포크 — HWP 파서(공개 작업)', href: '/work/#pyhwp' },
       ],
-      cta: '20분 통화 예약',
     },
     about: {
       title: '회사 소개',
@@ -686,7 +683,6 @@ export const content = {
         { k: '전화', v: '02-702-5795 — 평일 09:00–18:00' },
         { k: '이메일', v: 'hello@sizlon.io' },
       ],
-      cta: '20분 통화 예약',
     },
 
     // ── 대표 소개 (/founder, 2026-09-06) — 이름 검색에 걸리는 페이지. 회사 소개와 분리.
@@ -744,7 +740,6 @@ export const content = {
       ],
       workLine: '누구나 열어 볼 수 있는 코드·명세·실험은 공개 작업에 따로 모았습니다.',
       workLink: '공개 작업 보기',
-      cta: '20분 통화 예약',
     },
 
     // ── 증거 글 공통 문구 (/notes/*, 2026-09-06) ────────────────────────
@@ -766,13 +761,11 @@ export const content = {
     // ── 문의 (v3 §3.7) ─────────────────────────────────────────────────
     contact: {
       title: '문의',
-      description: '시즐론 문의 — 전화 02-702-5795(평일 09–18), 20분 통화 예약, 문의 폼.',
+      description: '시즐론 문의 — 전화 02-702-5795(평일 09–18), 문의 폼.',
       eyebrow: '문의',
       h1: '전화가 가장 빠릅니다.',
       phoneLabel: '평일 09:00–18:00',
       phoneMissed: '부재중이면 예약 링크를 문자로 보내드립니다.',
-      bookLead: '통화 시간을 미리 잡으시려면',
-      book: '20분 통화 예약',
       formH: '폼으로 남기기',
       labels: { name: '회사 / 담당자', email: '이메일', phone: '전화번호 (선택)', service: '상황', message: '요청 내용 (선택)' },
       servicePlaceholder: '상황 선택',
@@ -873,7 +866,6 @@ export const content = {
       menu: 'Menu',
       skip: 'Skip to content',
       call: 'Call',
-      book: 'Book a 20-minute call',
       hours: 'Weekdays 09–18 KST',
       email: 'Email',
       langSwitch: 'KO',

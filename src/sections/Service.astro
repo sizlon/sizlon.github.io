@@ -3,7 +3,7 @@ import { ext } from '../i18n/utils';
 // 서비스 페이지 공통 본문 (v3 §3.2~3.4). 세 서비스가 같은 뼈대를 쓰고 블록은
 // 내용이 비면 렌더하지 않는다. rtm 은 `brief` 로 짧은 판(제목·부제·가격·근거·CTA).
 import Base from '../layouts/Base.astro';
-import { site, servicePages, bookingHref, ORG_ID } from '../config/site';
+import { site, servicePages, ORG_ID } from '../config/site';
 import { content, type ServiceKey } from '../i18n/content';
 
 interface Props { service: ServiceKey }
@@ -113,7 +113,6 @@ const serviceSchema = {
             <>
               <p class="vat eyebrow">{tr.common.vatNote}</p>
               <div class="cta-row">
-                <a class="btn btn-primary" href={bookingHref(topic)}>{tr.common.book} <span class="arrow">&rarr;</span></a>
                 <a class="btn btn-ghost" href={`tel:${site.contactPhoneIntl}`}>{tr.common.call} {site.contactPhone}</a>
               </div>
               {scan && <p class="scan-link"><a href="#scan">{scan.scanLink} &rarr;</a></p>}
@@ -319,7 +318,6 @@ const serviceSchema = {
     <div class="wrap cta-inner">
       <h2>{c.cta}</h2>
       <div class="cta-row">
-        <a class="btn btn-primary" href={bookingHref(topic)}>{tr.common.book} <span class="arrow">&rarr;</span></a>
         <a class="btn btn-ghost" href={`tel:${site.contactPhoneIntl}`}>{site.contactPhone}</a>
       </div>
       {scan && <p class="cross"><a href={scan.scanHref}>{scan.scanLink} &rarr;</a></p>}

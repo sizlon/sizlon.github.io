@@ -36,9 +36,6 @@ export const site = devRemap({
   // 평일 09–18 응대, 히어로·/contact 최상단, tel: 링크·JSON-LD telephone 허용.
   contactPhone: '02-702-5795',
   contactPhoneIntl: '+82-2-702-5795',
-  // 20분 통화 예약 링크. 비어 있으면 CTA 가 /contact 폼으로 떨어진다 — 예약
-  // 도구(Google Calendar 예약 일정 등) URL 이 정해지면 여기 한 줄만 채운다.
-  bookingUrl: 'https://calendar.app.google/Du1gf9ZL7b9k2WJT7',
   // Upwork 프로필. 비어 있으면 /en/ 에서 그 링크를 숨긴다.
   upworkUrl: '',
   // 문의 폼 엔드포인트 — sizlon-platform site-backend `/api/contact`.
@@ -47,12 +44,6 @@ export const site = devRemap({
   turnstileSiteKey: '0x4AAAAAADzkjelT6SU8nIio',
   miriboaUrl: 'https://miriboa.sizlon.io/',
 });
-
-/** 20분 통화 예약 CTA 의 목적지 — 예약 링크가 없으면 폼으로. */
-export function bookingHref(service?: string): string {
-  if (site.bookingUrl) return site.bookingUrl;
-  return service ? `/contact/?service=${service}#form` : '/contact/#form';
-}
 
 // 내부 경로는 항상 `/…/` (astro.config trailingSlash 'always', 슬래시 없으면 GitHub Pages 가 301).
 // 전역 내비 — 서비스 셋이 먼저, 근거(공개 작업)·회사·문의 순. 라벨은 content[lang].nav.
