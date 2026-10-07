@@ -89,9 +89,10 @@ const c = content.ko.engine;
   .block h2 { font-size: var(--step-1); margin: 0; }
   .block h3 { font-size: var(--step-0); margin: 1rem 0 0; }
   .block p { color: var(--color-slate); line-height: 1.7; margin: 0; }
-  .steps { margin: 0; padding: 0; list-style: none; display: grid; gap: 1px; background: var(--hairline); border: 1px solid var(--hairline); border-radius: var(--radius); overflow: hidden; }
+  /* 10-07 오너: 단계를 표처럼 붙이지 않고 하나씩 띄운 박스로 — 아래 '하는 일' 카드와 같은 테두리·간격 */
+  .steps { margin: 0; padding: 0; list-style: none; display: grid; gap: 1rem; }
   /* 09-14: 칸·카드는 페이지 배경(vellum)과 구분되게 mist — 홈 시스템 칸과 같은 조합 */
-  .steps li { background: var(--color-mist); padding: 1.25rem 1.5rem; display: flex; flex-direction: column; gap: 0.4rem; }
+  .steps li { background: var(--color-mist); border: 1px solid var(--hairline); border-radius: var(--radius); padding: 1.25rem 1.5rem; display: flex; flex-direction: column; gap: 0.4rem; }
   .steps .measure { font-family: var(--font-mono); font-size: var(--step--1); color: var(--color-ink); }
   .steps .measure a, .evidence a, .sources a { color: var(--color-ink); text-decoration: none; border-bottom: 1px solid var(--color-recovered); }
   .plain { margin: 0; padding-left: 1.2rem; display: grid; gap: 0.5rem; color: var(--color-slate); line-height: 1.6; }
