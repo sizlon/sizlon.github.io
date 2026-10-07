@@ -3,7 +3,8 @@ import { ext } from '../i18n/utils';
 // 증거 글 본문 (2026-09-06). 마크다운은 콘텐츠 컬렉션 `notes` 에서 온다. 표는 자기 컨테이너
 // 안에서 가로 스크롤(본문이 가로로 넘치면 안 된다). JSON-LD 는 TechArticle — 저자는 대표 노드.
 import Base from '../layouts/Base.astro';
-import { site, servicePages, ORG_ID, FOUNDER_ID } from '../config/site';
+import { site, servicePages, ORG_ID, FOUNDER_ID, OG_IMAGE_PATH } from '../config/site';
+import { LASTMOD } from '../config/lastmod';
 import { content } from '../i18n/content';
 import type { CollectionEntry } from 'astro:content';
 import { render } from 'astro:content';
@@ -18,14 +19,19 @@ const tr = content[lang];
 const svc = servicePages.find((s) => s.key === d.service)!;
 const url = new URL(Astro.url.pathname, Astro.site).href;
 const hreflang = twin ? { ko: `/notes/${slug}/`, en: `/en/notes/${slug}/` } : undefined;
+// 수정일은 sitemap 과 같은 출처(lastmod.ts) — 없으면 발행일(2026-10-07 SEO 보강).
+const modified = LASTMOD[Astro.url.pathname] ?? d.date;
 const article = {
   '@type': 'TechArticle',
   '@id': `${url}#article`,
   headline: d.title,
   description: d.description,
   datePublished: d.date,
+  dateModified: modified,
   inLanguage: lang,
   url,
+  mainEntityOfPage: { '@type': 'WebPage', '@id': url },
+  image: new URL(OG_IMAGE_PATH, Astro.site).href,
   author: { '@id': FOUNDER_ID },
   publisher: { '@id': ORG_ID },
   isPartOf: { '@id': ORG_ID },
@@ -33,7 +39,7 @@ const article = {
 };
 ---
 
-<Base title={d.metaTitle ?? d.title} description={d.description} lang={lang} rawTitle schema={[article]} hreflang={hreflang}>
+<Base title={d.metaTitle ?? d.title} description={d.description} lang={lang} rawTitle schema={[article]} hreflang={hreflang} article={{ published: d.date, modified }} ogImageAlt={d.title}>
   <section class="hero band-ink section">
     <div class="wrap head">
       <span class="eyebrow">{d.eyebrow} · {tr.nav[d.service]}</span>

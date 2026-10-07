@@ -76,5 +76,7 @@ export const legalLinks = [
 ] as const;
 
 // JSON-LD @id — 회사 노드(Base.astro)와 대표 노드(/founder)가 페이지를 넘어 같은 개체로 묶이는 열쇠.
+/** 공유 카드 이미지 경로(Base 의 og:image, 블로그 글 JSON-LD image 가 같이 쓴다). 문구가 바뀌면 파일명을 새로(AGENTS.md). */
+export const OG_IMAGE_PATH = '/og-v10.png';
 export const ORG_ID = 'https://sizlon.io/#org';
 export const FOUNDER_ID = 'https://sizlon.io/founder/#person';
