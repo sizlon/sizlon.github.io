@@ -765,7 +765,6 @@ export const content = {
       eyebrow: '문의',
       h1: '전화가 가장 빠릅니다.',
       phoneLabel: '평일 09:00–18:00',
-      phoneMissed: '부재중이면 예약 링크를 문자로 보내드립니다.',
       formH: '폼으로 남기기',
       labels: { name: '회사 / 담당자', email: '이메일', phone: '전화번호 (선택)', service: '상황', message: '요청 내용 (선택)' },
       servicePlaceholder: '상황 선택',
