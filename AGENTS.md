@@ -83,8 +83,9 @@ URL 301 with the expected `Location` (those 301s come from Cloudflare, see
   Scope of the "크롤러 플랫폼" ban (clarified 2026-09-06): *selling it as a product*
   on any sales page. Since 2026-09-11 the data-feed page carries one block, "이 피드를
   돌리는 시스템" (`services.data.system`), that names the in-house system once
-  ("사내 이름 Crawler Platform") and states recovery, sinks, rehearsal, test count
-  (from `proof.crawlerTests`) and the install-later path — still no editions, price
+  ("사내 이름 Crawler Platform") and states recovery, sinks and the install-later path
+  (the rehearsal/test-count line and the bid-opening tech paragraph were removed
+  2026-10-07, owner decision) — still no editions, price
   bands or product page. The name stays in the legal trademark line, and the legal
   pages describe the license model generically ("소프트웨어를 납품하는 경우") —
   the owner intends to productize Crawler Platform once data-feed engagements
