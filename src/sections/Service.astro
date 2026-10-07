@@ -36,6 +36,8 @@ const nextH = 'nextH' in c ? c.nextH : '';
 const valueLine = 'valueLine' in c ? c.valueLine : null;
 // 히어로를 제목·부제·근거만으로(2026-10-07, search) — 가격·부가세·예약/전화·스캔 링크를 숨긴다.
 const heroBare = 'heroBare' in c && c.heroBare;
+// 히어로에 h1 하나만(2026-10-07, data) — 머리말·부제·가격·근거·예약/전화까지 전부 숨긴다.
+const heroH1Only = 'heroH1Only' in c && c.heroH1Only;
 const effort = 'effortH' in c ? c : null;
 
 // Service + Offer JSON-LD (2026-09-06). 숫자는 content 의 offer(표시 price 와 같은 값) 에서만.
@@ -82,34 +84,38 @@ const serviceSchema = {
 <Base title={c.title} description={c.description} lang="ko" schema={[serviceSchema, ...faqSchema]}>
   <section class="hero band-ink">
     <div class="wrap head">
-      {'crumb' in c ? <nav class="crumb eyebrow" aria-label="위치"><a href={c.crumb.href}>{c.crumb.label}</a> <span aria-hidden="true">›</span> {c.crumb.here}</nav> : <span class="eyebrow">{c.eyebrow}</span>}
-      <h1>{c.h1}</h1>
-      <p class="lede">{c.sub}</p>
-      {!heroBare && <p class="price">{c.price}</p>}
-      {!heroBare && c.priceNote && <p class="price-note">{c.priceNote}{priceLink && <> <a class="price-link" href={priceLink.href}>{priceLink.label} &rarr;</a></>}</p>}
-      {valueLine && (
-        <a class="value" href={valueLine.href}>
-          <span class="value-side"><span class="value-k">{valueLine.direct}</span><span class="value-v">{valueLine.directVal}</span></span>
-          <span class="value-arrow" aria-hidden="true">&rarr;</span>
-          <span class="value-side"><span class="value-k">{valueLine.ours}</span><span class="value-v ours">{valueLine.oursVal}</span></span>
-          <span class="value-note">{valueLine.note} · {valueLine.label} &darr;</span>
-        </a>
-      )}
-      {heroProof.length > 0 && (
-        <div class="proof">
-          {heroProof.map((l) => <p>{l}</p>)}
-          {heroProofLink && <a href={heroProofLink.href} {...ext(heroProofLink.href)}>{heroProofLink.label} &rarr;</a>}
-          {engineLink && <a href={engineLink.href}>{engineLink.label} &rarr;</a>}
-        </div>
-      )}
-      {!heroBare && (
+      {heroH1Only ? <h1>{c.h1}</h1> : (
         <>
-          <p class="vat eyebrow">{tr.common.vatNote}</p>
-          <div class="cta-row">
-            <a class="btn btn-primary" href={bookingHref(topic)}>{tr.common.book} <span class="arrow">&rarr;</span></a>
-            <a class="btn btn-ghost" href={`tel:${site.contactPhoneIntl}`}>{tr.common.call} {site.contactPhone}</a>
-          </div>
-          {scan && <p class="scan-link"><a href="#scan">{scan.scanLink} &rarr;</a></p>}
+          {'crumb' in c ? <nav class="crumb eyebrow" aria-label="위치"><a href={c.crumb.href}>{c.crumb.label}</a> <span aria-hidden="true">›</span> {c.crumb.here}</nav> : <span class="eyebrow">{c.eyebrow}</span>}
+          <h1>{c.h1}</h1>
+          <p class="lede">{c.sub}</p>
+          {!heroBare && <p class="price">{c.price}</p>}
+          {!heroBare && c.priceNote && <p class="price-note">{c.priceNote}{priceLink && <> <a class="price-link" href={priceLink.href}>{priceLink.label} &rarr;</a></>}</p>}
+          {valueLine && (
+            <a class="value" href={valueLine.href}>
+              <span class="value-side"><span class="value-k">{valueLine.direct}</span><span class="value-v">{valueLine.directVal}</span></span>
+              <span class="value-arrow" aria-hidden="true">&rarr;</span>
+              <span class="value-side"><span class="value-k">{valueLine.ours}</span><span class="value-v ours">{valueLine.oursVal}</span></span>
+              <span class="value-note">{valueLine.note} · {valueLine.label} &darr;</span>
+            </a>
+          )}
+          {heroProof.length > 0 && (
+            <div class="proof">
+              {heroProof.map((l) => <p>{l}</p>)}
+              {heroProofLink && <a href={heroProofLink.href} {...ext(heroProofLink.href)}>{heroProofLink.label} &rarr;</a>}
+              {engineLink && <a href={engineLink.href}>{engineLink.label} &rarr;</a>}
+            </div>
+          )}
+          {!heroBare && (
+            <>
+              <p class="vat eyebrow">{tr.common.vatNote}</p>
+              <div class="cta-row">
+                <a class="btn btn-primary" href={bookingHref(topic)}>{tr.common.book} <span class="arrow">&rarr;</span></a>
+                <a class="btn btn-ghost" href={`tel:${site.contactPhoneIntl}`}>{tr.common.call} {site.contactPhone}</a>
+              </div>
+              {scan && <p class="scan-link"><a href="#scan">{scan.scanLink} &rarr;</a></p>}
+            </>
+          )}
         </>
       )}
     </div>
