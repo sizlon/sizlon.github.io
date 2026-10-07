@@ -22,9 +22,10 @@ const c = content.ko.engine;
   <section class="section wrap block">
     <h2>{c.stepsH}</h2>
     <ol class="steps">
-      {c.steps.map((s) => (
+      {c.steps.map((s, i) => (
         <li>
-          <span class="eyebrow">{s.name}</span>
+          {/* 10-07 오너: 단계마다 번호(홈 시스템 칸의 01·02 와 같은 꼴) */}
+          <span class="eyebrow">{String(i + 1).padStart(2, '0')} · {s.name}</span>
           <p>{s.text}</p>
           <p class="measure">{s.measure} {'link' in s && <a href={s.link.href} {...ext(s.link.href)}>{s.link.label} &rarr;</a>}</p>
         </li>
