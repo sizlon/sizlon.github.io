@@ -18,20 +18,7 @@ const c = content.ko.engine;
     </div>
   </section>
 
-  {/* v5(2026-09-14): 허브 — 이 엔진으로 하는 일을 단계 설명보다 먼저 */}
-  <section class="section wrap block">
-    <h2>{c.servicesH}</h2>
-    <div class="cards">
-      {c.services.map((s) => (
-        <a class="card" href={s.href} {...ext(s.href)}>
-          <span class="name">{s.name}</span>
-          <p>{s.what}</p>
-          <p class="measured">{s.measured}</p>
-        </a>
-      ))}
-    </div>
-  </section>
-
+  {/* 10-07 오너: 작동 방식(네 단계)을 히어로 바로 다음에 */}
   <section class="section wrap block">
     <h2>{c.stepsH}</h2>
     <ol class="steps">
@@ -44,6 +31,20 @@ const c = content.ko.engine;
       ))}
     </ol>
     {'layers' in c && <ul class="plain layers">{c.layers.map((l) => <li>{l}</li>)}</ul>}
+  </section>
+
+  {/* v5(2026-09-14) 허브 — 10-07 오너: 작동 방식(네 단계) 다음으로 */}
+  <section class="section wrap block">
+    <h2>{c.servicesH}</h2>
+    <div class="cards">
+      {c.services.map((s) => (
+        <a class="card" href={s.href} {...ext(s.href)}>
+          <span class="name">{s.name}</span>
+          <p>{s.what}</p>
+          <p class="measured">{s.measured}</p>
+        </a>
+      ))}
+    </div>
   </section>
 
   <section class="section wrap block">
