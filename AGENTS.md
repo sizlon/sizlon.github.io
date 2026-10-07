@@ -140,7 +140,7 @@ URL 301 with the expected `Location` (those 301s come from Cloudflare, see
 `site.ts` if it belongs in the nav. The header holds five links on purpose (v5,
 2026-09-14; reordered 2026-09-29 so 검색 진단 leads) — 검색 진단, 데이터 피드, 요구사항 대조 엔진 (`/engine/` hub; also marked current on `/services/rtm/`
 and `/services/miriboa/` via the nav item's `also` list, and those two pages show a
-"요구사항 대조 엔진 › …" crumb), 실측 노트, 회사 — plus the
+"요구사항 대조 엔진 › …" crumb), 블로그 (was 실측 노트 until 2026-10-07), 회사 — plus the
 right-hand **문의 · 02-702-5795 button**
 (`/contact/`; the English chrome keeps a `tel:` link there). Header labels come
 from `content.navShort` (short forms) falling back to `nav`; footer/notes/work
@@ -167,7 +167,8 @@ topic, prefills `contact.scanTemplate` in the message box and prefixes the
 submission with `contact.scanTag` — no backend or `topics` key change. Pages
 with a visible FAQ also emit a `FAQPage` JSON-LD node.
 
-**Notes (`/notes/<slug>/`, since 2026-09-06)** are the one long-form surface:
+**Notes (`/notes/<slug>/`, since 2026-09-06; labelled 블로그 / Blog since 2026-10-07 —
+the URL stays `/notes/` on purpose, owner decision)** are the one long-form surface:
 evidence articles hung off a service page. Body is Markdown in
 `src/content/notes/<slug>.md` (collection `notes`, schema in
 `src/content.config.ts`: title, description, date, service, optional `metaTitle`
@@ -175,8 +176,10 @@ evidence articles hung off a service page. Body is Markdown in
 `/notes/` and `/en/notes/` list the collection (`Notes.astro`, hreflang pair;
 both in `lastmod.ts`). `Note.astro`
 renders it with a `TechArticle` JSON-LD node (author = founder, publisher =
-org). Rules: only write a note when there is a measurement to publish (the
-2026-07-26 criterion — no generic guides); link it from its service page via
+org). Rules: since 2026-10-07 a post no longer needs a measurement (owner
+decision — the old 2026-07-26 "measurement only, no generic guides" rule is
+lifted); numbers in a post still come only from an experiment record. Link a post
+that belongs to a service from its service page via
 `content.ko.services.<key>.notes`; add the URL to `lastmod.ts`. Experiment
 files go in **one** place: if there is a public GitHub repository for the
 experiment, link it and keep no copies here (`korean-tokenizer` →

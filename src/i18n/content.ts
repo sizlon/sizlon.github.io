@@ -165,7 +165,7 @@ export const content = {
     },
     // v4(2026-09-11): 미리보아는 서비스(헤더·푸터·홈 카드), 검색 진단은 헤더에서 뺌(홈·푸터·'이 다음에'·노트에서 간다).
     // 09-14 오너: 엔진 이름 '문서 검증 엔진' → '요구사항 대조 엔진'('문서검증'은 시장에서 진위·위변조 판별(eKYC) 뜻, '검증'은 확정 권한처럼 읽힘).
-    nav: { engine: '요구사항 대조 엔진', rtm: '요구사항 반영 사전 검토', miriboa: '입찰 서류 검증', data: '데이터 피드', search: '검색 품질 진단', notes: '실측 노트', work: '공개 작업', about: '회사 소개', contact: '문의', founder: '대표 소개' },
+    nav: { engine: '요구사항 대조 엔진', rtm: '요구사항 반영 사전 검토', miriboa: '입찰 서류 검증', data: '데이터 피드', search: '검색 품질 진단', notes: '블로그', work: '공개 작업', about: '회사 소개', contact: '문의', founder: '대표 소개' },
     // 헤더 전용 짧은 라벨(2026-09-11) — 6항목이 821px 에서 안 접히게. 푸터·노트·만든 것들은 nav 의 긴 말을 쓴다.
     navShort: { rtm: '요구사항 반영 검토', search: '검색 진단', about: '회사' } as Partial<Record<string, string>>,
     footer: {
@@ -179,7 +179,7 @@ export const content = {
       workItems: [
         { href: '/engine/', label: '요구사항 대조 엔진' },
         { href: '/#pipeline', label: '개찰 데이터 파이프라인' },
-        { href: '/notes/', label: '실측 노트' },
+        { href: '/notes/', label: '블로그' },
         { href: '/work/', label: '공개 작업' },
       ],
       baseline: '고정가 · 결과물 명시 · 대표가 직접 운영',
@@ -307,8 +307,8 @@ export const content = {
           { label: '키워드로 안 잡히는 질의가 남으면', line: 'BM25 + kNN 하이브리드 설계. 진단 뒤 별도 견적.', href: '/contact/?service=search#form' },
           { label: '이 검색 모듈이 공공 SI 납품물이면', line: '감리 전에 대비표를 대조해 빈 칸과 반영 미흡을 찾습니다.', href: '/services/rtm/' },
         ],
-        // 증거 글(/notes/*) — 실측이 있는 글만. 글 본문은 src/content/notes/.
-        notesH: '실측 노트',
+        // 블로그 글(/notes/*, 10-07 '실측 노트'→'블로그'). 글 본문은 src/content/notes/.
+        notesH: '블로그',
         notes: [
           { label: '검색이 못 찾으면 RAG 는 답할 수 없다 — 한국어는 토크나이저부터 본다', href: '/notes/korean-tokenizer/', line: '공고명 183,240건, Nori 기본 vs 코퍼스 사전. P@10 0.906→0.986.' },
         ],
@@ -378,7 +378,7 @@ export const content = {
           rows: proof.rtmEffort.rows,
         },
         effortBasis: proof.rtmEffort.basis,
-        notesH: '노트',
+        notesH: '블로그',
         notes: [
           { label: '정보시스템 감리 산출물 — 요구사항정의서 · 과업대비표 · 요구사항추적표 · 검사기준서, 누가 언제 무엇을 내나', href: '/notes/audit-deliverables/', line: '감리기준 조문과 예시 컬럼, 빈 양식.' },
           { label: '정보시스템 감리에서 무엇이 지적되나 — 공개 통계 두 건과 감리원의 점검 절차', href: '/notes/audit-findings/', line: '감리보고서 분석의 지적 1순위는 요구사항 반영·추적.' },
@@ -606,7 +606,7 @@ export const content = {
           body: 'Elasticsearch 한국어 분석기(Nori) 기본 설정이 공고명에서 어떻게 틀리는지, 코퍼스에서 뽑은 사용자 사전이 얼마나 되돌리는지 잰 재현 실험입니다. 공고명 183,240건·질의 50개에서 P@10 0.906 → 0.986(loose 기준). 설정·코퍼스·결과가 모두 들어 있습니다.',
           links: [
             { label: 'github.com/sizlon/nori-user-dictionary-eval', href: 'https://github.com/sizlon/nori-user-dictionary-eval' },
-            { label: '실측 노트', href: '/notes/korean-tokenizer/' },
+            { label: '블로그 글', href: '/notes/korean-tokenizer/' },
           ],
         },
       ],
@@ -749,13 +749,13 @@ export const content = {
       // 서비스별 꼬리 문장(2026-09-10). 없으면 tailLine.
       tailLineBy: { rtm: '이 글은 요구사항이 추적표와 설계 산출물에 반영됐는지 감리 전에 대조하는 서비스를 준비하며 정리한 것입니다. 그 서비스:' } as Partial<Record<'search' | 'rtm' | 'data', string>>,
     },
-    // ── 노트 목록 /notes/ (2026-09-07, 개선 작업 C) — 컬렉션에서 자동 생성 ──
+    // ── 블로그 목록 /notes/ (2026-09-07 개선 작업 C; 10-07 오너: '실측 노트'→'블로그', 측정 없는 글도 허용, 주소는 /notes/ 유지) ──
     notesIndex: {
-      title: '실측 노트·제도 정리 — 한국어 검색·표 추출·공공 SI 감리',
-      description: '한국어 검색·HWP·PDF 표 추출을 실제 코퍼스로 잰 기록과 공공 SI 감리 제도를 1차 자료로 정리한 글.',
-      eyebrow: '노트',
-      h1: '실측 노트',
-      lede: '둘만 씁니다. 우리가 직접 잰 것, 그리고 고객이 찾는 제도를 1차 자료 원문으로 정리한 것. 숫자는 재현 파일과, 양식은 파일과 함께 공개합니다.',
+      title: '한국어 검색·표 추출·공공 SI 감리 블로그',
+      description: '시즐론 블로그. 한국어 검색·HWP·PDF 표 추출 실측 기록과 공공 SI 감리 제도 정리 등.',
+      eyebrow: '블로그',
+      h1: '블로그',
+      lede: '시즐론이 일하며 잰 것, 정리한 것, 생각한 것을 씁니다. 숫자가 있는 글은 재현 파일과, 양식이 있는 글은 파일과 함께 공개합니다.',
     },
 
     // ── 문의 (v3 §3.7) ─────────────────────────────────────────────────
@@ -873,7 +873,7 @@ export const content = {
       vatNote: 'Prices exclude VAT.',
       fixedLine: 'Fixed price · deliverables named up front · built and run by the founder',
     },
-    nav: { engine: 'Requirements comparison engine', rtm: 'Audit RTM', miriboa: 'Bid document check', data: 'Data feeds', search: 'Search diagnostics', notes: 'Notes', work: 'Open work', about: 'About', contact: 'Contact', founder: 'Founder' },
+    nav: { engine: 'Requirements comparison engine', rtm: 'Audit RTM', miriboa: 'Bid document check', data: 'Data feeds', search: 'Search diagnostics', notes: 'Blog', work: 'Open work', about: 'About', contact: 'Contact', founder: 'Founder' },
     navShort: {} as Partial<Record<string, string>>,
     footer: {
       tagline: 'Measured, not claimed.',
@@ -884,7 +884,7 @@ export const content = {
       principles: 'Data collection principles',
       workItems: [
         { href: 'https://miriboa.sizlon.io/en/', label: 'Miriboa' },
-        { href: '/en/notes/', label: 'Notes' },
+        { href: '/en/notes/', label: 'Blog' },
         { href: '/work/', label: 'Open work' },
       ],
       baseline: 'Fixed price · deliverables named up front · built and run by the founder',
@@ -897,11 +897,11 @@ export const content = {
       tailLine: 'Want this run on your corpus? Email',
     },
     notesIndex: {
-      title: 'Notes on Korean search, RAG & table extraction',
-      description: 'Measured on real Korean corpora: Nori dictionaries and HWP/PDF table extraction.',
-      eyebrow: 'Notes',
-      h1: 'Notes',
-      lede: 'Written only when there is a measurement to publish. Numbers ship with the files to reproduce them.',
+      title: 'Blog on Korean search, RAG and table extraction',
+      description: 'Sizlon blog: Nori dictionaries and HWP/PDF table extraction measured on real Korean corpora.',
+      eyebrow: 'Blog',
+      h1: 'Blog',
+      lede: 'What we measure, document and think about while building Sizlon. Posts with numbers ship with the files to reproduce them.',
     },
 
     notFound: {
