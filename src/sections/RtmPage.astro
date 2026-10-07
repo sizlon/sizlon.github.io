@@ -112,25 +112,7 @@ const schema = [
       <p>{p.measure}</p>
     </div>
     <ul class="plain small">{c.priceTable.notes.filter((n) => !n.startsWith('환급')).map((n) => <li>{n}</li>)}</ul>
-    <details class="effort">
-      <summary>{p.effortSummary}</summary>
-      <p>{c.effortLead}</p>
-      <div class="table-scroll">
-        <table class="grid-table">
-          <caption>{c.effortCaption}</caption>
-          <thead><tr>{c.effortStepsHead.map((h) => <th scope="col">{h}</th>)}</tr></thead>
-          <tbody>{c.effortSteps.map(([w, d]) => <tr><td class="what">{w}</td><td>{d}</td></tr>)}</tbody>
-        </table>
-      </div>
-      <div class="table-scroll">
-        <table class="grid-table mono">
-          <caption>{c.effortTable.caption}</caption>
-          <thead><tr>{c.effortTable.head.map((h) => <th scope="col">{h}</th>)}</tr></thead>
-          <tbody>{c.effortTable.rows.map((r) => <tr>{r.map((cell, i) => (i === 0 ? <th scope="row">{cell}</th> : <td>{cell}</td>))}</tr>)}</tbody>
-        </table>
-      </div>
-      <p class="muted small">{c.effortBasis}</p>
-    </details>
+    {/* 10-07 오너: '직접 대조하면 얼마나 걸리나 — 추정' 접이식 블록 삭제 */}
   </section>
 
   <section class="section wrap block" id="data">
@@ -226,9 +208,6 @@ const schema = [
   .dont li::marker { content: "— "; }
 
   .measure { border: 1px solid var(--color-recovered); border-radius: var(--radius); padding: 1rem 1.2rem; display: flex; flex-direction: column; gap: 0.4rem; }
-  .effort { border-top: 1px solid var(--hairline); padding-top: 0.75rem; display: flex; flex-direction: column; gap: 0.75rem; }
-  .effort summary { cursor: pointer; font-weight: 600; }
-  .effort[open] > * + * { margin-top: 0.75rem; }
 
   .faq { margin: 0; display: flex; flex-direction: column; gap: 1rem; }
   .qa { display: flex; flex-direction: column; gap: 0.3rem; padding-bottom: 1rem; border-bottom: 1px solid var(--hairline); }

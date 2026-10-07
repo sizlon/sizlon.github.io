@@ -76,6 +76,8 @@ URL 301 with the expected `Location` (those 301s come from Cloudflare, see
   requirement-count band) on `/services/rtm/` — shown as "추정" with its basis
   (measured requirement counts + assumed minutes per item + KOSA SW engineer
   daily wage). Keep the word 추정 and the basis line wherever it appears.
+  (2026-10-07, owner decision: the estimate block was removed from `/services/rtm/`;
+  the `proof.rtmEffort` / `services.rtm.effort*` data stays but nothing renders it now.)
 - **Forbidden words**: on `/services/search` — "AI", "LLM", "결정론적" (buyers'
   language only; the footer tagline is the one allowed exception). Site-wide —
   "크롤러 플랫폼", "에디션", "셀프호스팅/매니지드", "외주 없이" (the last one was
