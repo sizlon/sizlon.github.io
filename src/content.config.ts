@@ -17,7 +17,7 @@ const notes = defineCollection({
     date: z.string(),          // YYYY-MM-DD, 발행일 = lastmod 초기값
     /** 이 글이 증거가 되는 서비스 — 그 페이지가 이 글을 링크한다 */
     service: z.enum(['search', 'rtm', 'data']),
-    eyebrow: z.string().default('노트'),
+    eyebrow: z.string().default('블로그'),   // 10-07 '노트'→'블로그'(영문 글은 frontmatter 에 "Blog")
     /** <title> 전용(선택, 2026-09-07). h1 은 title 그대로. 검색 의도어("nori 사용자 사전" 등)를 SERP 제목에만 넣을 때 쓴다. */
     metaTitle: z.string().optional(),
   }),

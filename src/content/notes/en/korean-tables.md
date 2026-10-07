@@ -3,7 +3,7 @@ title: "When the table disappears, RAG states a wrong number with confidence —
 description: "Tables in 213 Korean tender files: generic HWP extraction drops 85% of cells."
 date: "2026-09-06"
 service: data
-eyebrow: "Note"
+eyebrow: "Blog"
 metaTitle: "HWP and PDF table extraction measured on 213 Korean tenders"
 ---
 

@@ -3,7 +3,7 @@ title: "If retrieval misses, RAG can't answer — in Korean, start with the toke
 description: "Nori on 183,240 Korean tender titles: a corpus dictionary took P@10 to 0.986."
 date: "2026-09-06"
 service: search
-eyebrow: "Note"
+eyebrow: "Blog"
 metaTitle: "Nori user dictionary for Korean search, measured on 183K titles"
 ---
 
