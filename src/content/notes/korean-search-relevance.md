@@ -3,7 +3,7 @@ title: "검색 관련성, 한국어 검색에서는 무엇이 다른가"
 description: "Elasticsearch·OpenSearch 한국어 검색 관련성. Nori 사전·동의어, BM25 점수, 판정셋으로 재고 고치는 순서."
 date: "2026-10-07"
 service: search
-metaTitle: "한국어 검색 관련성 높이는 법, Elasticsearch·OpenSearch Nori 사전과 판정셋"
+metaTitle: "한국어 검색 관련성 높이는 법, Nori 사전·동의어·판정셋"
 ---
 ## 응답 속도는 숫자, 관련성은 신뢰
 

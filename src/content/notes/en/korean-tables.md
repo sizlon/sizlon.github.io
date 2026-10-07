@@ -4,6 +4,7 @@ description: "Tables in 213 Korean tender files: generic HWP extraction drops 85
 date: "2026-09-06"
 service: data
 eyebrow: "Note"
+metaTitle: "HWP and PDF table extraction measured on 213 Korean tenders"
 ---
 
 Ask a RAG system "what is the technical-evaluation score weight in this tender?" and it sometimes answers with the wrong number. Retrieval did not miss the document. It found the document — but the table inside it had been flattened into prose, so the label "technical evaluation" and the number "90" ended up on different lines. The model picks whichever number is nearest. Nothing is logged.
