@@ -188,7 +188,7 @@ export const content = {
       // v5(2026-09-14, docs/plans/sizlon-site-restructure-plan-v5-draft.md, 오너 승인 h1 1번·헤더 A안): 소프트웨어 회사 — 만든 시스템 셋과 그 쓰임새.
       // 서비스 페이지 URL·h1·가격은 v4 그대로. 수치는 proof·/engine/ 에 잣대와 함께 이미 실린 것만.
       title: '시즐론 | 한국어 검색 진단·데이터 파이프라인·요구사항 대조',
-      description: '한국어 검색(Elasticsearch·OpenSearch) 품질 진단, 공공 데이터 파이프라인, 요구사항 대조 엔진을 만드는 소프트웨어 회사.',
+      description: '한국어 검색(Elasticsearch·OpenSearch) 품질 진단, 데이터 파이프라인, 요구사항 대조 엔진을 만드는 소프트웨어 회사.',
       // 09-14 오너: 옛 h1("읽고·모으고·찾게 만드는")이 모호 → 동사를 시스템 셋과 1:1 로. 쉼표마다 한 줄(h1Lines 로 렌더).
       // 10-07 오너: 세 줄을 각각 끝나는 문장으로. 셋째 줄은 '요구사항 대조 엔진' 대신 '문서를 시스템으로 체크'.
       h1: '검색 시스템을 고칩니다. 데이터를 수집하고 정제합니다. 문서를 시스템으로 체크합니다.',
@@ -320,7 +320,7 @@ export const content = {
         // 어떻게 보나(감리원 세 겹) / 보지 않는 것 / 가격·조건 / FAQ. 시스템 범위는 docs/plans/rtm-system-dev-plan.md.
         brief: false,
         title: '요구사항 반영 사전 검토·요구사항추적표(RTM)',   // 09-14: 접미 '— 시즐론' 과 대시 두 번·36자 → 짧게(h1 은 그대로)
-        description: '공공 SI 설계단계 감리 전, RFP 요구사항을 설계 산출물과 대조해 빠진 것을 찾습니다. 120~300만원 고정가.',
+        description: '공공 SI 설계단계 감리 전, RFP 요구사항을 설계 산출물과 대조해 빠진 것을 찾습니다.',
         eyebrow: '서비스 · 감리 앞',
         crumb: { href: '/engine/', label: '요구사항 대조 엔진', here: '감리 앞' },
         h1: '요구사항 반영 사전 검토 — 요구사항추적표·설계 산출물 대조',
@@ -521,7 +521,7 @@ export const content = {
     // 회사 사이트 안의 서비스 페이지 한 장 + 미리보아로 가는 버튼(새 탭). 가격·이용권·SLA 는 적지 않는다
     // (AGENTS.md: 정본은 미리보아 /pricing). 수치는 proof 에서만.
     bidcheck: {
-      title: '입찰 서류 검증 — 미리보아',
+      title: '입찰 서류 검증 미리보아',   // 10-07: <title> 대시 하나로(뒤에 '— 시즐론' 이 붙는다). h1 은 그대로
       description: '나라장터·미 연방조달 공고의 요구조건을 응찰 서류와 항목마다 대조해 원문 근거와 함께 보여 주는 셀프서비스, 미리보아.',
       eyebrow: '서비스 · 입찰 마감 앞',
       crumb: { href: '/engine/', label: '요구사항 대조 엔진', here: '입찰 마감 앞' },
