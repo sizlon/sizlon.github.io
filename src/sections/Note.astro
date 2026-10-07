@@ -62,8 +62,13 @@ const article = {
   .prose :global(p), .prose :global(li) { color: color-mix(in srgb, var(--color-ink) 85%, var(--color-vellum)); line-height: 1.75; }
   .prose :global(ul), .prose :global(ol) { margin: 0; padding-left: 1.3em; display: flex; flex-direction: column; gap: 0.4rem; }
   .prose :global(code) { font-family: var(--font-mono); font-size: 0.9em; background: color-mix(in srgb, var(--color-ink) 7%, var(--color-vellum)); padding: 0.05em 0.35em; border-radius: 4px; }
+  /* 10-07: 코드 블록(첫 사례 korean-search-relevance) — 인라인 code 배경이 줄마다 상자로 칠해지던 것을 끈다 */
+  .prose :global(pre) { margin: 0; padding: 1rem 1.1rem; border-radius: var(--radius); overflow-x: auto; font-size: var(--step--1); line-height: 1.55; }
+  .prose :global(pre code) { display: block; background: none; padding: 0; border-radius: 0; font-size: inherit; }
   .prose :global(table) { display: block; overflow-x: auto; border-collapse: collapse; font-size: var(--step--1); max-width: 100%; }
   .prose :global(th), .prose :global(td) { text-align: left; padding: 0.45rem 0.7rem; border-bottom: 1px solid color-mix(in srgb, var(--color-ink) 15%, var(--color-vellum)); vertical-align: top; white-space: nowrap; }
+  /* 10-07: 본문 칸은 줄바꿈 — 설명 열이 긴 표가 가로 스크롤 뒤로 잘려 보이던 것(머리줄은 nowrap 유지) */
+  .prose :global(td) { white-space: normal; min-width: 6rem; }
   .prose :global(th) { font-weight: 600; border-bottom-color: var(--color-ink); }
   .prose :global(a) { color: var(--color-ink); text-decoration: none; border-bottom: 1px solid var(--color-recovered); }
   .tail { display: flex; flex-direction: column; gap: 1.25rem; align-items: flex-start; padding-top: 0; }

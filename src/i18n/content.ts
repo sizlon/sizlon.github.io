@@ -310,6 +310,7 @@ export const content = {
         // 블로그 글(/notes/*, 10-07 '실측 노트'→'블로그'). 글 본문은 src/content/notes/.
         notesH: '블로그',
         notes: [
+          { label: '검색 관련성, 한국어 검색에서는 무엇이 다른가', href: '/notes/korean-search-relevance/', line: 'Nori 사전·동의어부터 BM25 점수, 판정셋 측정, 바꾼 것을 검증하는 순서까지.' },
           { label: '검색이 못 찾으면 RAG 는 답할 수 없다 — 한국어는 토크나이저부터 본다', href: '/notes/korean-tokenizer/', line: '공고명 183,240건, Nori 기본 vs 코퍼스 사전. P@10 0.906→0.986.' },
         ],
         // CTA 밴드 제목 — 버튼 문구와 같은 말이 두 번 나오던 것을 문장형으로(2026-09-07).
