@@ -34,6 +34,8 @@ const priceLink = 'priceLink' in c ? c.priceLink : null;
 const nextH = 'nextH' in c ? c.nextH : '';
 // 직접 하면 vs 맡기면(2026-09-15, rtm) — 구입 가치를 히어로 바로 밑에. 수치는 content.ko.proof.rtmEffort(추정).
 const valueLine = 'valueLine' in c ? c.valueLine : null;
+// 히어로를 제목·부제·근거만으로(2026-10-07, search) — 가격·부가세·예약/전화·스캔 링크를 숨긴다.
+const heroBare = 'heroBare' in c && c.heroBare;
 const effort = 'effortH' in c ? c : null;
 
 // Service + Offer JSON-LD (2026-09-06). 숫자는 content 의 offer(표시 price 와 같은 값) 에서만.
@@ -83,8 +85,8 @@ const serviceSchema = {
       {'crumb' in c ? <nav class="crumb eyebrow" aria-label="위치"><a href={c.crumb.href}>{c.crumb.label}</a> <span aria-hidden="true">›</span> {c.crumb.here}</nav> : <span class="eyebrow">{c.eyebrow}</span>}
       <h1>{c.h1}</h1>
       <p class="lede">{c.sub}</p>
-      <p class="price">{c.price}</p>
-      {c.priceNote && <p class="price-note">{c.priceNote}{priceLink && <> <a class="price-link" href={priceLink.href}>{priceLink.label} &rarr;</a></>}</p>}
+      {!heroBare && <p class="price">{c.price}</p>}
+      {!heroBare && c.priceNote && <p class="price-note">{c.priceNote}{priceLink && <> <a class="price-link" href={priceLink.href}>{priceLink.label} &rarr;</a></>}</p>}
       {valueLine && (
         <a class="value" href={valueLine.href}>
           <span class="value-side"><span class="value-k">{valueLine.direct}</span><span class="value-v">{valueLine.directVal}</span></span>
@@ -100,12 +102,16 @@ const serviceSchema = {
           {engineLink && <a href={engineLink.href}>{engineLink.label} &rarr;</a>}
         </div>
       )}
-      <p class="vat eyebrow">{tr.common.vatNote}</p>
-      <div class="cta-row">
-        <a class="btn btn-primary" href={bookingHref(topic)}>{tr.common.book} <span class="arrow">&rarr;</span></a>
-        <a class="btn btn-ghost" href={`tel:${site.contactPhoneIntl}`}>{tr.common.call} {site.contactPhone}</a>
-      </div>
-      {scan && <p class="scan-link"><a href="#scan">{scan.scanLink} &rarr;</a></p>}
+      {!heroBare && (
+        <>
+          <p class="vat eyebrow">{tr.common.vatNote}</p>
+          <div class="cta-row">
+            <a class="btn btn-primary" href={bookingHref(topic)}>{tr.common.book} <span class="arrow">&rarr;</span></a>
+            <a class="btn btn-ghost" href={`tel:${site.contactPhoneIntl}`}>{tr.common.call} {site.contactPhone}</a>
+          </div>
+          {scan && <p class="scan-link"><a href="#scan">{scan.scanLink} &rarr;</a></p>}
+        </>
+      )}
     </div>
   </section>
 

@@ -258,6 +258,8 @@ export const content = {
         eyebrow: '서비스 · 검색 품질 진단',
         h1: '검색·RAG 품질 진단 — Elasticsearch · OpenSearch',
         sub: '"검색이 이상하다"를 수치로 바꾸고, 2주 안에 고친 설정을 드립니다.',
+        // 10-07 오너: 히어로에서 가격·부가세 줄·예약/전화 버튼·무료 스캔 링크를 뺀다(본문 블록은 그대로).
+        heroBare: true,
         price: '250만원 · 2주 · 고정가',
         // JSON-LD Offer 용 숫자(KRW, 부가세 별도) — 위 price 문구와 같은 값이어야 한다.
         offer: { minPrice: 2500000, maxPrice: 2500000 },
