@@ -13,8 +13,14 @@ const hrefOf = (key: string) => servicePages.find((s) => s.key === key)?.href ??
 <Base title={c.title} description={c.description} lang="ko" rawTitle>
   <section class="hero band-ink">
     <div class="wrap hero-copy">
-      {/* 10-07 오너: 히어로는 h1 세 줄만 — lede·예약/전화 버튼·고정가 줄 삭제(문의는 헤더 버튼) */}
-      <h1>{c.h1Lines.map((l) => <span class="h1-line">{l}</span>)}</h1>
+      {/* 10-08 오너: 히어로는 검색 진단 한 문장 + lede + 무료 스캔(가격·예약 버튼은 10-07 그대로 없음) */}
+      <h1>{c.heroLines.map((l) => <span class="h1-line">{l}</span>)}</h1>
+      <p class="lede">{c.heroLede}</p>
+      <div class="hero-cta">
+        <a class="btn btn-primary" href={c.heroScan.href}>{c.heroScan.label} <span class="arrow">&rarr;</span></a>
+        <a class="btn btn-ghost" href={c.heroMore.href}>{c.heroMore.label} <span class="arrow">&rarr;</span></a>
+      </div>
+      <p class="hero-note">{c.heroScan.note}</p>
     </div>
   </section>
 
@@ -42,6 +48,16 @@ const hrefOf = (key: string) => servicePages.find((s) => s.key === key)?.href ??
             ))}
           </dl>
           {'factsNote' in sys && <p class="facts-note">{sys.factsNote}</p>}
+          {'steps' in sys && <span class="eyebrow uses-label">{sys.stepsLabel}</span>}
+          {'steps' in sys && <ol class="steps">
+            {sys.steps.map((st) => (
+              <li class="step">
+                <a class="step-name" href={st.href}>{st.name}</a>
+                <span class="step-text">{st.text}</span>
+              </li>
+            ))}
+          </ol>}
+          {'termsLine' in sys && <p class="facts-note">{sys.termsLine}</p>}
           {sys.uses.length > 0 && <span class="eyebrow uses-label">{'usesLabel' in sys ? sys.usesLabel : c.usesLabel}</span>}
           {sys.uses.length > 0 && <div class="uses">
             {sys.uses.map((u) => (
@@ -74,6 +90,14 @@ const hrefOf = (key: string) => servicePages.find((s) => s.key === key)?.href ??
   /* 문장마다 한 줄(09-14·10-07) — 옛 최장 줄('요구사항을 대조하는 엔진을 만들고,') 약 13.5em 기준이라 좁은 폰에서도 세 줄을 넘지 않게 폭에 맞춰 줄인다 */
   .hero h1 { max-width: none; font-size: min(var(--step-4), calc((100vw - 2 * var(--gutter)) / 14.4)); }
   .h1-line { display: block; }
+  .hero-cta { display: flex; flex-wrap: wrap; gap: 0.75rem; }
+  .hero-note { font-size: var(--step--1); color: color-mix(in srgb, var(--color-mist) 70%, var(--color-ink)); }
+  .steps { list-style: none; margin: 0; padding: 0; counter-reset: step; display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 14rem), 1fr)); gap: 0.75rem; }
+  .step { counter-increment: step; display: flex; flex-direction: column; gap: 0.35rem; padding: 0.95rem 1.1rem; border: 1px solid var(--hairline); border-radius: var(--radius); background: var(--color-vellum); min-width: 0; }
+  .step-name { font-weight: 600; color: var(--color-ink); text-decoration: none; }
+  .step-name::before { content: counter(step) '. '; font-family: var(--font-mono); color: var(--color-recovered); }
+  .step-name:hover { border-bottom: 1px solid var(--color-recovered); }
+  .step-text { color: var(--color-slate); font-size: var(--step--1); line-height: 1.55; }
   .head { display: flex; flex-direction: column; gap: 0.75rem; margin-bottom: 2rem; max-width: var(--measure); }
   .systems { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 30rem), 1fr)); gap: 1.25rem; }
   .system { display: flex; flex-direction: column; gap: 1rem; padding: 1.6rem; border: 1px solid var(--hairline); border-radius: var(--radius); background: var(--color-mist); min-width: 0; }

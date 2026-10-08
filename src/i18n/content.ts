@@ -187,12 +187,19 @@ export const content = {
       // 09-29 오너: 검색 진단을 맨 앞으로(첫 칸·h1 첫 줄·title), 요구사항 대조 엔진은 마지막 칸으로 — 판매 우선순위 반영.
       // v5(2026-09-14, docs/plans/sizlon-site-restructure-plan-v5-draft.md, 오너 승인 h1 1번·헤더 A안): 소프트웨어 회사 — 만든 시스템 셋과 그 쓰임새.
       // 서비스 페이지 URL·h1·가격은 v4 그대로. 수치는 proof·/engine/ 에 잣대와 함께 이미 실린 것만.
-      title: '시즐론 | 한국어 검색 진단·데이터 파이프라인·요구사항 대조',
-      description: '한국어 검색(Elasticsearch·OpenSearch) 품질 진단, 데이터 파이프라인, 요구사항 대조 엔진을 만드는 소프트웨어 회사.',
+      // 10-08 오너: 홈을 한국어 검색·RAG 품질 진단 하나로 모은다(title·description·h1). 데이터 파이프라인·엔진 칸은 그대로 아래에.
+      title: '시즐론 | 한국어 검색·RAG 품질 진단',
+      description: '사내 검색·RAG가 엉뚱한 문서를 가져올 때, Elasticsearch·OpenSearch 한국어 검색을 고치고 전후를 숫자로 보여 드립니다.',
       // 09-14 오너: 옛 h1("읽고·모으고·찾게 만드는")이 모호 → 동사를 시스템 셋과 1:1 로. 쉼표마다 한 줄(h1Lines 로 렌더).
       // 10-07 오너: 세 줄을 각각 끝나는 문장으로. 셋째 줄은 '요구사항 대조 엔진' 대신 '문서를 시스템으로 체크'.
       h1: '검색 시스템을 고칩니다. 데이터를 수집하고 정제합니다. 문서를 시스템으로 체크합니다.',
       h1Lines: ['검색 시스템을 고칩니다.', '데이터를 수집하고 정제합니다.', '문서를 시스템으로 체크합니다.'],
+      // 10-08 오너: 히어로를 한 문장(두 줄)으로 — 위 h1·h1Lines(10-07)는 되돌릴 때를 위해 남기고 렌더하지 않는다.
+      heroLines: ['한국어 검색이 틀리는 이유를', '숫자로 찾아 고칩니다.'],
+      heroLede: '사내 검색이나 RAG 챗봇이 엉뚱한 문서를 가져온다면, Elasticsearch·OpenSearch의 형태소·사전·동의어·랭킹을 진단하고 고친 뒤 정답률이 얼마나 올랐는지 재서 보여 드립니다.',
+      // 무료 스캔 — 검색 진단 페이지의 scanHref 와 같은 폼(/contact/?service=search&scan=1#form).
+      heroScan: { label: '무료 스캔 받기', href: '/contact/?service=search&scan=1#form', note: '실패하는 검색어 20~50개를 보내 주시면 영업일 1일 안에 진단 1쪽을 보내 드립니다.' },
+      heroMore: { label: '2주 진단·개선 자세히', href: '/services/search/' },
       systemsEyebrow: '만든 것과 하는 일',
       // 09-14: 03 한국어 검색은 '만든 것'에서 '하는 일'로 — 운영 중인 자체 검색 시스템이 없다(미리보아 검색은 SQLite FTS5+번역 사전).
       systemsH2: '한국어 검색 진단, 그리고 만든 시스템 둘',
@@ -202,6 +209,14 @@ export const content = {
           // 10-07 오너: '서비스' 카드·무료 스캔 링크를 빼고 검색 진단 페이지 바로가기 하나만(이름이 이미 '한국어 검색 품질 진단').
           key: 'search', no: '하는 일', name: '한국어 검색 품질 진단', featured: true,
           sysLink: { href: '/services/search/', label: '검색 진단 바로가기' },
+          // 10-08 오너: 진행 방식 세 단계(무료 스캔 → 2주 진단·개선 → 월 유지관리)와 계약 형태 한 줄. 가격은 홈에 쓰지 않는다(10-07).
+          stepsLabel: '진행 방식',
+          steps: [
+            { name: '무료 스캔', text: '실패하는 검색어 20~50개로, 영업일 1일 안에 진단 1쪽.', href: '/contact/?service=search&scan=1#form' },
+            { name: '2주 진단·개선', text: '실패 질의 골든셋 확정 → analyzer·사전·동의어·랭킹 재설정 → 질의별 전후 결과표. 적중률이 10%p 이상 오르지 않으면 2주차분은 청구하지 않습니다.', href: '/services/search/' },
+            { name: '월 유지관리', text: '문서와 질의가 바뀌어도 정답률이 떨어지지 않도록 매달 같은 골든셋으로 다시 재고 사전을 갱신합니다. 범위에 따라 견적.', href: '/contact/?service=search#form' },
+          ],
+          termsLine: '고정가 프로젝트 외에 기간제 계약과 주 1일 자문도 가능합니다.',
           text: '고객이 운영하는 Elasticsearch·OpenSearch 검색에서, 형태소 분석·사용자 사전·동의어 때문에 못 찾는 이유를 재고 고칩니다. 시즐론이 운영하는 검색 시스템이 아니라 고객의 검색을 진단하는 일입니다.',
           facts: [
             { v: 'P@10 0.906 → 0.986', note: '실측 실험 — 공고명 183,240건, Nori 기본 vs 사용자 사전(loose, 실패 질의)', href: '/notes/korean-tokenizer/' },
