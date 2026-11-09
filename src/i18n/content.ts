@@ -16,6 +16,8 @@ const proof = {
   current: '나라장터 개찰 데이터 6개월분 수집·첨부 파싱·집계 — 협상에 의한 계약 응찰 73,373건·업체 13,220곳 (시즐론)',
   engine: '미리보아 요구조건 추출·대조 엔진 — 동결 골든셋 2,013항목(공고 3건 전수, 유효 1,985항목) 기준 요구조건 추출 recall 87.4%, "확실" 판정 precision 96.5%',
   tool: 'API가 있으면 API로, 없으면 자체 자동 복구 크롤러로 수집합니다.',
+  // 2026-11-09 오너 진술: 이전 회사에서 약 15년 개발자(기획·제작·수정·유지보수 전담), PHP 직접 작성. /services/php 전용.
+  phpCareer: '대표가 이전 회사에서 약 15년간 PHP 서비스를 직접 기획·개발·유지보수했고, 공식 지원이 끝난 PHP 7.0~7.3 용 보안 패치를 직접 만들고 있습니다.',
   // 수집 시스템 자동 테스트 수 — sizlon-platform app·tests 의 test_ 함수 수(2026-09-11 집계). 재집계는 docs/tools/asset-check.sh.
   crawlerTests: '자동 테스트 2,411건(2026-09-11, 테스트 함수 수 집계)',
   // 평가 문턱(정본 miriboa/docs/VERIFY_POSITIONING.md, 미리보아 첫 화면과 같은 값) — /services/miriboa 전용.
@@ -160,7 +162,7 @@ export const content = {
     },
     // v4(2026-09-11): 미리보아는 서비스(헤더·푸터·홈 카드), 검색 진단은 헤더에서 뺌(홈·푸터·'이 다음에'·노트에서 간다).
     // 09-14 오너: 엔진 이름 '문서 검증 엔진' → '요구사항 대조 엔진'('문서검증'은 시장에서 진위·위변조 판별(eKYC) 뜻, '검증'은 확정 권한처럼 읽힘).
-    nav: { engine: '요구사항 대조 엔진', rtm: '요구사항 반영 사전 검토', miriboa: '입찰 서류 검증', data: '데이터 피드', search: '검색 품질 진단', notes: '블로그', work: '공개 작업', about: '회사 소개', contact: '문의', founder: '대표 소개' },
+    nav: { engine: '요구사항 대조 엔진', rtm: '요구사항 반영 사전 검토', miriboa: '입찰 서류 검증', data: '데이터 피드', search: '검색 품질 진단', php: '구버전 PHP 보안 점검', notes: '블로그', work: '공개 작업', about: '회사 소개', contact: '문의', founder: '대표 소개' },
     // 헤더 전용 짧은 라벨(2026-09-11) — 6항목이 821px 에서 안 접히게. 푸터·노트·만든 것들은 nav 의 긴 말을 쓴다.
     navShort: { rtm: '요구사항 반영 검토', search: '검색 진단', about: '회사' } as Partial<Record<string, string>>,
     footer: {
@@ -530,6 +532,82 @@ export const content = {
         // 10-07 오너: '이 다음에 보통 필요한 것' 절 삭제(검색 진단·요구사항 반영 검토로 가는 링크 둘).
         cta: '받고 싶은 데이터와 출처 URL 만 알려주시면 하루 안에 구축비와 주기적 납품 및 유지보수 견적을 드립니다',
       },
+      // ── 구버전 PHP 보안 점검·패치 /services/php/ (2026-11-09 오너 결정) ──────────
+      // 헤더에는 넣지 않는다(사이트 정체성은 검색·데이터·문서) — 푸터 서비스 열과 문의 폼으로만 간다.
+      // 가격은 크몽 등록 상품과 같은 세 단계. 결과 보장 없음(점검·완화 조치까지)을 범위에 분명히 적는다.
+      // 문의 topic 은 백엔드 TOPIC_LABELS 기존 키 'other' 를 쓴다(백엔드 무변경).
+      php: {
+        title: '구버전 PHP 보안 점검·패치',
+        description: 'PHP 버전을 못 올리는 사이트를 위해, 지금 버전 그대로 보안 점검과 위험 완화 조치·패치를 고정가로 합니다.',
+        eyebrow: '서비스 · 구버전 PHP',
+        h1: '구버전 PHP 사이트 보안 점검·패치 — 버전을 올리지 못해도 할 수 있는 조치',
+        sub: '"PHP 를 올리세요"로 끝내지 않습니다. 지금 버전에서 무엇이 위험하고 무엇을 막을 수 있는지 찾아 조치합니다.',
+        price: '33만원부터 · 고정가 세 단계',
+        // JSON-LD Offer 용 숫자(KRW, 부가세 별도) — 아래 가격표 최저·최고와 같은 값이어야 한다.
+        offer: { minPrice: 330000, maxPrice: 1980000 },
+        priceNote: '진단 33만원 · 긴급 조치 88만원 · 패치와 사후 점검 198만원. 범위는 통화에서 확인한 뒤 견적서로 확정합니다.',
+        whoH: '이런 분께 필요합니다',
+        who: [
+          'PHP 버전을 올리면 사이트가 깨져서 올리지 못하고 있는 곳',
+          '그누보드·영카트나 오래된 프레임워크로 만든 사이트를 운영 중인 곳',
+          '최근 PHP 취약점 소식을 듣고 우리 사이트도 위험한지 확인하고 싶은 곳',
+          '처음 만든 개발사와 연락이 닿지 않는 곳',
+        ],
+        howH: '진행',
+        how: [
+          { name: '1 — 확인', text: '서버·PHP 버전, 사용 중인 솔루션·프레임워크, 서버 형태(호스팅·클라우드·자체 서버)와 백업 여부를 확인합니다. 접속 정보는 계약 뒤 안전한 경로로 받습니다.' },
+          { name: '2 — 진단', text: '알려진 취약점과 대조하고 외부에 노출된 경로를 점검해, 위험도별 조치 우선순위를 리포트로 드립니다.' },
+          { name: '3 — 완화 조치', text: '웹서버 설정, 접근 차단, 취약한 기능 비활성화 등 지금 바로 적용할 수 있는 조치를 협의한 시간에 진행합니다. 적용 전에 원래대로 되돌리는 방법을 준비합니다.' },
+          { name: '4 — 패치·사후 점검', text: '공식 지원이 끝난 버전에는 버전을 올리지 않고 적용하는 보안 패치를 만들어 적용하고, 30일 뒤 다시 점검합니다.' },
+        ],
+        scopeH: '하는 것과 하지 않는 것',
+        scopeDo: {
+          h: '하는 것',
+          groups: [
+            { label: '점검', items: ['PHP·웹서버 버전과 알려진 취약점 대조', '외부 노출 경로와 설정 점검', '위험도별 조치 우선순위 리포트'] },
+            { label: '조치', items: ['즉시 적용 가능한 위험 완화 조치', '지원이 끝난 버전용 보안 패치 적용(패치와 사후 점검 단계)'] },
+          ],
+        },
+        scopeDont: {
+          h: '하지 않는 것',
+          items: [
+            '모든 보안 사고를 막는다는 보장 — 이 서비스는 점검과 위험 완화 조치입니다',
+            '이미 침해된 사이트의 사고 조사·복구 — 별도 견적',
+            'PHP 버전 업그레이드와 그에 따른 코드 수정 — 별도 견적',
+          ],
+        },
+        deliverH: '결과물',
+        deliverables: [
+          '진단 리포트 — 버전·취약점·노출 경로, 위험도별 조치 우선순위',
+          '조치 내역서 — 바꾼 설정과 되돌리는 방법',
+          '적용한 패치와 30일 뒤 재점검 결과(패치와 사후 점검 단계)',
+        ],
+        optionH: '',
+        options: [],
+        priceTableH: '가격표',
+        priceTable: {
+          caption: '사이트 1개 기준 · 부가세 별도',
+          head: ['단계', '가격', '작업일', '포함'],
+          rows: [
+            ['진단', '33만원', '3일', '버전·취약점·노출 경로 점검 리포트'],
+            ['긴급 조치', '88만원', '5일', '진단 + 즉시 완화 조치'],
+            ['패치와 사후 점검', '198만원', '10일', '긴급 조치 + 보안 패치 적용 + 30일 뒤 재점검 1회'],
+          ],
+          notes: [
+            '작업일은 접속 정보를 받은 날부터 셉니다.',
+            '첫 작업 뒤 월 단위 유지보수가 필요하면 사이트 상태를 보고 별도로 견적을 드립니다.',
+          ],
+        },
+        heroProof: [proof.phpCareer],
+        faqH: '자주 묻는 것',
+        faq: [
+          { q: '작업 중에 사이트가 멈추나요?', a: '조치는 미리 협의한 시간에 진행하고, 적용 전에 원래대로 되돌리는 방법을 준비합니다.' },
+          { q: '서버 접속 권한이 꼭 필요한가요?', a: '진단은 소스 코드만 받아도 일부 가능합니다. 완화 조치와 패치에는 접속 권한이 필요합니다.' },
+          { q: '이미 해킹된 것 같습니다.', a: '사고 조사와 복구는 이 가격표 밖의 일입니다. 전화로 상황을 알려 주시면 범위를 따로 정합니다.' },
+          { q: '월 유지보수도 되나요?', a: '첫 작업 뒤 사이트 상태를 보고 월 단위로 견적을 드립니다.' },
+        ],
+        cta: '사이트 주소와 PHP 버전만 알려 주시면 어느 단계가 맞는지 바로 말씀드립니다.',
+      },
     },
 
     // ── 입찰 서류 검증 관문 /services/miriboa/ (v4, 2026-09-11 오너 결정) ──────────
@@ -788,7 +866,7 @@ export const content = {
       // 키 이름은 `topics` 여야 한다 — sizlon-platform tests/test_contact_topics.py 가 이
       // 파일에서 `topics: {…}` 를 읽어 백엔드 TOPIC_LABELS 와 대조한다(주제 유실 가드).
       // v4(2026-09-11): 선택지는 상황 문장. 키는 백엔드 TOPIC_LABELS 그대로(pilot = 미리보아 서비스 문의, 이미 있음) — 백엔드 무변경.
-      topics: { rtm: '감리를 앞두고 있음 — 요구사항 반영 사전 검토', pilot: '입찰 마감을 앞두고 있음 — 미리보아 문의', datafeed: '데이터가 매달 필요함 — 데이터 피드', search: '검색이 못 찾음 — 검색 품질 진단', other: '그 밖의 문서 검증 · 기타' },
+      topics: { rtm: '감리를 앞두고 있음 — 요구사항 반영 사전 검토', pilot: '입찰 마감을 앞두고 있음 — 미리보아 문의', datafeed: '데이터가 매달 필요함 — 데이터 피드', search: '검색이 못 찾음 — 검색 품질 진단', other: '구버전 PHP 보안 점검 · 그 밖의 문의' },
       messageDefault: '통화 요청',
       // 무료 스캔(2026-09-07, 개선 작업 B): ?service=search&scan=1 이면 안내·템플릿을 띄우고 message 앞에 scanTag 를 붙인다. 백엔드·topic 키 무변경.
       scanNote: '무료 스캔 — 검색 엔진·버전과 실패하는 검색어 20~50개만 적어 보내시면, 영업일 1일 안에 Nori 기본 설정 기준 형태소 분절·미등록어 진단 결과 1쪽을 이메일로 보냅니다. 형태소 분석기가 Nori 가 아니면(Mecab·seunjeon 등) 그 사실을 먼저 알려 드립니다.',
@@ -890,7 +968,7 @@ export const content = {
       vatNote: 'Prices exclude VAT.',
       fixedLine: 'Fixed price · deliverables named up front · built and run by the founder',
     },
-    nav: { engine: 'Requirements comparison engine', rtm: 'Audit RTM', miriboa: 'Bid document check', data: 'Data feeds', search: 'Search diagnostics', notes: 'Blog', work: 'Open work', about: 'About', contact: 'Contact', founder: 'Founder' },
+    nav: { engine: 'Requirements comparison engine', rtm: 'Audit RTM', miriboa: 'Bid document check', data: 'Data feeds', search: 'Search diagnostics', php: 'Legacy PHP security (Korean)', notes: 'Blog', work: 'Open work', about: 'About', contact: 'Contact', founder: 'Founder' },
     navShort: {} as Partial<Record<string, string>>,
     footer: {
       tagline: 'Measured, not claimed.',

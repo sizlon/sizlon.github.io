@@ -67,6 +67,8 @@ export const servicePages = [
   { href: '/services/data/', key: 'data', topic: 'datafeed' },
   { href: '/services/rtm/', key: 'rtm', topic: 'rtm' },
   { href: '/services/miriboa/', key: 'miriboa', topic: 'pilot' },
+  // 2026-11-09: 구버전 PHP 보안 점검. 헤더(nav)에는 없음. topic 은 백엔드 기존 키 'other'(라벨을 'PHP · 그 밖의 문의'로).
+  { href: '/services/php/', key: 'php', topic: 'other' },
 ] as const;
 
 export const legalLinks = [
