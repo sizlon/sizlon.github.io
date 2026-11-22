@@ -268,6 +268,12 @@ const serviceSchema = {
       <p>{scan.scan}</p>
       <a class="btn btn-primary" href={scan.scanHref}>{scan.scanCta} <span class="arrow">&rarr;</span></a>
       <p class="min">{scan.scanSub}</p>
+      {'scanRag' in scan && (
+        <div class="scan-rag">
+          <p>{scan.scanRag}</p>
+          <a class="btn btn-ghost" href={scan.scanRagHref}>{scan.scanRagCta} <span class="arrow">&rarr;</span></a>
+        </div>
+      )}
     </section>
   )}
 
@@ -360,6 +366,7 @@ const serviceSchema = {
   .scan-link { margin-top: 0.25rem; font-size: var(--step--1); }
   .scan-link a { color: var(--color-mist); text-decoration: none; border-bottom: 1px solid var(--color-recovered); }
   .scan .btn { align-self: flex-start; }
+  .scan-rag { margin-top: 1.5rem; padding-top: 1.25rem; border-top: 1px solid var(--hairline); display: flex; flex-direction: column; gap: 0.75rem; }
   .cross { color: var(--slate-on-dark); }
   .cross a { color: var(--color-mist); text-decoration: none; border-bottom: 1px solid var(--color-recovered); }
   .price-link { color: var(--color-mist); text-decoration: none; border-bottom: 1px solid var(--color-recovered); white-space: nowrap; }
